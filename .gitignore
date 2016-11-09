@@ -25,6 +25,7 @@ c/http_client
 
 # Intellij
 *.iml
+.idea/
 pharmacy_DB/.idea/
 
 # Common text editor backup files
