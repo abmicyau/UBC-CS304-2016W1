@@ -7,4 +7,7 @@ HOW TO RUN:
 - SSH into your UBC CS account to form a tunnel to use to successfully log into oracle (use Putty,Xmanager,Bash)
 	- For cmdline: ssh -l username -L localhost:1522:dbhost.ugrad.cs.ubc.ca:1522 remote.ugrad.cs.ubc.ca
 	- For Putty/Xmanager: Create a local outgoing connection on port 1522. Set destination host: dbhost.ugrad.cs.ubc.ca port 1522
-- Run on Eclipse 
+- Run on Eclipse
+
+copypasta for michael
+ssh -l i5n8 -L localhost:1522:dbhost.ugrad.cs.ubc.ca:1522 remote.ugrad.cs.ubc.ca
