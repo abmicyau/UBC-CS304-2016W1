@@ -9,5 +9,8 @@ HOW TO RUN:
 	- For Putty/Xmanager: Create a local outgoing connection on port 1522. Set destination host: dbhost.ugrad.cs.ubc.ca port 1522
 - Run on Eclipse
 
-copypasta for michael
+NOTES
+- Please remember to add extra project files/directories to the .gitignore if you are using an IDE. I have it set up for IntelliJ, but not yet for Eclipse.
+
+COPYPASTA FOR MICHAEL
 ssh -l i5n8 -L localhost:1522:dbhost.ugrad.cs.ubc.ca:1522 remote.ugrad.cs.ubc.ca
