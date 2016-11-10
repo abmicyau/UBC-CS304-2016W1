@@ -12,83 +12,78 @@ public class Pharmacy_DB {
     private String password = "a29789112";
 
     // JPanel Stuff
-    private JFrame mainFrame;
-    private JLabel headerLabel;
-    private JLabel statusLabel;
-    private JPanel controlPanel;
-    private JLabel msglabel;
+    private JFrame mainFrame = new JFrame("PharmSQL");;
 
     // Connection
     private Connection connection;
 
-    // etc.
+    // working area... categorize later
+    private JPanel login = new JPanel(new GridBagLayout());;
+    private JPanel newPanel2 = new JPanel(new GridBagLayout());;
+
     private JLabel labelUsername = new JLabel("Enter username: ");
     private JLabel labelPassword = new JLabel("Enter password: ");
+
     private JTextField textUsername = new JTextField(20);
     private JPasswordField fieldPassword = new JPasswordField(20);
     private JButton buttonLogin = new JButton("Login");
 
+    // Constructor sets up all GUI components
+    //
     public Pharmacy_DB () {
         prepareGUI();
     }
 
+    // Main method creates new database application and starts it
+    //
     public static void main(String[] args) {
         Pharmacy_DB database = new Pharmacy_DB();
         database.start();
     }
 
+    // Initializes the database application
+    //
     public void start() {
-        showJPanel();
-        connect();
-        sampleQuery();
-    }
-
-    private void prepareGUI() {
-        mainFrame = new JFrame("PharmSQL");
+        // add window listener to terminate process when window is closed
         mainFrame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent windowEvent){
                 System.exit(0);
             }
         });
-        
-        // create a new panel with GridBagLayout manager
-        JPanel newPanel = new JPanel(new GridBagLayout());
 
-        // set padding
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.WEST;
-        constraints.insets = new Insets(10, 10, 10, 10);
+        // open the application window
+        showJPanel();
 
-        // add components to the panel
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        newPanel.add(labelUsername, constraints);
+        // connect to the database and perform a sample query, printing the results
+        connect();
+        sampleQuery();
+    }
 
-        constraints.gridx = 1;
-        newPanel.add(textUsername, constraints);
+    // prepares all the GUI components, calling GUI setup helpers
+    //
+    private void prepareGUI() {
 
-        constraints.gridx = 0;
-        constraints.gridy = 1;
-        newPanel.add(labelPassword, constraints);
+        // set up the login window components
+        setupLogin();
 
-        constraints.gridx = 1;
-        newPanel.add(fieldPassword, constraints);
+        // TODO: set up the main window components
 
-        constraints.gridx = 0;
-        constraints.gridy = 2;
-        constraints.gridwidth = 2;
-        constraints.anchor = GridBagConstraints.CENTER;
-        newPanel.add(buttonLogin, constraints);
-
-        // set border for the panel
-        newPanel.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createEtchedBorder(), "Login Panel"));
-
-        // add the panel to this frame
-        mainFrame.add(newPanel);
-
+        // set the initial frame to the login window
+        mainFrame.setContentPane(login);
+        // resize window accordingly
         mainFrame.pack();
+        // make window appear in the middle of the screen
         mainFrame.setLocationRelativeTo(null);
+
+        // testing button actions...
+        buttonLogin.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                mainFrame.setContentPane(newPanel2);
+                mainFrame.pack();
+                mainFrame.invalidate();
+                mainFrame.validate();
+            }
+        });
     }
 
     private void showJPanel() {
@@ -107,6 +102,8 @@ public class Pharmacy_DB {
         });
     }
 
+    // Connects to the database
+    //
     private void connect() {
         try {
             DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
@@ -117,6 +114,8 @@ public class Pharmacy_DB {
         }
     }
 
+    // Sample query code. Temporary...
+    //
     private void sampleQuery() {
         try {
             Statement stmt = connection.createStatement();
@@ -131,5 +130,39 @@ public class Pharmacy_DB {
         catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    // GUI setup for the login window
+    //
+    private void setupLogin() {
+        // set padding
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.WEST;
+        constraints.insets = new Insets(10, 10, 10, 10);
+
+        // add components to the panel
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        login.add(labelUsername, constraints);
+
+        constraints.gridx = 1;
+        login.add(textUsername, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        login.add(labelPassword, constraints);
+
+        constraints.gridx = 1;
+        login.add(fieldPassword, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        constraints.gridwidth = 2;
+        constraints.anchor = GridBagConstraints.CENTER;
+        login.add(buttonLogin, constraints);
+
+        // set border for the panel
+        login.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(), "Login Panel"));
     }
 }
