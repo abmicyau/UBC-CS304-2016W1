@@ -6,39 +6,53 @@ import javax.swing.*;
 
 public class Pharmacy_DB {
 
-    // Login info
+    // Login info (using Michael's for now)
     private String url = "jdbc:oracle:thin:@localhost:1522:ug";
     private String userid = "ora_i5n8";
     private String password = "a29789112";
 
-    // JPanel Stuff
-    private JFrame mainFrame = new JFrame("PharmSQL");;
-
     // Connection
     private Connection connection;
 
-    // working area... categorize later
-    private JPanel login = new JPanel(new GridBagLayout());;
-    private JPanel newPanel2 = new JPanel(new GridBagLayout());;
+    // JPanel Stuff
+    private JFrame mainFrame = new JFrame("PharmSQL");;
 
+    // Login screen
+    private JPanel login = new JPanel(new GridBagLayout());;
     private JLabel labelUsername = new JLabel("Enter username: ");
     private JLabel labelPassword = new JLabel("Enter password: ");
-
     private JTextField textUsername = new JTextField(20);
     private JPasswordField fieldPassword = new JPasswordField(20);
     private JButton buttonLogin = new JButton("Login");
 
-    // Constructor sets up all GUI components
-    //
-    public Pharmacy_DB () {
-        prepareGUI();
-    }
+    // Home screen
+    private JPanel home = new JPanel(new GridBagLayout());;
+    private JButton actionButton1 = new JButton("Process Payment");
+    private JButton actionButton2 = new JButton("Add Record");
+    private JButton actionButton3 = new JButton("Delete Record");
+    private JButton actionButton4 = new JButton("Drug Restock");
+    private JButton actionButton5 = new JButton("Drug Lookup");
+    private JButton actionButton6 = new JButton("Record Lookup");
+    private JButton actionButton7 = new JButton("Employee Lookup");
+    private JButton actionButton8 = new JButton("Doctor Lookup");
+    private JButton actionButton9 = new JButton("Insurance Lookup");
+    private JButton actionButton10 = new JButton("Check Prescription");
+    private JButton buttonLogout = new JButton("Logout");
+
+    // Other screens...
+
 
     // Main method creates new database application and starts it
     //
     public static void main(String[] args) {
         Pharmacy_DB database = new Pharmacy_DB();
         database.start();
+    }
+
+    // Constructor sets up all GUI components
+    //
+    public Pharmacy_DB () {
+        prepareGUI();
     }
 
     // Initializes the database application
@@ -63,10 +77,11 @@ public class Pharmacy_DB {
     //
     private void prepareGUI() {
 
-        // set up the login window components
+        // set up the login screen components
         setupLogin();
 
-        // TODO: set up the main window components
+        // set up the home screen components
+        setupHome();
 
         // set the initial frame to the login window
         mainFrame.setContentPane(login);
@@ -74,16 +89,6 @@ public class Pharmacy_DB {
         mainFrame.pack();
         // make window appear in the middle of the screen
         mainFrame.setLocationRelativeTo(null);
-
-        // testing button actions...
-        buttonLogin.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                mainFrame.setContentPane(newPanel2);
-                mainFrame.pack();
-                mainFrame.invalidate();
-                mainFrame.validate();
-            }
-        });
     }
 
     private void showJPanel() {
@@ -132,10 +137,10 @@ public class Pharmacy_DB {
         }
     }
 
-    // GUI setup for the login window
+    // GUI setup for the login screen
     //
     private void setupLogin() {
-        // set padding
+        // set contraints and padding
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.WEST;
         constraints.insets = new Insets(10, 10, 10, 10);
@@ -163,6 +168,86 @@ public class Pharmacy_DB {
 
         // set border for the panel
         login.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createEtchedBorder(), "Login Panel"));
+                BorderFactory.createEtchedBorder(), "Login"));
+
+        // login button action
+        buttonLogin.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                mainFrame.setContentPane(home);
+                mainFrame.pack();
+                mainFrame.invalidate();
+                mainFrame.validate();
+            }
+        });
     }
+
+    // GUI setup for the home screen
+    //
+    private void setupHome() {
+        // set contraints and padding
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.WEST;
+        constraints.insets = new Insets(10, 10, 10, 10);
+
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        home.add(actionButton1, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        home.add(actionButton2, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        home.add(actionButton3, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 3;
+        home.add(actionButton4, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 4;
+        home.add(actionButton10, constraints);
+
+        constraints.gridx = 1;
+        constraints.gridy = 0;
+        home.add(actionButton5, constraints);
+
+        constraints.gridx = 1;
+        constraints.gridy = 1;
+        home.add(actionButton6, constraints);
+
+        constraints.gridx = 1;
+        constraints.gridy = 2;
+        home.add(actionButton7, constraints);
+
+        constraints.gridx = 1;
+        constraints.gridy = 3;
+        home.add(actionButton8, constraints);
+
+        constraints.gridx = 1;
+        constraints.gridy = 4;
+        home.add(actionButton9, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 5;
+        constraints.gridwidth = 2;
+        constraints.anchor = GridBagConstraints.CENTER;
+        home.add(buttonLogout, constraints);
+
+        // set border for the panel
+        home.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(), "Home"));
+
+        // logout button action
+        buttonLogout.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                mainFrame.setContentPane(login);
+                mainFrame.pack();
+                mainFrame.invalidate();
+                mainFrame.validate();
+            }
+        });
+    }
+
 }
