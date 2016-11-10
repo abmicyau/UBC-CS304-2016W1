@@ -8,8 +8,8 @@ public class Pharmacy_DB {
 
     // Login info
     private String url = "jdbc:oracle:thin:@localhost:1522:ug";
-    private String userid = "ora_y3v9a";
-    private String password = "a33732132";
+    private String userid = "ora_i5n8";
+    private String password = "a29789112";
 
     // JPanel Stuff
     private JFrame mainFrame;
@@ -85,15 +85,12 @@ public class Pharmacy_DB {
     private void sampleQuery() {
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM drug");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM Employee");
 
             while(rs.next()){
-                System.out.print("{" +
-                        rs.getString("DIN") + ", " +
-                        rs.getString("DRUG_NAME_INN") + ", " +
-                        rs.getString("DRUG_NAME_TRADE") + ", " +
-                        rs.getString("DRUG_DESCRIPTION").trim() + ", " +
-                        rs.getString("CONTRAINDICATIONS").trim() + "}\n");
+                System.out.println("{" +
+                        rs.getString("name") + ", " +
+                        rs.getString("email") + "}");
             }
         }
         catch (SQLException e) {

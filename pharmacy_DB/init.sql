@@ -1,11 +1,12 @@
 drop table Pharmacy_Assistant;
 drop table Pharmacist;
 drop table Pharmacy_Technician;
-drop table Employee; 
--- EMPLOYEE MUST BE DROPPED AFTER 3 SUBCLASSES
+drop table Works_in;
+drop table Pharmacy_managed;
+drop table Employee;
+-- Employee and Pharmacy(_managed) must be dropped last due to foreign key references
 
--- drop table Pharmacy_managed;
--- drop table Works_in;
+
 -- drop table Prescription_prescribed_by_is_for;
 -- drop table service_provides;
 -- drop table Prescription_item_has;
@@ -23,12 +24,14 @@ drop table Employee;
 -- drop table Walk_in_Client;
 -- drop table Pharmacy_record_has;
 
+----------------------------------------------------------------
+
 create table Employee
 	(emp_id int not null,
-	email varchar2(60) null,
+	email varchar2(64) null,
 	date_of_birth date null, 
-	address varchar2(50) null,
-	name varchar2(50) null,
+	address varchar2(64) null,
+	name varchar2(32) null,
 	phone_number char(10) null, 
 	gender char(1) null,
 	sin char(9) not null,
@@ -37,38 +40,37 @@ create table Employee
 insert into Employee
 values (0, 'dtrump@hotmail.com', '1946-06-14', '123 Fake Street', 'Donald Trump', '6041111111', 'M', '000011234'); 
 
-
 insert into Employee
 values (1, 'clinton_h@gmail.com', '1947-10-26', '1600 Pennsylvania Avenue', 'Hillary Clinton', '6042222222', 'F', '119023228'); 
-
 
 insert into Employee
 values (2, 'drake_swag@yahoo.ca', '1986-10-24', '8200 Dalhousie Rd', 'Aubrey Drake', '6043333333', 'M', '778823456'); 
 
-
 insert into Employee
 values (3, 'thisisfame@aol.ca', '1977-06-08', '145 Calabasa Avenue', 'Kanye West', '6044444444', 'M', '122398009'); 
-
 
 insert into Employee
 values (4, 'hermoine@hogwarts.ca', '1990-04-15', '22 Jump Street', 'Emma Watson', '6045555555', 'F', '100976523'); 
 
 
+----------------------------------------------------------------
+
 create table Pharmacy_Assistant
 	(emp_id int not null,
 	primary key (emp_id),
-foreign key (emp_id) references Employee ON DELETE CASCADE);
+	foreign key (emp_id) references Employee ON DELETE CASCADE);
 
 insert into Pharmacy_Assistant
 values (0);
 
+----------------------------------------------------------------
 
 create table Pharmacist
 	(emp_id int not null,
 	liability_insurance varchar2(40) null,
 	license_number char(8) not null,
 	primary key (emp_id),
-foreign key (emp_id) references Employee ON DELETE CASCADE);
+	foreign key (emp_id) references Employee ON DELETE CASCADE);
 
 insert into Pharmacist
 values (1, 'Westland Insurance', '00000000');
@@ -76,12 +78,13 @@ values (1, 'Westland Insurance', '00000000');
 insert into Pharmacist
 values (2, 'Eastland Insurance', '00000001');
 
+----------------------------------------------------------------
 
 create table Pharmacy_Technician
 	(emp_id int not null,
 	license_number char(8) not null,
 	primary key (emp_id),
-foreign key (emp_id) references Employee ON DELETE CASCADE);
+	foreign key (emp_id) references Employee ON DELETE CASCADE);
 
 insert into Pharmacy_Technician
 values (3, '00000002');
@@ -89,47 +92,42 @@ values (3, '00000002');
 insert into Pharmacy_Technician
 values (4, '00000003');
 
+----------------------------------------------------------------
 
--- create table Pharmacy_managed
--- (store_id char(8) primary key not null,
---  emp_id char(8) not null, 
---  address char(40) not null,
---  name char(40) not null,
---  phone_number	 char(40) null,
---  foreign key (emp_id) references Employee ON DELETE CASCADE
--- 	);
+create table Pharmacy_managed
+	(store_id int primary key not null,
+	emp_id int not null, 
+	address char(64) not null,
+	name char(64) not null,
+	phone_number char(10) null,
+	foreign key (emp_id) references Employee ON DELETE CASCADE);
 
+insert into Pharmacy_managed
+values (0, 1, '2748 E Hastings St.', 'Shoppers Drug Mart', '6042515358');
 
--- insert into Pharmacy_managed
--- values ('00000000', '00000001', '2748 E Hastings St.', 'Shoppers Drug Mart', '604-251-5358');
-	
--- create table Works_in
--- 	(emp_id char(8) not null,
--- 	 store_id char(8) not null,
--- 	 primary key (emp_id, store_id), 
--- 	 foreign key (emp_id) references Employee ON DELETE CASCADE, 
--- 	 foreign key (store_Id) references Pharmacy ON DELETE CASCADE);
+----------------------------------------------------------------
 
+create table Works_in
+	(emp_id int not null,
+	 store_id int not null,
+	 primary key (emp_id, store_id), 
+	 foreign key (emp_id) references Employee ON DELETE CASCADE, 
+	 foreign key (store_Id) references Pharmacy_managed ON DELETE CASCADE);
 
--- insert into Works_in
--- values ('00000000', '00000000');
+insert into Works_in
+values (0, 0);
 
+insert into Works_in
+values (1, 0);
 
--- insert into Works_in
--- values ('00000001', '00000000');
+insert into Works_in
+values (2, 0);
 
+insert into Works_in
+values (3, 0);
 
--- insert into Works_in
--- values ('00000002', '00000000');
-
-
--- insert into Works_in
--- values ('00000003', '00000000');
-
-
--- insert into Works_in
--- values ('00000004', '00000000');
-
+insert into Works_in
+values (4, 0);
 
 -- create table Prescription_prescribed_by_is_for
 -- 	(service_id char(8) not null,
