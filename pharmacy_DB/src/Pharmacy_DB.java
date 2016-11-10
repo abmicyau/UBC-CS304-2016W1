@@ -38,7 +38,7 @@ public class Pharmacy_DB {
 
     private void prepareGUI() {
         mainFrame = new JFrame("PharmSQL");
-        mainFrame.setSize(400,400);
+        mainFrame.setSize(1280, 720);
         mainFrame.setLayout(new GridLayout(3, 1));
         mainFrame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent windowEvent){
@@ -85,23 +85,19 @@ public class Pharmacy_DB {
     private void sampleQuery() {
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM vaccination");
-
-            String service_id;
-            String vaccination_id;
-            String date_vaccinated;
-            String dose;
+            ResultSet rs = stmt.executeQuery("SELECT * FROM drug");
 
             while(rs.next()){
-                service_id = rs.getString("service_id");
-                vaccination_id = rs.getString("vaccination_id");
-                date_vaccinated = rs.getString("date_vaccinated");
-                dose = rs.getString("dose");
-                System.out.println("{" + service_id + ", " + vaccination_id + ", " + date_vaccinated + ", " + dose + "}");
+                System.out.print("{" +
+                        rs.getString("DIN") + ", " +
+                        rs.getString("DRUG_NAME_INN") + ", " +
+                        rs.getString("DRUG_NAME_TRADE") + ", " +
+                        rs.getString("DRUG_DESCRIPTION") + ", " +
+                        rs.getString("CONTRAINDICATIONS") + "}\n");
             }
         }
         catch (SQLException e) {
-            System.err.println("Connection Failed");
+            e.printStackTrace();
         }
     }
 }
