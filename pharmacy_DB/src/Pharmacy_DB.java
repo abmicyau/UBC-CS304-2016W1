@@ -92,8 +92,8 @@ public class Pharmacy_DB {
                         rs.getString("DIN") + ", " +
                         rs.getString("DRUG_NAME_INN") + ", " +
                         rs.getString("DRUG_NAME_TRADE") + ", " +
-                        rs.getString("DRUG_DESCRIPTION") + ", " +
-                        rs.getString("CONTRAINDICATIONS") + "}\n");
+                        rs.getString("DRUG_DESCRIPTION").trim() + ", " +
+                        rs.getString("CONTRAINDICATIONS").trim() + "}\n");
             }
         }
         catch (SQLException e) {

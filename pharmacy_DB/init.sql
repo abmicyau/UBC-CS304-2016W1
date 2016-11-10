@@ -1,7 +1,9 @@
-drop table Employee;
--- drop table Pharmacy_Assistant;
--- drop table Pharmacist;
--- drop table Pharmacy_Technician;
+drop table Pharmacy_Assistant;
+drop table Pharmacist;
+drop table Pharmacy_Technician;
+drop table Employee; 
+-- EMPLOYEE MUST BE DROPPED AFTER 3 SUBCLASSES
+
 -- drop table Pharmacy_managed;
 -- drop table Works_in;
 -- drop table Prescription_prescribed_by_is_for;
@@ -21,18 +23,16 @@ drop table Employee;
 -- drop table Walk_in_Client;
 -- drop table Pharmacy_record_has;
 
-
 create table Employee
 	(emp_id int not null,
-	email varchar(60) null,
+	email varchar2(60) null,
 	date_of_birth date null, 
-	address varchar(50) null,
-	name varchar(50) null,
+	address varchar2(50) null,
+	name varchar2(50) null,
 	phone_number char(10) null, 
 	gender char(1) null,
 	sin char(9) not null,
 	primary key (emp_id));
-
 
 insert into Employee
 values (0, 'dtrump@hotmail.com', '1946-06-14', '123 Fake Street', 'Donald Trump', '6041111111', 'M', '000011234'); 
@@ -54,45 +54,40 @@ insert into Employee
 values (4, 'hermoine@hogwarts.ca', '1990-04-15', '22 Jump Street', 'Emma Watson', '6045555555', 'F', '100976523'); 
 
 
--- create table Pharmacy_Assistant
--- 	(emp_id char(8) not null,
--- 	primary key (emp_id),
--- foreign key (emp_id) references Employee ON DELETE CASCADE);
+create table Pharmacy_Assistant
+	(emp_id int not null,
+	primary key (emp_id),
+foreign key (emp_id) references Employee ON DELETE CASCADE);
+
+insert into Pharmacy_Assistant
+values (0);
 
 
--- insert into Pharmacy_Assistant
--- values ('00000000');
+create table Pharmacist
+	(emp_id int not null,
+	liability_insurance varchar2(40) null,
+	license_number char(8) not null,
+	primary key (emp_id),
+foreign key (emp_id) references Employee ON DELETE CASCADE);
+
+insert into Pharmacist
+values (1, 'Westland Insurance', '00000000');
+
+insert into Pharmacist
+values (2, 'Eastland Insurance', '00000001');
 
 
--- create table Pharmacist
--- 	(emp_id char(8) not null,
--- 	liability_insurance varchar(40) null,
--- 	license_number char(10) not null,
--- 	primary key (emp_id),
--- foreign key (emp_id) references Employee ON DELETE CASCADE);
+create table Pharmacy_Technician
+	(emp_id int not null,
+	license_number char(8) not null,
+	primary key (emp_id),
+foreign key (emp_id) references Employee ON DELETE CASCADE);
 
+insert into Pharmacy_Technician
+values (3, '00000002');
 
--- insert into Pharmacist
--- values ('00000001', 'Westland Insurance', '0000000000');
-
-
--- insert into Pharmacist
--- values ('00000002', 'Eastland Insurance', '0000000001');
-
-
--- create table Pharmacy_Technician
--- 	(emp_id char(8) not null,
--- 	license_number char(10) not null,
--- 	primary key (emp_id),
--- foreign key (emp_id) references Employee ON DELETE CASCADE);
-
-
--- insert into Pharmacy_Technician
--- values ('00000003', '0000000002');
-
-
--- insert into Pharmacy_Technician
--- values ('00000004', '0000000003');
+insert into Pharmacy_Technician
+values (4, '00000003');
 
 
 -- create table Pharmacy_managed
