@@ -21,6 +21,13 @@ public class Pharmacy_DB {
     // Connection
     private Connection connection;
 
+    // etc.
+    private JLabel labelUsername = new JLabel("Enter username: ");
+    private JLabel labelPassword = new JLabel("Enter password: ");
+    private JTextField textUsername = new JTextField(20);
+    private JPasswordField fieldPassword = new JPasswordField(20);
+    private JButton buttonLogin = new JButton("Login");
+
     public Pharmacy_DB () {
         prepareGUI();
     }
@@ -38,38 +45,66 @@ public class Pharmacy_DB {
 
     private void prepareGUI() {
         mainFrame = new JFrame("PharmSQL");
-        mainFrame.setSize(1280, 720);
-        mainFrame.setLayout(new GridLayout(3, 1));
         mainFrame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent windowEvent){
                 System.exit(0);
             }
         });
-        headerLabel = new JLabel("", JLabel.CENTER);
-        statusLabel = new JLabel("",JLabel.CENTER);
+        
+        // create a new panel with GridBagLayout manager
+        JPanel newPanel = new JPanel(new GridBagLayout());
 
-        statusLabel.setSize(350,100);
+        // set padding
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.WEST;
+        constraints.insets = new Insets(10, 10, 10, 10);
 
-        msglabel = new JLabel("Begin", JLabel.CENTER);
+        // add components to the panel
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        newPanel.add(labelUsername, constraints);
 
-        controlPanel = new JPanel();
-        controlPanel.setLayout(new FlowLayout());
+        constraints.gridx = 1;
+        newPanel.add(textUsername, constraints);
 
-        mainFrame.add(headerLabel);
-        mainFrame.add(controlPanel);
-        mainFrame.add(statusLabel);
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        newPanel.add(labelPassword, constraints);
+
+        constraints.gridx = 1;
+        newPanel.add(fieldPassword, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        constraints.gridwidth = 2;
+        constraints.anchor = GridBagConstraints.CENTER;
+        newPanel.add(buttonLogin, constraints);
+
+        // set border for the panel
+        newPanel.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(), "Login Panel"));
+
+        // add the panel to this frame
+        mainFrame.add(newPanel);
+
+        mainFrame.pack();
+        mainFrame.setLocationRelativeTo(null);
     }
 
     private void showJPanel() {
-        headerLabel.setText("Welcome to the Breaking Bad Pharmacy Database");
+        // set look and feel to the system look and feel
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
-        JPanel panel = new JPanel();
-        panel.setBackground(Color.lightGray);
-        panel.setLayout(new FlowLayout());
-        panel.add(msglabel);
-
-        controlPanel.add(panel);
-        mainFrame.setVisible(true);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                mainFrame.setVisible(true);
+            }
+        });
     }
 
     private void connect() {
@@ -78,7 +113,7 @@ public class Pharmacy_DB {
             connection = DriverManager.getConnection(url, userid, password);
             System.out.println("Connected to Oracle Database");
         } catch (SQLException e) {
-            System.err.println("Connection Failed");
+            e.printStackTrace();
         }
     }
 
