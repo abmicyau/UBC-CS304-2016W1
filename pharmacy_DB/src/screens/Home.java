@@ -90,14 +90,14 @@ public class Home extends JPanel {
         // logout button action
         buttonLogout.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Pharmacy_DB.mainFrame.switchScreen(Pharmacy_DB.mainFrame.getLoginPanel());
+                Pharmacy_DB.switchScreen(Pharmacy_DB.getLoginPanel());
             }
         });
 
         // employee lookup button action
         actionButton7.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Pharmacy_DB.mainFrame.switchScreen(Pharmacy_DB.mainFrame.getEmployeeLookupPanel());
+                Pharmacy_DB.switchScreen(Pharmacy_DB.getEmployeeLookupPanel());
             }
         });
     }

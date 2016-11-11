@@ -6,38 +6,32 @@ import screens.Login;
 
 import java.sql.*;
 import java.awt.event.*;
+import java.util.Vector;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 
 public class Pharmacy_DB extends JFrame {
 
-    // Single static database application instance
-    //
-    public static Pharmacy_DB mainFrame;
+    private static JFrame mainFrame;
 
     // Login info (using Michael's for now)
-    private String url = "jdbc:oracle:thin:@localhost:1522:ug";
-    private String userid = "ora_i5n8";
-    private String pass = "a29789112";
+    private static String url = "jdbc:oracle:thin:@localhost:1522:ug";
+    private static String userid = "ora_i5n8";
+    private static String pass = "a29789112";
 
     // Connection
-    private Connection connection;
+    private static Connection connection;
 
     // Screens
-    private JPanel login;
-    private JPanel home;
-    private JPanel employeeLookup;
+    private static JPanel login;
+    private static JPanel home;
+    private static JPanel employeeLookup;
 
     // Main method creates new database application
     //
     public static void main(String[] args) {
-        mainFrame = new Pharmacy_DB();
-    }
-
-    // Constructor sets up all GUI components
-    //
-    protected Pharmacy_DB () {
-        super("PharmSQL"); // window label
+        mainFrame = new JFrame("PharmSQL");
 
         // Connect to Oracle
         try {
@@ -48,22 +42,19 @@ public class Pharmacy_DB extends JFrame {
             e.printStackTrace();
         }
 
-        // Sample query
-        sampleQuery();
-
         // Instantiate screens
         login = new Login();
         home = new Home();
         employeeLookup = new EmployeeLookup();
 
-        setSize(1280, 720);
+        mainFrame.setSize(1280, 720);
         // make window appear in the middle of the screen
-        setLocationRelativeTo(null);
+        mainFrame.setLocationRelativeTo(null);
         // set the initial frame to the login window
-        setContentPane(login);
+        mainFrame.setContentPane(login);
 
         // add window listener to terminate process when window is closed
-        addWindowListener(new WindowAdapter() {
+        mainFrame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent windowEvent){
                 System.exit(0);
             }
@@ -73,7 +64,7 @@ public class Pharmacy_DB extends JFrame {
         showJPanel();
     }
 
-    private void showJPanel() {
+    private static void showJPanel() {
         // set look and feel to the system look and feel
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -84,23 +75,29 @@ public class Pharmacy_DB extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                setVisible(true);
+                mainFrame.setVisible(true);
             }
         });
     }
 
-
-    // Sample query code. Temporary...
+    // Switches the current panel to the specified one
     //
-    private void sampleQuery() {
+    public static void switchScreen(JPanel panel) {
+        mainFrame.setContentPane(panel);
+        mainFrame.revalidate();
+    }
+
+    public static void fill(DefaultTableModel model) {
         try {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM Employee");
 
             while(rs.next()){
-                System.out.println("{" +
-                        rs.getString("name") + ", " +
-                        rs.getString("email") + "}");
+                String name = rs.getString("name");
+                String email = rs.getString("email");
+                String phone = rs.getString("phone_number");
+                String address = rs.getString("address");
+                model.addRow(new Object[]{name, email, phone, address});
             }
         }
         catch (SQLException e) {
@@ -108,18 +105,10 @@ public class Pharmacy_DB extends JFrame {
         }
     }
 
-    // Switches the current panel to the specified one
-    //
-    public void switchScreen(JPanel panel) {
-        mainFrame.setContentPane(panel);
-        mainFrame.invalidate();
-        mainFrame.validate();
-    }
-
     // SCREEN GETTERS
     //
-    public JPanel getLoginPanel() { return login; }
-    public JPanel getHomePanel() { return home; }
-    public JPanel getEmployeeLookupPanel() { return employeeLookup; }
+    public static JPanel getLoginPanel() { return login; }
+    public static JPanel getHomePanel() { return home; }
+    public static JPanel getEmployeeLookupPanel() { return employeeLookup; }
 
 }

@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 
 public class Login extends JPanel {
 
-    private JLabel title = new JLabel("Log in with your CS id and password");
+    private JLabel title = new JLabel("Employee Login");
     private JLabel labelUsername = new JLabel("Enter username: ");
     private JLabel labelPassword = new JLabel("Enter password: ");
     private JTextField textUsername = new JTextField(20);
@@ -61,9 +61,7 @@ public class Login extends JPanel {
         // login button action
         buttonLogin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Pharmacy_DB.mainFrame.setContentPane(Pharmacy_DB.mainFrame.getHomePanel());
-                Pharmacy_DB.mainFrame.invalidate();
-                Pharmacy_DB.mainFrame.validate();
+                Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
             }
         });
     }
