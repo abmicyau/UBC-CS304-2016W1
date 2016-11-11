@@ -24,18 +24,26 @@ public class EmployeeLookup extends JPanel {
     public EmployeeLookup() {
 
         // important! call JPanel constructor and pass GridBagLayout
-        super(new GridLayout(1, 2));
+        super(new GridBagLayout());
 
         left = new JPanel(new GridBagLayout());
         right = new JPanel(new GridBagLayout());
-
-        add(left);
-        add(right);
 
         // set contraints and padding
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.WEST;
         constraints.insets = new Insets(10, 10, 10, 10);
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 0.1;
+
+        constraints.gridx = 0;
+        add(left, constraints);
+
+        constraints.gridx = 1;
+        constraints.gridwidth = 2;
+        constraints.weightx = 1;
+        add(right, constraints);
+        constraints.gridwidth = 1;
 
         // add components to the panel
         constraints.gridx = 0;
