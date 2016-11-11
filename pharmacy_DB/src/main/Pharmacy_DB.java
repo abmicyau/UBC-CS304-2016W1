@@ -87,10 +87,10 @@ public class Pharmacy_DB extends JFrame {
         mainFrame.revalidate();
     }
 
-    public static void fill(DefaultTableModel model) {
+    public static void fill(DefaultTableModel model, String query) {
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM Employee");
+            ResultSet rs = stmt.executeQuery(query);
 
             while(rs.next()){
                 String name = rs.getString("name");
