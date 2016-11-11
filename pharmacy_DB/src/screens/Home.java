@@ -26,6 +26,11 @@ public class Home extends JPanel {
         // important! call JPanel constructor and pass GridBagLayout
         super(new GridBagLayout());
 
+        placeElements();
+        addActions();
+    }
+
+    private void placeElements() {
         // set contraints and padding
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.WEST;
@@ -79,13 +84,20 @@ public class Home extends JPanel {
 
         // set border for the panel
         setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Home"));
+    }
 
+    private void addActions() {
         // logout button action
         buttonLogout.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Pharmacy_DB.mainFrame.setContentPane(Pharmacy_DB.mainFrame.getLoginPanel());
-                Pharmacy_DB.mainFrame.invalidate();
-                Pharmacy_DB.mainFrame.validate();
+                Pharmacy_DB.mainFrame.switchScreen(Pharmacy_DB.mainFrame.getLoginPanel());
+            }
+        });
+
+        // employee lookup button action
+        actionButton7.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Pharmacy_DB.mainFrame.switchScreen(Pharmacy_DB.mainFrame.getEmployeeLookupPanel());
             }
         });
     }

@@ -7,55 +7,60 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Login extends JPanel {
+public class EmployeeLookup extends JPanel {
 
-    private JLabel title = new JLabel("Log in with your CS id and password");
     private JLabel labelUsername = new JLabel("Enter username: ");
     private JLabel labelPassword = new JLabel("Enter password: ");
     private JTextField textUsername = new JTextField(20);
     private JPasswordField fieldPassword = new JPasswordField(20);
     private JButton buttonLogin = new JButton("Login");
 
-    public Login() {
+    private JPanel left;
+    private JPanel right;
+
+    public EmployeeLookup() {
 
         // important! call JPanel constructor and pass GridBagLayout
-        super(new GridBagLayout());
+        super(new GridLayout(1, 2));
+
+        left = new JPanel(new GridBagLayout());
+        right = new JPanel(new GridBagLayout());
+
+        add(left);
+        add(right);
 
         // set contraints and padding
         GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.WEST;
         constraints.insets = new Insets(10, 10, 10, 10);
 
+        // add components to the panel
         constraints.gridx = 0;
         constraints.gridy = 0;
-        constraints.gridwidth = 2;
-        constraints.anchor = GridBagConstraints.CENTER;
-        add(title, constraints);
+        left.add(labelUsername, constraints);
 
-        constraints.gridwidth = 1;
-        constraints.anchor = GridBagConstraints.WEST;
+        constraints.gridx = 1;
+        left.add(textUsername, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 1;
-        add(labelUsername, constraints);
+        left.add(labelPassword, constraints);
 
         constraints.gridx = 1;
-        add(textUsername, constraints);
+        left.add(fieldPassword, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 2;
-        add(labelPassword, constraints);
-
-        constraints.gridx = 1;
-        add(fieldPassword, constraints);
-
-        constraints.gridx = 0;
-        constraints.gridy = 3;
         constraints.gridwidth = 2;
         constraints.anchor = GridBagConstraints.CENTER;
-        add(buttonLogin, constraints);
+        right.add(buttonLogin, constraints);
 
         // set border for the panel
-        setBorder(BorderFactory.createTitledBorder(
+        left.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(), "Login"));
+
+        // set border for the panel
+        right.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(), "Login"));
 
         // login button action

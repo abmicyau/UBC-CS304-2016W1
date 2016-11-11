@@ -1,10 +1,10 @@
 package main;
 
+import screens.EmployeeLookup;
 import screens.Home;
 import screens.Login;
 
 import java.sql.*;
-import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
@@ -18,7 +18,7 @@ public class Pharmacy_DB extends JFrame {
     // Login info (using Michael's for now)
     private String url = "jdbc:oracle:thin:@localhost:1522:ug";
     private String userid = "ora_i5n8";
-    private String password = "a29789112";
+    private String pass = "a29789112";
 
     // Connection
     private Connection connection;
@@ -26,6 +26,7 @@ public class Pharmacy_DB extends JFrame {
     // Screens
     private JPanel login;
     private JPanel home;
+    private JPanel employeeLookup;
 
     // Main method creates new database application
     //
@@ -38,9 +39,22 @@ public class Pharmacy_DB extends JFrame {
     protected Pharmacy_DB () {
         super("PharmSQL"); // window label
 
+        // Connect to Oracle
+        try {
+            DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
+            connection = DriverManager.getConnection(url, userid, pass);
+            System.out.println("Connected to Oracle Database");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // Sample query
+        sampleQuery();
+
         // Instantiate screens
         login = new Login();
         home = new Home();
+        employeeLookup = new EmployeeLookup();
 
         setSize(1280, 720);
         // make window appear in the middle of the screen
@@ -57,10 +71,6 @@ public class Pharmacy_DB extends JFrame {
 
         // open the application window
         showJPanel();
-
-        // connect to the database and perform a sample query, printing the results
-        connect();
-        sampleQuery();
     }
 
     private void showJPanel() {
@@ -79,17 +89,6 @@ public class Pharmacy_DB extends JFrame {
         });
     }
 
-    // Connects to the database
-    //
-    private void connect() {
-        try {
-            DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
-            connection = DriverManager.getConnection(url, userid, password);
-            System.out.println("Connected to Oracle Database");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     // Sample query code. Temporary...
     //
@@ -121,5 +120,6 @@ public class Pharmacy_DB extends JFrame {
     //
     public JPanel getLoginPanel() { return login; }
     public JPanel getHomePanel() { return home; }
+    public JPanel getEmployeeLookupPanel() { return employeeLookup; }
 
 }
