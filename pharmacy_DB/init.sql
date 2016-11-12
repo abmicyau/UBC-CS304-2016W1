@@ -581,15 +581,24 @@ values (4, '00000003');
 ----------------------------------------------------------------
 
 create table Pharmacy_managed
-	(store_id int primary key not null,
+	(store_id int not null, 
 	emp_id int not null, 
 	address char(64) not null,
 	name char(64) not null,
-	phone_number char(10) null,
+	phone_number varchar2(32) null,
+	primary key (store_id),
 	foreign key (emp_id) references Employee ON DELETE CASCADE);
 
-insert into Pharmacy_managed
-values (0, 1, '2748 E Hastings St.', 'Shoppers Drug Mart', '6042515358');
+insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) values (1, 45, '5 Eagle Crest Park', 'Boyle, Mitchell and Lynch', '86-(616)156-6771');
+insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) values (2, 134, '6803 Portage Center', 'Schmidt and Sons', '60-(904)278-2579');
+insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) values (3, 126, '270 Graedel Drive', 'Muller and Sons', '62-(791)338-5236');
+insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) values (4, 141, '4036 Longview Street', 'Altenwerth-Jaskolski', '48-(591)914-3482');
+insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) values (5, 156, '142 Clarendon Place', 'Larkin, Tremblay and Gislason', '972-(416)202-1722');
+insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) values (6, 96, '99344 Lakewood Crossing', 'Davis, Daniel and Davis', '63-(781)616-8390');
+insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) values (7, 164, '64789 Jay Parkway', 'Nienow-Kessler', '57-(154)834-0106');
+insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) values (8, 38, '4134 Thompson Crossing', 'Towne-Upton', '51-(138)186-9980');
+insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) values (9, 23, '815 Southridge Lane', 'Reilly, Schulist and Padberg', '86-(889)805-7821');
+insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) values (10, 148, '962 Dwight Avenue', 'Borer LLC', '359-(751)761-7881');
 
 ----------------------------------------------------------------
 
@@ -600,20 +609,6 @@ create table Works_in
 	 foreign key (emp_id) references Employee ON DELETE CASCADE, 
 	 foreign key (store_Id) references Pharmacy_managed ON DELETE CASCADE);
 
-insert into Works_in
-values (0, 0);
-
-insert into Works_in
-values (1, 0);
-
-insert into Works_in
-values (2, 0);
-
-insert into Works_in
-values (3, 0);
-
-insert into Works_in
-values (4, 0);
 
 ----------------------------------------------------------------
 
