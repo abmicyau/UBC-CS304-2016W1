@@ -6,8 +6,6 @@ drop table Pharmacy_Technician;
 drop table Works_in;
 drop table Pharmacy_managed;
 drop table Employee;
--- Employee and Pharmacy(_managed) must be dropped last due to foreign key references
-
 drop table Item_consistof_drug;
 drop table Prescription_item_has;
 drop table Prescription_by_is_for;
@@ -15,8 +13,6 @@ drop table Over_the_counter_drug;
 drop table Stock_drug;
 drop table Drug;
 drop table Doctor;
--- drop table Vaccination_consistof_drug;
-
 drop table Subsidizes;
 drop table Insurance_coverage;
 drop table Payment_paid_by;
@@ -24,8 +20,6 @@ drop table Pharmacy_record_has;
 drop table Patient;
 drop table Walk_in_Client;
 drop table Customer;
-
-
 
 ----------------------------------------------------------------
 
@@ -39,6 +33,185 @@ create table Employee
 	gender char(1) null,
 	sin char(9) not null,
 	primary key (emp_id));
+
+create table Pharmacy_Assistant
+	(emp_id int not null,
+	primary key (emp_id),
+	foreign key (emp_id) references Employee ON DELETE CASCADE);
+
+create table Pharmacist
+	(emp_id int not null,
+	liability_insurance varchar2(40) null,
+	license_number char(8) not null,
+	primary key (emp_id),
+	foreign key (emp_id) references Employee ON DELETE CASCADE);
+
+create table Pharmacy_Technician
+	(emp_id int not null,
+	license_number char(8) not null,
+	primary key (emp_id),
+	foreign key (emp_id) references Employee ON DELETE CASCADE);
+
+create table Pharmacy_managed
+	(store_id int not null, 
+	emp_id int not null, 
+	address char(64) not null,
+	name char(64) not null,
+	phone_number varchar2(32) null,
+	primary key (store_id),
+	foreign key (emp_id) references Employee ON DELETE CASCADE);
+
+create table Works_in
+	(emp_id int not null,
+	 store_id int not null,
+	 primary key (emp_id, store_id), 
+	 foreign key (emp_id) references Employee ON DELETE CASCADE, 
+	 foreign key (store_Id) references Pharmacy_managed ON DELETE CASCADE);
+
+-- TODO: Add tuples for Works_in
+
+ create table Doctor 
+ 	(doctor_id char(8) not null,
+ 	 phone_number char(10) not null,
+ 	 name varchar(20),
+ 	 primary key (doctor_id)
+ 	);
+
+create table Customer
+	(customer_id char(8) not null,
+	 name varchar(25) null,
+ 	 phone_number char(10) null,
+	 insurance_info varchar(30) null,
+ 	 primary key (customer_id)
+ 	);
+
+ create table Patient
+ 	(customer_Id char(8) not null,
+ 	 care_card_number char(16) not null unique,
+ 	 address char(20) null,
+ 	 birthdate date null,
+ 	 gender char(1) null,
+ 	 primary key (customer_Id), 
+ 	 foreign key (customer_Id) references Customer ON DELETE CASCADE
+ 	);
+
+ create table Prescription_by_is_for
+ 	(service_id char(8) not null,
+	 doctor_id char(8) not null,
+ 	 customer_id char(8) not null,
+ 	 prescription_id char(8) not null, 
+ 	 date_prescribed date not null, 
+	 primary key (service_id), 
+ 	 foreign key (doctor_id) references Doctor ON DELETE CASCADE, 
+	 foreign key (customer_id) references Patient ON DELETE CASCADE
+ 	);
+
+create table Prescription_item_has
+	(item_id char(8) not null unique,
+ 	 prescription_id char(8) not null,
+	 dose varchar(16) not null,
+ 	 duration varchar(32) not null,
+ 	 frequency varchar(32) not null,
+ 	 primary key (item_id, prescription_id), 
+ 	 foreign key (prescription_id) references Prescription_by_is_for ON DELETE CASCADE
+	);
+
+create table Pharmacy_record_has 
+ 	(record_id char(10) not null,
+ 	 care_card_number char(16) not null,
+ 	 purchasing_history varchar(100),
+ 	 primary key (record_id, care_card_number),
+ 	 foreign key (care_card_number) references Patient (care_card_number) ON DELETE CASCADE
+ 	);
+
+create table Service_provides
+	(service_id char(8) not null unique,
+	 emp_id int not null,
+	 primary key (service_id, emp_id), 
+	 foreign key (emp_id) references Pharmacist ON DELETE CASCADE
+	); 
+
+create table Vaccination 
+	(service_id char(8) not null, 
+ 	 vaccination_id char(8) null,
+	 date_vaccinated char(10) null,
+ 	 dose varchar(16) null,
+ 	 primary key (service_id), 
+ 	 foreign key (service_id) references Service_provides (service_id) ON DELETE CASCADE
+ 	); 
+
+create table Drug
+	(DIN int not null, 
+	 drug_name_INN varchar2(512) not null,
+	 drug_name_trade varchar2(512) not null,
+	 drug_description varchar2(512) null,
+	 contraindications varchar2(512) null,
+	 primary key (DIN)); 
+
+create table Over_the_counter_drug 
+	(DIN int not null,
+	 brand varchar2(32) null,
+	 cost varchar2(16) null,
+	 quantity int null,
+	 primary key (DIN), 
+	 foreign key (DIN) references Drug ON DELETE CASCADE
+	);
+
+create table Stock_drug
+	(DIN int not null,
+	 amount_g float(16) null,
+	 cost_per_g varchar2(16) null,
+	 primary key (DIN), 
+	 foreign key (DIN) references Drug ON DELETE CASCADE
+	);
+
+create table Item_consistof_drug 
+	(item_id char(8) not null,
+	 DIN int not null,
+	 primary key (item_id, DIN), 
+	 foreign key (item_id) references Prescription_item_has (item_id) ON DELETE CASCADE, 
+	 foreign key (DIN) references Drug ON DELETE CASCADE
+	);
+
+create table Payment_paid_by
+ 	(paymentId char(8) not null, 
+ 	customer_id char(8) not null,
+ 	transdate date not null,
+ 	total char(10) not null,
+ 	cardNumber char(12) not null,
+ 	cardExpDate date not null,
+ 	time char(5) not null,
+ 	primary key (paymentId), 
+ 	foreign key (customer_id) references Customer ON DELETE CASCADE 
+ 	); 
+
+create table Insurance_coverage
+ 	(policyId char(8) not null,
+	 expDate date null,
+ 	 maxAllowance int null,
+   	 company varchar (40) null,
+ 	 primary key (policyId)
+ 	); 
+
+create table Subsidizes
+	(paymentId char(8) not null, 
+	 policyId char(8) not null, 
+ 	 primary key (paymentId, policyId), 
+ 	 foreign key (paymentId) references Payment_paid_by ON DELETE CASCADE, 
+ 	 foreign key (policyId) references Insurance_coverage ON DELETE CASCADE
+	); 
+
+create table Walk_in_Client
+	(customer_id char(8) not null, 
+ 	 primary key (customer_id), 
+ 	 foreign key (customer_id) references Customer ON DELETE CASCADE
+	); 
+
+
+--------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------
+
 
 insert into Employee (emp_id, email, date_of_birth, address, name, phone_number, gender, sin) values (0, 'tberry0@cnet.com', '1993-02-07', '965 Johnson Avenue', 'Tina Berry', '1-(739)838-9611', 'F', '491796127');
 insert into Employee (emp_id, email, date_of_birth, address, name, phone_number, gender, sin) values (1, 'ckelly1@cnet.com', '1959-04-26', '04935 Swallow Crossing', 'Christine Kelly', '62-(659)576-4866', 'F', '301457583');
@@ -541,55 +714,13 @@ insert into Employee (emp_id, email, date_of_birth, address, name, phone_number,
 insert into Employee (emp_id, email, date_of_birth, address, name, phone_number, gender, sin) values (498, 'jthompsondu@barnesandnoble.com', '1989-07-08', '6038 3rd Street', 'Jean Thompson', '54-(872)883-4230', 'F', '353839138');
 insert into Employee (emp_id, email, date_of_birth, address, name, phone_number, gender, sin) values (499, 'fcoxdv@abc.net.au', '1960-07-29', '65 Marcy Junction', 'Fred Cox', '1-(887)745-9333', 'M', '560224258');
 
-----------------------------------------------------------------
+insert into Pharmacy_Assistant values (0);
 
-create table Pharmacy_Assistant
-	(emp_id int not null,
-	primary key (emp_id),
-	foreign key (emp_id) references Employee ON DELETE CASCADE);
+insert into Pharmacist values (1, 'Westland Insurance', '00000000');
+insert into Pharmacist values (2, 'Eastland Insurance', '00000001');
 
-insert into Pharmacy_Assistant
-values (0);
-
-----------------------------------------------------------------
-
-create table Pharmacist
-	(emp_id int not null,
-	liability_insurance varchar2(40) null,
-	license_number char(8) not null,
-	primary key (emp_id),
-	foreign key (emp_id) references Employee ON DELETE CASCADE);
-
-insert into Pharmacist
-values (1, 'Westland Insurance', '00000000');
-
-insert into Pharmacist
-values (2, 'Eastland Insurance', '00000001');
-
-----------------------------------------------------------------
-
-create table Pharmacy_Technician
-	(emp_id int not null,
-	license_number char(8) not null,
-	primary key (emp_id),
-	foreign key (emp_id) references Employee ON DELETE CASCADE);
-
-insert into Pharmacy_Technician
-values (3, '00000002');
-
-insert into Pharmacy_Technician
-values (4, '00000003');
-
-----------------------------------------------------------------
-
-create table Pharmacy_managed
-	(store_id int not null, 
-	emp_id int not null, 
-	address char(64) not null,
-	name char(64) not null,
-	phone_number varchar2(32) null,
-	primary key (store_id),
-	foreign key (emp_id) references Employee ON DELETE CASCADE);
+insert into Pharmacy_Technician values (3, '00000002');
+insert into Pharmacy_Technician values (4, '00000003');
 
 insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) values (1, 45, '5 Eagle Crest Park', 'Boyle, Mitchell and Lynch', '86-(616)156-6771');
 insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) values (2, 134, '6803 Portage Center', 'Schmidt and Sons', '60-(904)278-2579');
@@ -602,227 +733,47 @@ insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) val
 insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) values (9, 23, '815 Southridge Lane', 'Reilly, Schulist and Padberg', '86-(889)805-7821');
 insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) values (10, 148, '962 Dwight Avenue', 'Borer LLC', '359-(751)761-7881');
 
-----------------------------------------------------------------
-
-create table Works_in
-	(emp_id int not null,
-	 store_id int not null,
-	 primary key (emp_id, store_id), 
-	 foreign key (emp_id) references Employee ON DELETE CASCADE, 
-	 foreign key (store_Id) references Pharmacy_managed ON DELETE CASCADE);
-
-
-----------------------------------------------------------------
-
- create table Doctor 
- 	(doctor_id char(8) not null,
- 	 phone_number char(10) not null,
- 	 name varchar(20),
- 	 primary key (doctor_id)
- 	);
-
-
-insert into Doctor
-	values ('00000000', '7788881234', 'Dr. Miranda Bailey');
-
-
-insert into Doctor
-	values ('00000001', '6045681234', 'Dr. Meredith Grey');
-
-
-insert into Doctor
-	values ('00000002', '6045969923', 'Dr. Gregory House');
-
-
-insert into Doctor
-	values ('00000003', '7782217865', 'Dr. Derek Shepherd');
-
-
-insert into Doctor
-	values ('00000004', '4035552213', 'Dr. Christina Yang');
-
-----------------------------------------------------------------
-
-create table Customer
-	(customer_id char(8) not null,
-	 name varchar(25) null,
- 	 phone_number char(10) null,
-	 insurance_info varchar(30) null,
- 	 primary key (customer_id)
- 	);
-
-
-insert into Customer
-	values ('00000000', 'Harry Potter', '7781129876', 'Westland Insurance');
-
-
-insert into Customer
-	values ('00000001', 'Pikachu Chu', '6045525673', 'Westland Insurance');
-
-
-insert into Customer
-	values ('00000002', 'Angelina Jolie', '6042346754', 'Blue Cross');
-
-
-insert into Customer
-	values ('00000003', 'Ken Bone', '7783324326', 'Eastland Insurance');
-
-
-insert into Customer
-	values ('00000004', 'Oprah Winfrey', '6048320986', 'Blue Cross');
-
-----------------------------------------------------------------
-
- create table Patient
- 	(customer_Id char(8) not null,
- 	 care_card_number char(16) not null unique,
- 	 address char(20) null,
- 	 birthdate date null,
- 	 gender char(1) null,
- 	 primary key (customer_Id), 
- 	 foreign key (customer_Id) references Customer ON DELETE CASCADE
- 	);
-
-
-insert into Patient 
-	values ('00000000', '9123456798342343', '22B Baker Street', '1954-01-29', 'F');
-
-
-insert into Patient
-	values ('00000001', '9100567832130097', '1766 Willow St.', '1975-06-04', 'F');
-
-
-insert into Patient
-	values ('00000002', '9322998812344631', '567 Evergreen Ave.', '1980-07-31', 'M');
-
-----------------------------------------------------------------
-
- create table Prescription_by_is_for
- 	(service_id char(8) not null,
-	 doctor_id char(8) not null,
- 	 customer_id char(8) not null,
- 	 prescription_id char(8) not null, 
- 	 date_prescribed date not null, 
-	 primary key (service_id), 
- 	 foreign key (doctor_id) references Doctor ON DELETE CASCADE, 
-	 foreign key (customer_id) references Patient ON DELETE CASCADE
- 	);
-
-insert into Prescription_by_is_for
-	values ('00000000', '00000000', '00000000', '00000000', '2016-10-16');
-
-insert into Prescription_by_is_for
-	values ('00000001', '00000000', '00000001', '00000001', '2016-10-16');
-
-insert into Prescription_by_is_for
-	values ('00000002', '00000001', '00000002', '00000002', '2016-10-16');
-
-insert into Prescription_by_is_for
-	values ('00000003', '00000001', '00000002', '00000003', '2016-10-16');
-
-insert into Prescription_by_is_for
-	values ('00000004', '00000001', '00000000', '00000004', '2016-10-16');
-
-----------------------------------------------------------------
-
-create table Prescription_item_has
-	(item_id char(8) not null unique,
- 	 prescription_id char(8) not null,
-	 dose varchar(16) not null,
- 	 duration varchar(32) not null,
- 	 frequency varchar(32) not null,
- 	 primary key (item_id, prescription_id), 
- 	 foreign key (prescription_id) references Prescription_by_is_for ON DELETE CASCADE
-	);
-
-insert into Prescription_item_has
-	values ('00000000', '00000000', '20 mg', '3 weeks', '1 capsule QID');
-
-insert into Prescription_item_has
-	values ('00000001', '00000000', '80 mg', '2 weeks', '3 pills QD');
-
-insert into Prescription_item_has
-	values ('00000002', '00000000', '100 mg', '2 weeks', '2 capsules TID');
-
-insert into Prescription_item_has
-	values ('00000003', '00000001', '15 mg', '5 days', '1 pill every 3 hours');
-
-insert into Prescription_item_has
-	values ('00000004', '00000001', '180 mg', '5 days', '2 tablets every 8 hours');
-
-----------------------------------------------------------------
-
-create table Pharmacy_record_has 
- 	(record_id char(10) not null,
- 	 care_card_number char(16) not null,
- 	 purchasing_history varchar(100),
- 	 primary key (record_id, care_card_number),
- 	 foreign key (care_card_number) references Patient (care_card_number) ON DELETE CASCADE
- 	);
-
-insert into Pharmacy_record_has
-	values ('0000000000', '9123456798342343', 'Patient is up to date with all medication');
-
-insert into Pharmacy_record_has
-	values ('0000000001', '9100567832130097', 'Patient switched brand of birth control');
-
-insert into Pharmacy_record_has
-	values ('0000000002', '9322998812344631', 'Patient is up to date with all medication');
-
-----------------------------------------------------------------
-
-create table Service_provides
-	(service_id char(8) not null unique,
-	 emp_id int not null,
-	 primary key (service_id, emp_id), 
-	 foreign key (emp_id) references Pharmacist ON DELETE CASCADE
-	); 
-
-
-insert into Service_provides
-	values ('00000000', '1');
-
-insert into Service_provides
-	values ('00000001', '2');
-
-insert into Service_provides
-	values ('00000002', '1');
-
-insert into Service_provides
-	values ('00000003', '2');
-
-insert into Service_provides
-	values ('00000004', '2');
-
-----------------------------------------------------------------
-
-create table Vaccination 
-	(service_id char(8) not null, 
- 	 vaccination_id char(8) null,
-	 date_vaccinated char(10) null,
- 	 dose varchar(16) null,
- 	 primary key (service_id), 
- 	 foreign key (service_id) references Service_provides (service_id) ON DELETE CASCADE
- 	); 
-
-insert into Vaccination
-	values ('00000000', '10000000', '2016-02-23', '3ml');
-
-insert into Vaccination
-	values ('00000001', '20000000', '2015-12-03', '2ml'); 
-
-insert into Vaccination
-	values ('00000002', '30000000', '2016-06-03', '1ml'); 
-
-----------------------------------------------------------------
-
-create table Drug
-	(DIN int not null, 
-	 drug_name_INN varchar2(512) not null,
-	 drug_name_trade varchar2(512) not null,
-	 drug_description varchar2(512) null,
-	 contraindications varchar2(512) null,
-	 primary key (DIN)); 
+insert into Doctor values ('00000000', '7788881234', 'Dr. Miranda Bailey');
+insert into Doctor values ('00000001', '6045681234', 'Dr. Meredith Grey');
+insert into Doctor values ('00000002', '6045969923', 'Dr. Gregory House');
+insert into Doctor values ('00000003', '7782217865', 'Dr. Derek Shepherd');
+insert into Doctor values ('00000004', '4035552213', 'Dr. Christina Yang');
+
+insert into Customer values ('00000000', 'Harry Potter', '7781129876', 'Westland Insurance');
+insert into Customer values ('00000001', 'Pikachu Chu', '6045525673', 'Westland Insurance');
+insert into Customer values ('00000002', 'Angelina Jolie', '6042346754', 'Blue Cross');
+insert into Customer values ('00000003', 'Ken Bone', '7783324326', 'Eastland Insurance');
+insert into Customer values ('00000004', 'Oprah Winfrey', '6048320986', 'Blue Cross');
+
+insert into Patient values ('00000000', '9123456798342343', '22B Baker Street', '1954-01-29', 'F');
+insert into Patient values ('00000001', '9100567832130097', '1766 Willow St.', '1975-06-04', 'F');
+insert into Patient values ('00000002', '9322998812344631', '567 Evergreen Ave.', '1980-07-31', 'M');
+
+insert into Prescription_by_is_for values ('00000000', '00000000', '00000000', '00000000', '2016-10-16');
+insert into Prescription_by_is_for values ('00000001', '00000000', '00000001', '00000001', '2016-10-16');
+insert into Prescription_by_is_for values ('00000002', '00000001', '00000002', '00000002', '2016-10-16');
+insert into Prescription_by_is_for values ('00000003', '00000001', '00000002', '00000003', '2016-10-16');
+insert into Prescription_by_is_for values ('00000004', '00000001', '00000000', '00000004', '2016-10-16');
+
+insert into Prescription_item_has values ('00000000', '00000000', '20 mg', '3 weeks', '1 capsule QID');
+insert into Prescription_item_has values ('00000001', '00000000', '80 mg', '2 weeks', '3 pills QD');
+insert into Prescription_item_has values ('00000002', '00000000', '100 mg', '2 weeks', '2 capsules TID');
+insert into Prescription_item_has values ('00000003', '00000001', '15 mg', '5 days', '1 pill every 3 hours');
+insert into Prescription_item_has values ('00000004', '00000001', '180 mg', '5 days', '2 tablets every 8 hours');
+
+insert into Pharmacy_record_has values ('0000000000', '9123456798342343', 'Patient is up to date with all medication');
+insert into Pharmacy_record_has values ('0000000001', '9100567832130097', 'Patient switched brand of birth control');
+insert into Pharmacy_record_has values ('0000000002', '9322998812344631', 'Patient is up to date with all medication');
+
+insert into Service_provides values ('00000000', '1');
+insert into Service_provides values ('00000001', '2');
+insert into Service_provides values ('00000002', '1');
+insert into Service_provides values ('00000003', '2');
+insert into Service_provides values ('00000004', '2');
+
+insert into Vaccination values ('00000000', '10000000', '2016-02-23', '3ml');
+insert into Vaccination values ('00000001', '20000000', '2015-12-03', '2ml'); 
+insert into Vaccination values ('00000002', '30000000', '2016-06-03', '1ml');
 
 insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (1, 'Dimethicone', 'Photocil', 'Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat.', 'Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.');
 insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (2, 'Eucalyptol, menthol, methyl salicylate, thymol', 'Tartar control plus', 'Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros.', 'Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus.');
@@ -925,17 +876,6 @@ insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contrai
 insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (99, 'Acetaminophen, dextromethorphan HBr, guaifenesin, phenylephrine HCl, diphenhydramine HCl', 'TopCare Mucus Relief and Cold and Flu', 'Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.', 'Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem.');
 insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (100, 'Iron, Cyanocobalamin and Folic Acid', 'Iferex 150 Forte', 'Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.', 'Proin leo odio, porttitor id, consequat in, consequat ut, nulla. Sed accumsan felis. Ut at dolor quis odio consequat varius.');
 
-
-create table Over_the_counter_drug 
-	(DIN int not null,
-	 brand varchar2(32) null,
-	 cost varchar2(16) null,
-	 quantity int null,
-	 primary key (DIN), 
-	 foreign key (DIN) references Drug ON DELETE CASCADE
-	);
-
-
 insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (1, 'Topco Associates LLC', '$9.93', 95);
 insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (2, 'Dollar General', '$8.67', 167);
 insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (3, 'Conopco Inc. d/b/a Unilever', '$15.58', 68);
@@ -961,15 +901,6 @@ insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (22, 'Alle
 insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (23, 'AMERICAN SALES COMPANY', '$29.24', 14);
 insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (24, 'H E B', '$26.69', 190);
 insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (25, 'GOWOONSESANG COSMETICS CO., LTD.', '$10.45', 15);
-
-
-create table Stock_drug
-	(DIN int not null,
-	 amount_g float(16) null,
-	 cost_per_g varchar2(16) null,
-	 primary key (DIN), 
-	 foreign key (DIN) references Drug ON DELETE CASCADE
-	);
 
 insert into Stock_drug (DIN, amount_g, cost_per_g) values (26, 636.694, '$0.58');
 insert into Stock_drug (DIN, amount_g, cost_per_g) values (27, 532.452, '$0.32');
@@ -1047,81 +978,17 @@ insert into Stock_drug (DIN, amount_g, cost_per_g) values (98, 1113.438, '$1.70'
 insert into Stock_drug (DIN, amount_g, cost_per_g) values (99, 1516.43, '$4.74');
 insert into Stock_drug (DIN, amount_g, cost_per_g) values (100, 453.487, '$0.65');
 
-----------------------------------------------------------------
-
-create table Item_consistof_drug 
-	(item_id char(8) not null,
-	 DIN int not null,
-	 primary key (item_id, DIN), 
-	 foreign key (item_id) references Prescription_item_has (item_id) ON DELETE CASCADE, 
-	 foreign key (DIN) references Drug ON DELETE CASCADE
-	);
-
 insert into Item_consistof_drug (item_id, DIN) values ('00000000', 1);
 insert into Item_consistof_drug (item_id, DIN) values ('00000001', 2);
 insert into Item_consistof_drug (item_id, DIN) values ('00000002', 3);
 insert into Item_consistof_drug (item_id, DIN) values ('00000003', 4);
 insert into Item_consistof_drug (item_id, DIN) values ('00000004', 5);
 
-----------------------------------------------------------------
-
-
-
-create table Payment_paid_by
- 	(paymentId char(8) not null, 
- 	customer_id char(8) not null,
- 	transdate date not null,
- 	total char(10) not null,
- 	cardNumber char(12) not null,
- 	cardExpDate date not null,
- 	time char(5) not null,
- 	primary key (paymentId), 
- 	foreign key (customer_id) references Customer ON DELETE CASCADE 
- 	); 
-
-
-insert into Payment_paid_by
- values ('11111111', '00000000', '2016-11-23', '$22.30', '123456789012', '2018-08-29', '13:00');
-
-insert into Payment_paid_by
- values ('22222222', '00000001', '2016-01-03', '$2.30', '412398792345', '2020-01-31', '14:45');
-
-
-insert into Payment_paid_by
- values ('33333333', '00000002', '2016-04-20', '$11.02', '543098672345', '2016-12-14', '09:11');
-
-
-insert into Payment_paid_by
-values ('44444444', '00000003', '2015-12-31', '$44.44', '432898761239', '2018-08-11', '11:37');
-
-
-insert into Payment_paid_by
-values ('55555555', '00000004', '2016-10-18', '$9.35', '543687931112', '2017-02-01', '16:07');
-
-
-create table Insurance_coverage
- 	(policyId char(8) not null,
-	 expDate date null,
- 	 maxAllowance int null,
-   	 company varchar (40) null,
- 	 primary key (policyId)
- 	); 
-
-create table Subsidizes
-	(paymentId char(8) not null, 
-	 policyId char(8) not null, 
- 	 primary key (paymentId, policyId), 
- 	 foreign key (paymentId) references Payment_paid_by ON DELETE CASCADE, 
- 	 foreign key (policyId) references Insurance_coverage ON DELETE CASCADE
-	); 
-
-create table Walk_in_Client
-	(customer_id char(8) not null, 
- 	 primary key (customer_id), 
- 	 foreign key (customer_id) references Customer ON DELETE CASCADE
-	); 
+insert into Payment_paid_by values ('11111111', '00000000', '2016-11-23', '$22.30', '123456789012', '2018-08-29', '13:00');
+insert into Payment_paid_by values ('22222222', '00000001', '2016-01-03', '$2.30', '412398792345', '2020-01-31', '14:45');
+insert into Payment_paid_by values ('33333333', '00000002', '2016-04-20', '$11.02', '543098672345', '2016-12-14', '09:11');
+insert into Payment_paid_by values ('44444444', '00000003', '2015-12-31', '$44.44', '432898761239', '2018-08-11', '11:37');
+insert into Payment_paid_by values ('55555555', '00000004', '2016-10-18', '$9.35', '543687931112', '2017-02-01', '16:07');
 
 insert into Walk_in_Client (customer_Id) values ('00000003');
-
 insert into Walk_in_Client (customer_Id) values ('00000004');
-
