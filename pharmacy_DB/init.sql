@@ -7,7 +7,7 @@ drop table Employee;
 -- Employee and Pharmacy(_managed) must be dropped last due to foreign key references
 
 
--- drop table Prescription_prescribed_by_is_for;
+drop table Prescription_by_is_for;
 -- drop table service_provides;
 -- drop table Prescription_item_has;
 -- drop table Item_consistof_drug;
@@ -15,13 +15,13 @@ drop table Over_the_counter_drug;
 drop table Stock_drug;
 drop table Drug;
 -- drop table Vaccination;
--- drop table Doctor;
 
+drop table Doctor;
 -- drop table Vaccination_consistof_drug;
 -- drop table Payment_paid_by;
 -- drop table Subsidizes;
--- drop table Customer;
--- drop table Patient;
+drop table Patient;
+drop table Customer;
 -- drop table Walk_in_Client;
 -- drop table Pharmacy_record_has;
 
@@ -615,35 +615,120 @@ values (3, 0);
 insert into Works_in
 values (4, 0);
 
--- create table Prescription_prescribed_by_is_for
--- 	(service_id char(8) not null,
--- 	 doctor_id char(8) not null,
--- 	 customer_id char(8) not null,
--- 	 prescription_id char(8) not null, 
--- 	 date_prescribed char(10) not null, 
--- 	 primary key (service_id), 
--- 	 foreign key (doctor_id) references Doctor ON DELETE CASCADE, 
--- 	 foreign key (customer_id) references Patient ON DELETE CASCADE
--- 	);
+----------------------------------------------------------------
+
+ create table Doctor 
+ 	(doctor_id char(8) not null,
+ 	 phone_number char(10) not null,
+ 	 name varchar(20),
+ 	 primary key (doctor_id)
+ 	);
 
 
--- insert into Prescription_prescribed_by_is_for
+-- insert into Doctor
+-- values ('00000000', '778-888-1234', 'Dr. Miranda Bailey');
+
+
+-- insert into Doctor
+-- values ('00000001', '604-568-1234', 'Dr. Meredith Grey');
+
+
+-- insert into Doctor
+-- values ('00000002', '604-596-9923', 'Dr. Gregory House');
+
+
+-- insert into Doctor
+-- values ('00000003', '778-221-7865', 'Dr. Derek Shepherd');
+
+
+-- insert into Doctor
+-- values ('00000004', '403-555-2213', 'Dr. Christina Yang');
+
+----------------------------------------------------------------
+
+create table Customer
+	(customer_id char(8) not null,
+	 name varchar(25) null,
+ 	 phone_number char(12) null,
+	 insurance_info varchar(30) null,
+ 	 primary key (customer_id)
+ 	);
+
+
+-- insert into Customer
+-- values ('00000000', 'Harry Potter', '778-112-9876', 'Westland Insurance');
+
+
+-- insert into Customer
+-- values ('00000001', 'Pikachu Chu', '604-552-5673', 'Westland Insurance');
+
+
+-- insert into Customer
+-- values ('00000002', 'Angelina Jolie', '604-234-6754', 'Blue Cross');
+
+
+-- insert into Customer
+-- values ('00000003', 'Ken Bone', '778-332-4326', 'Eastland Insurance');
+
+
+-- insert into Customer
+-- values ('00000004', 'Oprah Winfrey', '604-832-0986', 'Blue Cross');
+
+----------------------------------------------------------------
+
+ create table Patient
+ 	(customer_Id char(8) not null,
+ 	 care_card_number char(16) not null,
+ 	 address char(20) null,
+ 	 birthdate char(10) null,
+ 	 gender char(1) null,
+ 	 primary key (customer_Id), 
+ 	 foreign key (customer_Id) references Customer ON DELETE CASCADE
+ 	);
+
+
+-- insert into Patient
+-- values ('00000000', '9123456798342343', '22B Baker Street', '1954-01-29', 'F');
+
+
+-- insert into Patient
+-- values ('00000001', '9100567832130097', '1766 Willow St.', '1975-06-04', 'F');
+
+
+-- insert into Patient
+-- values ('00000002', '9322998812344631', '567 Evergreen Ave.', '1980-07-31', 'M');
+
+----------------------------------------------------------------
+
+ create table Prescription_by_is_for
+ 	(service_id char(8) not null,
+	 doctor_id char(8) not null,
+ 	 customer_id char(8) not null,
+ 	 prescription_id char(8) not null, 
+ 	 date_prescribed char(10) not null, 
+	 primary key (service_id), 
+ 	 foreign key (doctor_id) references Doctor ON DELETE CASCADE, 
+	 foreign key (customer_id) references Patient ON DELETE CASCADE
+ 	);
+
+
+-- insert into Prescription_by_is_for
 -- values ('00000000', '00000000', '00000000', '00000000', '2016-10-16');
 
 
--- insert into Prescription_prescribed_by_is_for
+-- insert into Prescription_by_is_for
 -- values ('00000001', '00000000', '00000001', '00000001', '2016-10-16');
 
 
--- insert into Prescription_prescribed_by_is_for
+-- insert into Prescription_by_is_for
 -- values ('00000002', '00000001', '00000002', '00000002', '2016-10-16');
 
 
--- insert into Prescription_prescribed_by_is_for
+-- insert into Prescription_by_is_for
 -- values ('00000003', '00000001', '00000003', '00000003', '2016-10-16');
 
 
--- insert into Prescription_prescribed_by_is_for
+-- insert into Prescription_by_is_for
 -- values ('00000004', '00000001', '00000004', '00000004', '2016-10-16');
 
 
@@ -969,33 +1054,6 @@ insert into Stock_drug (DIN, amount_g, cost_per_g) values (100, 453.487, '$0.65'
 -- values ('00000002', '30000000', '2016-06-03', '1mg'); 
 
 
--- create table Doctor 
--- 	(doctor_id char(8) not null,
--- 	 phone_number char(10) not null,
--- 	 name varchar(20),
--- 	 primary key (doctor_id)
--- 	);
-
-
--- insert into Doctor
--- values ('00000000', '778-888-1234', 'Dr. Miranda Bailey');
-
-
--- insert into Doctor
--- values ('00000001', '604-568-1234', 'Dr. Meredith Grey');
-
-
--- insert into Doctor
--- values ('00000002', '604-596-9923', 'Dr. Gregory House');
-
-
--- insert into Doctor
--- values ('00000003', '778-221-7865', 'Dr. Derek Shepherd');
-
-
--- insert into Doctor
--- values ('00000004', '403-555-2213', 'Dr. Christina Yang');
-
 
 
 
@@ -1054,57 +1112,6 @@ insert into Stock_drug (DIN, amount_g, cost_per_g) values (100, 453.487, '$0.65'
 -- 	 foreign key (policyId) references Insurance_coverage ON DELETE CASCADE
 -- ); 
 
-
--- create table Customer
--- 	(customer_id char(8) not null,
--- 	 name varchar(25) null,
--- 	 phone_number char(12) null,
--- 	 insurance_info varchar(30) null,
--- 	 primary key (customer_id)
--- 	);
-
-
--- insert into Customer
--- values ('00000000', 'Harry Potter', '778-112-9876', 'Westland Insurance');
-
-
--- insert into Customer
--- values ('00000001', 'Pikachu Chu', '604-552-5673', 'Westland Insurance');
-
-
--- insert into Customer
--- values ('00000002', 'Angelina Jolie', '604-234-6754', 'Blue Cross');
-
-
--- insert into Customer
--- values ('00000003', 'Ken Bone', '778-332-4326', 'Eastland Insurance');
-
-
--- insert into Customer
--- values ('00000004', 'Oprah Winfrey', '604-832-0986', 'Blue Cross');
-
-
--- create table Patient
--- 	(customer_Id char(8) not null,
--- 	 care_card_number char(16) not null,
--- 	 address char(20) null,
--- 	 birthdate char(10) null,
--- 	 gender char(1) null,
--- 	 primary key (customer_Id), 
--- 	 foreign key (customer_Id) references Customer ON DELETE CASCADE
--- 	);
-
-
--- insert into Patient
--- values ('00000000', '9123456798342343', '22B Baker Street', '1954-01-29', 'F');
-
-
--- insert into Patient
--- values ('00000001', '9100567832130097', '1766 Willow St.', '1975-06-04', 'F');
-
-
--- insert into Patient
--- values ('00000002', '9322998812344631', '567 Evergreen Ave.', '1980-07-31', 'M');
 
 
 -- create table Walk_in_Client
