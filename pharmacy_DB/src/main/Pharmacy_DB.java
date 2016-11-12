@@ -35,6 +35,12 @@ public class Pharmacy_DB extends JFrame {
     public static void main(String[] args) {
         mainFrame = new JFrame("PharmSQL");
 
+        connect();
+        initializeScreens();
+        initializeWindow();
+    }
+
+    private static void connect() {
         // Connect to Oracle
         try {
             DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
@@ -43,11 +49,15 @@ public class Pharmacy_DB extends JFrame {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
 
-        // Instantiate screens
+    private static void initializeScreens() {
         login = new Login();
         home = new Home();
         employeeLookup = new EmployeeLookup();
+    }
+
+    private static void initializeWindow() {
 
         mainFrame.setSize(1280, 720);
         // make window appear in the middle of the screen
@@ -62,11 +72,6 @@ public class Pharmacy_DB extends JFrame {
             }
         });
 
-        // open the application window
-        showJPanel();
-    }
-
-    private static void showJPanel() {
         // set look and feel to the system look and feel
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
