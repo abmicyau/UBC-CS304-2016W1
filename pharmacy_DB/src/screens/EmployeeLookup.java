@@ -142,7 +142,7 @@ public class EmployeeLookup extends JPanel {
 
                     query.append(" ORDER BY emp_id");
 
-                    Pharmacy_DB.fill(model, query.toString());
+                    Pharmacy_DB.fillEmployees(model, query.toString());
 
                     message.append(model.getRowCount());
                     message.append(" results found.");

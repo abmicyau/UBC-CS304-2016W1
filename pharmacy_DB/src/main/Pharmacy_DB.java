@@ -92,9 +92,10 @@ public class Pharmacy_DB extends JFrame {
     public static void switchScreen(JPanel panel) {
         mainFrame.setContentPane(panel);
         mainFrame.revalidate();
+        mainFrame.repaint();
     }
 
-    public static void fill(DefaultTableModel model, String query) {
+    public static void fillEmployees(DefaultTableModel model, String query) {
 
         model.setRowCount(0);
 
@@ -109,7 +110,7 @@ public class Pharmacy_DB extends JFrame {
                 String name = rs.getString("name");
                 String phone = rs.getString("phone_number");
 
-                model.addRow(new Object[] {id, name, email, phone, address});
+                model.addRow(new Object[] {String.format("%08d", id), name, email, phone, address});
             }
         }
         catch (SQLException e) {
