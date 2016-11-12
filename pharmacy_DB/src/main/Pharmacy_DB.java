@@ -1,11 +1,13 @@
 package main;
 
+import entities.Employee;
 import screens.EmployeeLookup;
 import screens.Home;
 import screens.Login;
 
 import java.sql.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.Vector;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -88,20 +90,25 @@ public class Pharmacy_DB extends JFrame {
     }
 
     public static void fill(DefaultTableModel model, String query) {
+
+        model.setRowCount(0);
+
         try {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery(query);
 
             while(rs.next()){
-                String name = rs.getString("name");
+                int id = rs.getInt("emp_id");
                 String email = rs.getString("email");
-                String phone = rs.getString("phone_number");
                 String address = rs.getString("address");
-                model.addRow(new Object[]{name, email, phone, address});
+                String name = rs.getString("name");
+                String phone = rs.getString("phone_number");
+
+                model.addRow(new Object[] {id, name, email, phone, address});
             }
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
         }
     }
 

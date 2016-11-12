@@ -34,6 +34,7 @@ public class Home extends JPanel {
         // set contraints and padding
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.WEST;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.insets = new Insets(10, 10, 10, 10);
 
         constraints.gridx = 0;
