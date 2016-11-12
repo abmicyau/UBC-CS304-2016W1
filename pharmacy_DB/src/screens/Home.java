@@ -95,6 +95,13 @@ public class Home extends JPanel {
             }
         });
 
+        // drug lookup button action
+        actionButton5.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Pharmacy_DB.switchScreen(Pharmacy_DB.getDrugLookup());
+            }
+        });
+
         // employee lookup button action
         actionButton7.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

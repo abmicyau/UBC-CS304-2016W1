@@ -1,6 +1,5 @@
 package screens;
 
-import entities.Employee;
 import main.Pharmacy_DB;
 
 import javax.swing.*;
@@ -30,8 +29,6 @@ public class EmployeeLookup extends JPanel {
 
     private JPanel left;
     private JPanel right;
-
-    private ArrayList<Employee> employees = new ArrayList<Employee>();
 
     public EmployeeLookup() {
 

@@ -1,6 +1,7 @@
 package main;
 
 import entities.Employee;
+import screens.DrugLookup;
 import screens.EmployeeLookup;
 import screens.Home;
 import screens.Login;
@@ -29,6 +30,7 @@ public class Pharmacy_DB extends JFrame {
     private static JPanel login;
     private static JPanel home;
     private static JPanel employeeLookup;
+    private static JPanel drugLookup;
 
     // Main method creates new database application
     //
@@ -55,6 +57,7 @@ public class Pharmacy_DB extends JFrame {
         login = new Login();
         home = new Home();
         employeeLookup = new EmployeeLookup();
+        drugLookup = new DrugLookup();
     }
 
     private static void initializeWindow() {
@@ -123,5 +126,6 @@ public class Pharmacy_DB extends JFrame {
     public static JPanel getLoginPanel() { return login; }
     public static JPanel getHomePanel() { return home; }
     public static JPanel getEmployeeLookupPanel() { return employeeLookup; }
+    public static JPanel getDrugLookup() { return drugLookup; }
 
 }
