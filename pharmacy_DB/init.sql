@@ -1,3 +1,5 @@
+drop table Vaccination;
+drop table Service_provides;
 drop table Pharmacy_Assistant;
 drop table Pharmacist;
 drop table Pharmacy_Technician;
@@ -8,14 +10,11 @@ drop table Employee;
 
 
 drop table Prescription_by_is_for;
--- drop table service_provides;
 -- drop table Prescription_item_has;
 -- drop table Item_consistof_drug;
 drop table Over_the_counter_drug;
 drop table Stock_drug;
 drop table Drug;
--- drop table Vaccination;
-
 drop table Doctor;
 -- drop table Vaccination_consistof_drug;
 -- drop table Payment_paid_by;
@@ -734,7 +733,6 @@ create table Pharmacy_record_has
  	 foreign key (care_card_number) references Patient (care_card_number) ON DELETE CASCADE
  	);
 
-
 insert into Pharmacy_record_has
 	values ('0000000000', '9123456798342343', 'Patient is up to date with all medication');
 
@@ -748,32 +746,57 @@ insert into Pharmacy_record_has
 
 ----------------------------------------------------------------
 
--- create table Service_provides
--- 	(service_id char(8) not null,
--- 	emp_id char(8) not null,
--- 	primary key (service_id, emp_id), 
--- foreign key (emp_id) references Pharmacist ON DELETE CASCADE); 
+create table Service_provides
+	(service_id char(8) not null,
+	 emp_id int not null,
+	 primary key (service_id), 
+	 foreign key (emp_id) references Pharmacist ON DELETE CASCADE
+	); 
 
 
--- insert into Service_provides
--- values ('00000000', '00000000');
+insert into Service_provides
+	values ('00000000', '1');
 
 
--- insert into Service_provides
--- values ('00000001', '00000004');
+insert into Service_provides
+	values ('00000001', '2');
 
 
--- insert into Service_provides
--- values ('00000002', '00000002');
+insert into Service_provides
+	values ('00000002', '1');
 
 
--- insert into Service_provides
--- values ('00000003', '00000001');
+insert into Service_provides
+	values ('00000003', '2');
 
 
--- insert into Service_provides
--- values ('00000004', '00000003');
+insert into Service_provides
+	values ('00000004', '2');
 
+----------------------------------------------------------------
+
+create table Vaccination 
+	(service_id char(8) not null, 
+ 	 vaccination_id char(8) null,
+	 date_vaccinated char(10) null,
+ 	 dose varchar(16) null,
+ 	 primary key (service_id), 
+ 	 foreign key (service_id) references Service_provides ON DELETE CASCADE
+ 	); 
+
+
+insert into Vaccination
+	values ('00000000', '10000000', '2016-02-23', '3ml'); 
+
+
+insert into Vaccination
+	values ('00000001', '20000000', '2015-12-03', '2ml'); 
+
+
+insert into Vaccination
+	values ('00000002', '30000000', '2016-06-03', '1ml'); 
+
+----------------------------------------------------------------
 
 -- create table Prescription_item_has
 -- (item_id char(8) not null,
@@ -1047,29 +1070,6 @@ insert into Stock_drug (DIN, amount_g, cost_per_g) values (97, 1411.892, '$0.37'
 insert into Stock_drug (DIN, amount_g, cost_per_g) values (98, 1113.438, '$1.70');
 insert into Stock_drug (DIN, amount_g, cost_per_g) values (99, 1516.43, '$4.74');
 insert into Stock_drug (DIN, amount_g, cost_per_g) values (100, 453.487, '$0.65');
-	
--- create table Vaccination 
--- 	(service_id char(8) not null, 
--- 	 vaccination_id char(8) null,
--- 	 date_vaccinated char(10) null,
--- 	 dose varchar(16) null,
--- 	 primary key (service_id), 
--- 	 foreign key (service_id) references Service ON DELETE CASCADE
--- ); 
-
-
--- Insert into Vaccination
--- values ('00000000', '10000000', '2016-02-23', '3mg'); 
-
-
--- Insert into Vaccination
--- values ('00000001', '20000000', '2015-12-03', '2mg'); 
-
-
--- Insert into Vaccination
--- values ('00000002', '30000000', '2016-06-03', '1mg'); 
-
-
 
 
 
