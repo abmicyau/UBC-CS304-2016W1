@@ -19,10 +19,11 @@ drop table Doctor;
 -- drop table Vaccination_consistof_drug;
 -- drop table Payment_paid_by;
 -- drop table Subsidizes;
+drop table Pharmacy_record_has;
 drop table Patient;
 drop table Customer;
 -- drop table Walk_in_Client;
--- drop table Pharmacy_record_has;
+
 
 ----------------------------------------------------------------
 
@@ -624,78 +625,78 @@ values (4, 0);
  	);
 
 
--- insert into Doctor
--- values ('00000000', '778-888-1234', 'Dr. Miranda Bailey');
+insert into Doctor
+	values ('00000000', '7788881234', 'Dr. Miranda Bailey');
 
 
--- insert into Doctor
--- values ('00000001', '604-568-1234', 'Dr. Meredith Grey');
+insert into Doctor
+	values ('00000001', '6045681234', 'Dr. Meredith Grey');
 
 
--- insert into Doctor
--- values ('00000002', '604-596-9923', 'Dr. Gregory House');
+insert into Doctor
+	values ('00000002', '6045969923', 'Dr. Gregory House');
 
 
--- insert into Doctor
--- values ('00000003', '778-221-7865', 'Dr. Derek Shepherd');
+insert into Doctor
+	values ('00000003', '7782217865', 'Dr. Derek Shepherd');
 
 
--- insert into Doctor
--- values ('00000004', '403-555-2213', 'Dr. Christina Yang');
+insert into Doctor
+	values ('00000004', '4035552213', 'Dr. Christina Yang');
 
 ----------------------------------------------------------------
 
 create table Customer
 	(customer_id char(8) not null,
 	 name varchar(25) null,
- 	 phone_number char(12) null,
+ 	 phone_number char(10) null,
 	 insurance_info varchar(30) null,
  	 primary key (customer_id)
  	);
 
 
--- insert into Customer
--- values ('00000000', 'Harry Potter', '778-112-9876', 'Westland Insurance');
+insert into Customer
+	values ('00000000', 'Harry Potter', '7781129876', 'Westland Insurance');
 
 
--- insert into Customer
--- values ('00000001', 'Pikachu Chu', '604-552-5673', 'Westland Insurance');
+insert into Customer
+	values ('00000001', 'Pikachu Chu', '6045525673', 'Westland Insurance');
 
 
--- insert into Customer
--- values ('00000002', 'Angelina Jolie', '604-234-6754', 'Blue Cross');
+insert into Customer
+	values ('00000002', 'Angelina Jolie', '6042346754', 'Blue Cross');
 
 
--- insert into Customer
--- values ('00000003', 'Ken Bone', '778-332-4326', 'Eastland Insurance');
+insert into Customer
+	values ('00000003', 'Ken Bone', '7783324326', 'Eastland Insurance');
 
 
--- insert into Customer
--- values ('00000004', 'Oprah Winfrey', '604-832-0986', 'Blue Cross');
+insert into Customer
+	values ('00000004', 'Oprah Winfrey', '6048320986', 'Blue Cross');
 
 ----------------------------------------------------------------
 
  create table Patient
  	(customer_Id char(8) not null,
- 	 care_card_number char(16) not null,
+ 	 care_card_number char(16) not null unique,
  	 address char(20) null,
- 	 birthdate char(10) null,
+ 	 birthdate date null,
  	 gender char(1) null,
  	 primary key (customer_Id), 
  	 foreign key (customer_Id) references Customer ON DELETE CASCADE
  	);
 
 
--- insert into Patient
--- values ('00000000', '9123456798342343', '22B Baker Street', '1954-01-29', 'F');
+insert into Patient 
+	values ('00000000', '9123456798342343', '22B Baker Street', '1954-01-29', 'F');
 
 
--- insert into Patient
--- values ('00000001', '9100567832130097', '1766 Willow St.', '1975-06-04', 'F');
+insert into Patient
+	values ('00000001', '9100567832130097', '1766 Willow St.', '1975-06-04', 'F');
 
 
--- insert into Patient
--- values ('00000002', '9322998812344631', '567 Evergreen Ave.', '1980-07-31', 'M');
+insert into Patient
+	values ('00000002', '9322998812344631', '567 Evergreen Ave.', '1980-07-31', 'M');
 
 ----------------------------------------------------------------
 
@@ -704,32 +705,52 @@ create table Customer
 	 doctor_id char(8) not null,
  	 customer_id char(8) not null,
  	 prescription_id char(8) not null, 
- 	 date_prescribed char(10) not null, 
+ 	 date_prescribed date not null, 
 	 primary key (service_id), 
  	 foreign key (doctor_id) references Doctor ON DELETE CASCADE, 
 	 foreign key (customer_id) references Patient ON DELETE CASCADE
  	);
 
+insert into Prescription_by_is_for
+	values ('00000000', '00000000', '00000000', '00000000', '2016-10-16');
 
--- insert into Prescription_by_is_for
--- values ('00000000', '00000000', '00000000', '00000000', '2016-10-16');
+insert into Prescription_by_is_for
+	values ('00000001', '00000000', '00000001', '00000001', '2016-10-16');
 
-
--- insert into Prescription_by_is_for
--- values ('00000001', '00000000', '00000001', '00000001', '2016-10-16');
-
-
--- insert into Prescription_by_is_for
--- values ('00000002', '00000001', '00000002', '00000002', '2016-10-16');
+insert into Prescription_by_is_for
+	values ('00000002', '00000001', '00000002', '00000002', '2016-10-16');
 
 
--- insert into Prescription_by_is_for
--- values ('00000003', '00000001', '00000003', '00000003', '2016-10-16');
+insert into Prescription_by_is_for
+	values ('00000003', '00000001', '00000002', '00000003', '2016-10-16');
 
 
--- insert into Prescription_by_is_for
--- values ('00000004', '00000001', '00000004', '00000004', '2016-10-16');
+insert into Prescription_by_is_for
+	values ('00000004', '00000001', '00000000', '00000004', '2016-10-16');
 
+----------------------------------------------------------------
+
+create table Pharmacy_record_has 
+ 	(record_id char(10) not null,
+ 	 care_card_number char(16) not null,
+ 	 purchasing_history varchar(100),
+ 	 primary key (record_id, care_card_number),
+ 	 foreign key (care_card_number) references Patient (care_card_number) ON DELETE CASCADE
+ 	);
+
+
+insert into Pharmacy_record_has
+	values ('0000000000', '9123456798342343', 'Patient is up to date with all medication');
+
+
+insert into Pharmacy_record_has
+	values ('0000000001', '9100567832130097', 'Patient switched brand of birth control');
+
+
+insert into Pharmacy_record_has
+	values ('0000000002', '9322998812344631', 'Patient is up to date with all medication');
+
+----------------------------------------------------------------
 
 -- create table Service_provides
 -- 	(service_id char(8) not null,
@@ -1164,23 +1185,3 @@ insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contrai
 -- insert into Walk_in_Client
 -- values ('00000004');
 
-
--- create table Pharmacy_record_has 
--- 	(record_id char(10) not null,
--- 	 care_card_number char(16) not null,
--- 	 purchasing_history varchar(100),
--- 	 primary key (record_id, care_card_number)
---  foreign key (care_card_number) references Patient ON DELETE CASCADE
--- );
-
-
--- insert into Pharmacy_record_has
--- values ('0000000000', '9123456798342343', 'Patient is up to date with all medication');
-
-
--- insert into Pharmacy_record_has
--- values ('0000000001', '9100567832130097', 'Patient switched brand of birth control');
-
-
--- insert into Pharmacy_record_has
--- values ('0000000002', '9322998812344631', 'Patient is up to date with all medication');
