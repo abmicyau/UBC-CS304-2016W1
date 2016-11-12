@@ -11,11 +11,12 @@ drop table Employee;
 -- drop table service_provides;
 -- drop table Prescription_item_has;
 -- drop table Item_consistof_drug;
+drop table Over_the_counter_drug;
+drop table Stock_drug;
 drop table Drug;
--- drop table Over_the_counter_drug;
 -- drop table Vaccination;
 -- drop table Doctor;
--- drop table Stock_drug;
+
 -- drop table Vaccination_consistof_drug;
 -- drop table Payment_paid_by;
 -- drop table Subsidizes;
@@ -717,8 +718,8 @@ values (4, 0);
 
 create table Drug
 	(DIN int not null, 
-	 drug_name_INN varchar2(256) not null,
-	 drug_name_trade varchar2(256) not null,
+	 drug_name_INN varchar2(512) not null,
+	 drug_name_trade varchar2(512) not null,
 	 drug_description varchar2(512) null,
 	 contraindications varchar2(512) null,
 	 primary key (DIN)); 
@@ -823,160 +824,129 @@ insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contrai
 insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (98, 'Piperonyl butoxide, Pyrethrum extract', 'smart sense lice killing', 'Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui.', 'Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.');
 insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (99, 'Acetaminophen, dextromethorphan HBr, guaifenesin, phenylephrine HCl, diphenhydramine HCl', 'TopCare Mucus Relief and Cold and Flu', 'Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.', 'Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem.');
 insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (100, 'Iron, Cyanocobalamin and Folic Acid', 'Iferex 150 Forte', 'Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.', 'Proin leo odio, porttitor id, consequat in, consequat ut, nulla. Sed accumsan felis. Ut at dolor quis odio consequat varius.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (101, 'Ibuprofen', 'Ibuprofen', 'Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat.', 'Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (102, 'Ketotifen Fumarate', 'Itchy Eye Drops', 'Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.', 'Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (103, 'Aspirin', 'Low Dose Chewable Aspirin', 'Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.', 'Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo. In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (104, 'Vasopressin', 'Vasopressin', 'Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.', 'Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo. In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (105, 'IOPAMIDOL', 'ISOVUE', 'Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.', 'Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (106, 'Triclosan', 'Golden Pear Antibacterial Foaming Handwash', 'Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.', 'Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (107, 'Acetaminophen', 'Childrens Acetaminophen', 'Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus. Duis at velit eu est congue elementum.', 'Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (108, 'Mycophenolate Mofetil', 'Mycophenolate Mofetil', 'Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.', 'Integer ac leo. Pellentesque ultrices mattis odio. Donec vitae nisi.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (109, 'alogliptin', 'Nesina', 'Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque.', 'Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (110, 'Lidocaine Hydrochloride', 'Lidocaine Hydrochloride', 'Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla. Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam.', 'Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (111, 'Atropa Belladonna, Chelidonium Majus, Citrullus Colocynthis Fruit Pulp, Lycopodium Clavatum Spore, Sodium Sulfate, Strychnos Nux-Vomica Seed, Phosphorus, Pulsatilla Vulgaris, Veratrum Album Root', 'LIVER GALLBLADDER HP', 'Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque.', 'Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (112, 'NOT APPLICABLE', 'Albuminuriaforce', 'Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.', 'Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (113, 'Prednisone', 'Prednisone', 'Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla. Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam.', 'In hac habitasse platea dictumst. Etiam faucibus cursus urna. Ut tellus.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (114, 'Toasted Vanilla Sugar', 'Bodycology', 'Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus.', 'Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (115, 'Alcohol', 'Clean N Fresh Instant Hand Sanitizer', 'In congue. Etiam justo. Etiam pretium iaculis justo.', 'Duis consequat dui nec nisi volutpat eleifend. Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (116, 'METOPROLOL SUCCINATE', 'METOPROLOL SUCCINATE', 'Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque.', 'Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (117, 'Titanium Dioxide', 'Mineral Wear Talc-Free Mineral Liquid Foundation', 'Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.', 'Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (118, 'Famotidine', 'Famotidine', 'Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl.', 'Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus. Duis at velit eu est congue elementum.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (119, 'AVOBENZONE, OCTOCRYLENE, OCTINOXATE', 'KLENSKIN SHOWERON SUNSCREEN', 'Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.', 'Proin leo odio, porttitor id, consequat in, consequat ut, nulla. Sed accumsan felis. Ut at dolor quis odio consequat varius.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (120, 'Oxygen', 'Oxygen', 'In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.', 'Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (121, 'Galantamine hydrobromide', 'Galantamine hydrobromide', 'Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.', 'Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (122, 'DILTIAZEM HYDROCHLORIDE', 'Diltiazem Hydrochloride', 'In quis justo. Maecenas rhoncus aliquam lacus. Morbi quis tortor id nulla ultrices aliquet.', 'In hac habitasse platea dictumst. Etiam faucibus cursus urna. Ut tellus.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (123, 'Guaifenesin', 'Quality Choice Mucus Relief', 'Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.', 'Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (124, 'Vitamin C, Calcium, Iron, Vitamin D3, Vitamin E, Thiamin, Riboflavin, Niacinamide, Vitamin B6, Folic Acid, Iodine, Zinc, Copper, Docusate Sodium', 'CitraNatal Rx', 'Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque.', 'Integer ac leo. Pellentesque ultrices mattis odio. Donec vitae nisi.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (125, 'Donepezil Hydrochloride', 'Donepezil Hydrochloride', 'Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros.', 'Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo. In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (126, 'bromfenac', 'bromfenac', 'In congue. Etiam justo. Etiam pretium iaculis justo.', 'Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (127, 'Citalopram Hydrobromide', 'Citalopram Hydrobromide', 'Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.', 'Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (128, 'Lovastatin', 'Lovastatin', 'Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl.', 'In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (129, 'TITANIUM DIOXIDE', 'EQUALIZER', 'Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.', 'Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (130, 'Isopropyl Alcohol', 'Medline Alcohol Prep', 'In congue. Etiam justo. Etiam pretium iaculis justo.', 'Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (131, 'Lisinopril', 'Lisinopril', 'Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.', 'Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (132, 'Alcohol', 'Anti-Bacterial Hand', 'Phasellus in felis. Donec semper sapien a libero. Nam dui.', 'Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (133, 'MENTHOL', 'Pain Relieving', 'Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.', 'Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (134, 'MORPHINE SULFATE', 'MORPHINE SULFATE', 'Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat.', 'Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla. Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (135, 'Guaifenesin', 'Mucus Relief ER', 'Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat.', 'Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (136, 'Fluconazole', 'Fluconazole', 'Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros.', 'Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (137, 'Chloroquine Phosphate', 'Chloroquine', 'In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.', 'In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (138, 'Magesium Citrate', 'citroma', 'Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem.', 'Integer ac leo. Pellentesque ultrices mattis odio. Donec vitae nisi.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (139, 'Berberis vulgaris, Glycyrrhiza glabra, Lappa major, Phytolacca decandra, Stillingia sylvatica, Trifolium pratense, Lymph (suis), Medulla ossis suis, Thymus (suis), Thyroidinum (suis), Calcarea fluorica,', 'Dentox', 'Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.', 'Proin leo odio, porttitor id, consequat in, consequat ut, nulla. Sed accumsan felis. Ut at dolor quis odio consequat varius.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (140, 'Beech, American Fagus grandifolia', 'Pollens - Trees, Beech, American Fagus grandifolia', 'Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.', 'Sed ante. Vivamus tortor. Duis mattis egestas metus.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (141, 'Citalopram Hydrobromide', 'Citalopram Hydrobromide', 'Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.', 'Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (142, 'AMIODARONE HYDROCHLORIDE', 'AMIODARONE HYDROCHLORIDE', 'In hac habitasse platea dictumst. Etiam faucibus cursus urna. Ut tellus.', 'Duis bibendum. Morbi non quam nec dui luctus rutrum. Nulla tellus.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (143, 'Octinoxate, Octisalate, Oxybenzone, Titanium Dioxide', 'SunscreenSPF 30', 'Duis bibendum. Morbi non quam nec dui luctus rutrum. Nulla tellus.', 'Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (144, 'Phenylephrine HCl', 'Maximum Strength Nasal Decongestant PE', 'Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.', 'Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (145, 'OCTINOXATE, TITANIUM DIOXIDE, ZINC OXIDE', 'FACE IT RADIANCE POWDER PACT SPF25 MOISTURE VEIL NB23', 'Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.', 'Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (146, 'Calendula officinalis, Nux vomica, Silicea,', 'H Acne Formula', 'Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus.', 'Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla. Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (147, 'Diphenhydramine HCl', 'CareOne Nighttime Sleep Aid', 'Phasellus in felis. Donec semper sapien a libero. Nam dui.', 'Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (148, 'Fexofenadine Hydrochloride', 'Fexofenadine Hydrochloride', 'Duis bibendum. Morbi non quam nec dui luctus rutrum. Nulla tellus.', 'Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (149, 'hydrocortisone', 'Hydrocortisone', 'Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem.', 'Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (150, 'Sodium Fluoride', 'Zap APF', 'Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.', 'Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (151, 'Amantadine Hydrochloride', 'Amantadine Hydrochloride', 'Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.', 'Fusce consequat. Nulla nisl. Nunc nisl.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (152, 'risperidone', 'Risperidone', 'Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.', 'Sed ante. Vivamus tortor. Duis mattis egestas metus.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (153, 'Salicylic Acid', 'Vichy Laboratoires Normaderm Purifying Pore Tightening Toner', 'Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat.', 'Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (154, 'Apis mel, Cantharis, Equisetum arv, Ferrum phos, Sarsaparilla, Acacia gum, lactose, magnesium stearate, corn starch, sucrose', 'BladderWell', 'Nullam porttitor lacus at turpis. Donec posuere metus vitae ipsum. Aliquam non mauris.', 'Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (155, 'Medroxyprogesterone Acetate', 'Medroxyprogesterone Acetate', 'Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat.', 'Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (156, 'Chloroxylenol', 'Servo-Stat P', 'Proin leo odio, porttitor id, consequat in, consequat ut, nulla. Sed accumsan felis. Ut at dolor quis odio consequat varius.', 'Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (157, 'Oxygen Helium Mixture 20/80', 'Oxygen Helium Mixture 20/80', 'Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.', 'Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (158, 'CAPTOPRIL', 'CAPTOPRIL', 'Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus.', 'Sed ante. Vivamus tortor. Duis mattis egestas metus.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (159, 'DOCUSATE SODIUM', 'Stool Softener', 'Sed ante. Vivamus tortor. Duis mattis egestas metus.', 'Phasellus sit amet erat. Nulla tempus. Vivamus in felis eu sapien cursus vestibulum.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (160, 'POTASSIUM CHLORIDE', 'Potassium Chloride', 'In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.', 'Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (161, 'Dextromethorphan HBr, Guaifenesin', 'Tussin Cough DM', 'Duis bibendum. Morbi non quam nec dui luctus rutrum. Nulla tellus.', 'Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (162, 'Metoclopramide', 'Metoclopramide', 'Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem.', 'Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (163, 'Triamterene and hydrochlorothiazide', 'Triamterene hydrochlorothiazide', 'Duis consequat dui nec nisi volutpat eleifend. Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus.', 'Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla. Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (164, 'Sodium Fluoride', 'DentiCare Pro-Foam', 'Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.', 'Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (165, 'Octinoxate and Oxybenzone', 'LBEL divine lip gloss SPF 15', 'Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui.', 'Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (166, 'POLIDOCANOL', 'Asclera', 'Nullam porttitor lacus at turpis. Donec posuere metus vitae ipsum. Aliquam non mauris.', 'Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (167, 'Russian Thistle', 'SALSOLA KALI POLLEN', 'Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.', 'Phasellus in felis. Donec semper sapien a libero. Nam dui.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (168, 'ETHYL ALCOHOL', 'Antibactierial Hand Sanitizer', 'Proin leo odio, porttitor id, consequat in, consequat ut, nulla. Sed accumsan felis. Ut at dolor quis odio consequat varius.', 'Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (169, 'guaifenesin', 'Liquituss GG', 'Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.', 'Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (170, 'Silicon Dioxide, Sodium Fluoride, and Triclosan', 'Colgate', 'Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.', 'Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (171, 'Benzocaine', 'Topex', 'In congue. Etiam justo. Etiam pretium iaculis justo.', 'Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (172, 'ACONITUM, RADIX', 'ACONITUM, RADIX', 'Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.', 'Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (173, 'Cedar Red', 'JUNIPERUS VIRGINIANA POLLEN', 'Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.', 'Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (174, 'Cottonwood, Common Populus deltoides', 'Pollens - Trees, Cottonwood, Common Populus deltoides', 'Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl.', 'Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (175, 'Omeprazole', 'Omeprazole', 'Integer ac leo. Pellentesque ultrices mattis odio. Donec vitae nisi.', 'Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (176, 'Acetaminophen and Diphenhydramine', 'CounterAct', 'Fusce consequat. Nulla nisl. Nunc nisl.', 'Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (177, 'Heparin Sodium', 'Heparin Sodium', 'Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo. In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.', 'Nullam porttitor lacus at turpis. Donec posuere metus vitae ipsum. Aliquam non mauris.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (178, 'piperacillin and tazobactam', 'piperacillin and tazobactam', 'Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.', 'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (179, 'Ranitidine', 'Ranitidine', 'In congue. Etiam justo. Etiam pretium iaculis justo.', 'Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (180, 'Saltbush', 'Saltbush', 'Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla. Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam.', 'Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (181, 'Naproxen', 'Naproxen', 'Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus. Duis at velit eu est congue elementum.', 'Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (182, 'BERBERIS VULGARIS ROOT BARK, CITRULLUS COLOCYNTHIS FRUIT PULP and VERATRUM ALBUM ROOT', 'Berberis Homaccord', 'Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.', 'Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (183, 'Menthol', 'Cold and Hot Medicated', 'In congue. Etiam justo. Etiam pretium iaculis justo.', 'Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (184, 'enoxaparin sodium', 'Lovenox', 'Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.', 'Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (185, 'Pravastatin Sodium', 'Pravastatin Sodium', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin risus. Praesent lectus.', 'Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (186, 'Niacinamide', 'Manefit Beauty Planner Lily Whitening Brightening Mask', 'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.', 'Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (187, 'sitagliptin', 'JANUVIA', 'Phasellus in felis. Donec semper sapien a libero. Nam dui.', 'Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (188, 'SALICYLIC ACID', 'BIOARPIL', 'Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus.', 'Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (189, 'LIDOCAINE HYDROCHLORIDE,EPINEPHRINE BITARTRATE', 'Xylocaine', 'Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.', 'Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (190, 'Alcohol', 'Pumpkin pie anti-bacterial SCENTED HAND SANITIZER', 'Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.', 'Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (191, 'Red Mulberry', 'Red Mulberry', 'Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.', 'Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (192, 'Ethyl Alcohol', 'Waterless Anti-Bacterial Hand Cleanser', 'Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque.', 'Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (193, 'Isopropyl Alcohol', '70% Rubbing', 'Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla. Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam.', 'Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (194, 'FOSINOPRIL SODIUM', 'FOSINOPRIL SODIUM', 'Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.', 'Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (195, 'Naproxen and Esomeprazole Magnesium', 'Vimovo', 'In quis justo. Maecenas rhoncus aliquam lacus. Morbi quis tortor id nulla ultrices aliquet.', 'Fusce consequat. Nulla nisl. Nunc nisl.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (196, 'Cultivated Wheat', 'Cultivated Wheat', 'Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.', 'Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (197, 'Tramadal Hydrochloride and Acetaminophen', 'Tramadal Hydrochloride and Acetaminophen', 'Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem.', 'In congue. Etiam justo. Etiam pretium iaculis justo.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (198, 'Alcohol', 'Instant Hand Sanitizer', 'In hac habitasse platea dictumst. Etiam faucibus cursus urna. Ut tellus.', 'Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (199, 'Lisinopril', 'Lisinopril', 'Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui.', 'Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.');
-insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (200, 'FENTANYL CITRATE', 'FENTANYL CITRATE', 'In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo.', 'Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.');
 
 
--- insert into Drug
--- values ('00000000', 'Morphine', 'Oramorph', 'Strong opiate analgesic', 'Respiratory depression, acute pancreatitis');
+create table Over_the_counter_drug 
+	(DIN int not null,
+	 brand varchar2(32) null,
+	 cost varchar2(16) null,
+	 quantity int null,
+	 primary key (DIN), 
+	 foreign key (DIN) references Drug ON DELETE CASCADE
+	);
 
 
--- insert into Drug
--- values ('00000001', 'Acetaminophen', 'Tylenol', 'Analgesic, antipyretic', 'Acute liver failure, shock');
+insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (1, 'Topco Associates LLC', '$9.93', 95);
+insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (2, 'Dollar General', '$8.67', 167);
+insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (3, 'Conopco Inc. d/b/a Unilever', '$15.58', 68);
+insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (4, 'Navarro Discount Pharmacies,LLC', '$7.38', 109);
+insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (5, 'AMOREPACIFIC', '$15.24', 140);
+insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (6, 'UDL Laboratories, Inc.', '$10.22', 49);
+insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (7, 'Mallinckrodt, Inc.', '$26.01', 152);
+insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (8, 'STAT RX USA LLC', '$26.22', 25);
+insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (9, 'Ventura Corporation, Ltd.', '$15.93', 144);
+insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (10, 'KAS Direct LLC dba BabyGanics', '$27.95', 70);
+insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (11, 'Kroger Company', '$22.51', 15);
+insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (12, 'Walgreen Company', '$22.64', 135);
+insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (13, 'Pharmacia and Upjohn Company', '$6.94', 200);
+insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (14, 'St Marys Medical Park Pharmacy', '$16.35', 39);
+insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (15, 'Cardinal Health', '$23.15', 55);
+insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (16, 'Aidarex Pharmaceuticals LLC', '$19.33', 78);
+insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (17, 'JHP Pharmaceuticals, LLC', '$14.65', 103);
+insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (18, 'Cederroth AB', '$5.03', 22);
+insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (19, 'Piramal Critical Care Inc.', '$24.17', 21);
+insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (20, 'Galderma Laboratories, L.P.', '$17.23', 21);
+insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (21, 'Sun Pharma Global Inc.', '$23.27', 167);
+insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (22, 'Allergy Laboratories, Inc.', '$15.50', 52);
+insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (23, 'AMERICAN SALES COMPANY', '$29.24', 14);
+insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (24, 'H E B', '$26.69', 190);
+insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (25, 'GOWOONSESANG COSMETICS CO., LTD.', '$10.45', 15);
 
 
--- insert into Drug
--- values ('00000002', 'Fluoxetine', 'Prozac', 'SSRI antidepressant', 'MAO inhibitors');
+create table Stock_drug
+	(DIN int not null,
+	 amount_g float(16) null,
+	 cost_per_g varchar2(16) null,
+	 primary key (DIN), 
+	 foreign key (DIN) references Drug ON DELETE CASCADE
+	);
 
-
--- insert into Drug
--- values ('00000003', 'Diazepam', 'Valium', 'Benzodiazepine relaxant', 'Ataxia, severe hypoventilation, acute narrow-angle glaucoma, severe hepatic deficiencies (hepatitis and liver cirrhosis decrease elimination by a factor of two), severe renal deficiencies (for example, patients on dialysis), liver disorders, severe sleep apnea, severe depression, particularly when accompanied by suicidal tendencies, psychosis, pregnancy or breast feeding, caution required in elderly or debilitated patients, coma or shock, abrupt discontinuation of therapy, acute intoxication with alcohol, narcotics, or other psychoactive substances (with the exception of some hallucinogens and/or stimulants, where it is occasionally used as a treatment for overdose), history of alcohol or drug dependence, myasthenia gravis, an autoimmune disorder causing marked fatiguability, hypersensitivity or allergy to any drug in the benzodiazepine class');
-
-
--- insert into Drug
--- values ('00000004', 'Amoxicillin', 'Amoxil', 'Beta-lactam antibiotic', 'hypersensitivity to beta-lactam antibiotics');
-
-
--- create table Over_the_counter_drug 
--- 	(DIN char(8) not null,
--- 	 brand varchar(16) null,
--- 	 cost varchar(10) null,
--- 	 quantity char(10) null,
--- 	 primary key (DIN), 
--- 	 foreign key (DIN) references Drug ON DELETE CASCADE
--- 	);
-
-
--- insert into Over_the_counter_drug
--- values ('10001000, 'Advil', '$20.00', 100); 
-
-
--- insert into Over_the_counter_drug
--- values ('20002000, 'Tylenol', '$20.00', 150); 
-
-
--- insert into Over_the_counter_drug
--- values ('30003000, 'Reactine', '$13.00', 100); 
-
-
--- insert into Over_the_counter_drug
--- values ('40004000, 'Theraflu', '$11.00', 10); 
-
-
--- insert into Over_the_counter_drug
--- values ('50005000, 'NyQuil', '$8.00', 77); 
-
-
-
-
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (26, 636.694, '$0.58');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (27, 532.452, '$0.32');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (28, 1776.931, '$3.86');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (29, 448.076, '$0.76');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (30, 407.492, '$1.19');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (31, 262.36, '$3.25');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (32, 207.774, '$4.57');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (33, 1159.894, '$3.15');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (34, 1333.352, '$2.29');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (35, 270.821, '$1.37');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (36, 1215.134, '$0.70');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (37, 379.333, '$1.69');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (38, 768.871, '$0.60');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (39, 1762.674, '$4.62');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (40, 1062.691, '$0.42');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (41, 1564.646, '$2.61');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (42, 1330.503, '$4.86');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (43, 1734.498, '$2.25');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (44, 1274.059, '$3.62');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (45, 1666.156, '$1.11');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (46, 642.549, '$3.33');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (47, 1787.179, '$2.60');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (48, 275.032, '$0.33');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (49, 739.586, '$0.78');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (50, 1335.879, '$4.07');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (51, 672.19, '$1.62');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (52, 1478.965, '$3.93');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (53, 302.73, '$1.19');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (54, 542.667, '$0.90');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (55, 733.841, '$4.62');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (56, 786.528, '$3.36');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (57, 496.97, '$2.38');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (58, 1371.204, '$4.23');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (59, 1938.016, '$1.74');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (60, 1030.642, '$1.65');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (61, 1059.618, '$4.97');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (62, 1569.22, '$3.51');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (63, 734.286, '$0.48');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (64, 891.191, '$2.22');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (65, 1543.677, '$0.40');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (66, 1559.45, '$4.10');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (67, 1544.774, '$4.77');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (68, 281.328, '$3.61');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (69, 867.676, '$1.76');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (70, 799.758, '$3.12');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (71, 717.561, '$1.31');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (72, 688.873, '$1.92');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (73, 1894.478, '$4.60');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (74, 1849.906, '$2.83');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (75, 1132.724, '$3.24');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (76, 378.11, '$0.78');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (77, 194.444, '$1.03');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (78, 323.182, '$2.58');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (79, 1101.888, '$2.60');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (80, 1416.001, '$1.24');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (81, 492.223, '$4.11');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (82, 1337.578, '$4.41');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (83, 1113.343, '$2.58');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (84, 596.86, '$0.16');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (85, 935.459, '$1.70');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (86, 1647.581, '$2.20');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (87, 1292.904, '$3.68');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (88, 1628.029, '$3.14');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (89, 1896.873, '$0.21');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (90, 1731.927, '$1.73');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (91, 1691.696, '$4.80');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (92, 344.484, '$0.69');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (93, 1484.625, '$2.94');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (94, 798.978, '$0.64');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (95, 1393.552, '$3.74');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (96, 1784.968, '$4.05');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (97, 1411.892, '$0.37');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (98, 1113.438, '$1.70');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (99, 1516.43, '$4.74');
+insert into Stock_drug (DIN, amount_g, cost_per_g) values (100, 453.487, '$0.65');
+	
 -- create table Vaccination 
 -- 	(service_id char(8) not null, 
 -- 	 vaccination_id char(8) null,
@@ -1027,13 +997,7 @@ insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contrai
 -- values ('00000004', '403-555-2213', 'Dr. Christina Yang');
 
 
--- create table Stock_drug
--- 	(DIN char(8) not null,
--- 	 quantity varchar(10) null,
--- 	 cost_rate varchar(10) null,
--- 	 primary key (DIN), 
--- 	 foreign key (DIN) references Drug ON DELETE CASCADE
--- 	);
+
 
 
 
