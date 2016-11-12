@@ -96,11 +96,11 @@ public class DrugLookup extends JPanel {
         left.add(messageContainer, constraints);
         searchMessage.setVisible(false);
 
-        model.addColumn("ID");
-        model.addColumn("Name");
-        model.addColumn("Email");
-        model.addColumn("Phone");
-        model.addColumn("Address");
+        model.addColumn("DIN");
+        model.addColumn("TN");
+        model.addColumn("INN");
+        model.addColumn("Description");
+        model.addColumn("CI");
 
         table.getColumnModel().getColumn(0).setPreferredWidth(100);
         table.getColumnModel().getColumn(1).setPreferredWidth(150);
@@ -127,38 +127,7 @@ public class DrugLookup extends JPanel {
 
     private class SearchButton implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            searchMessage.setText("Searching...");
-            searchMessage.setVisible(true);
-
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    StringBuilder query = new StringBuilder();
-                    StringBuilder message = new StringBuilder();
-
-                    query.append("SELECT * FROM Employee WHERE LOWER(name) LIKE LOWER('%");
-                    query.append(textName1.getText());
-                    query.append("%')");
-
-                    String id = textID.getText();
-
-                    if (id.length() != 0) {
-                        query.append(" AND emp_id = ");
-                        query.append(id);
-                    }
-
-                    query.append(" ORDER BY emp_id");
-
-                    Pharmacy_DB.fillEmployees(model, query.toString());
-
-                    message.append(model.getRowCount());
-                    message.append(" results found.");
-
-                    searchMessage.setText(message.toString());
-                    revalidate();
-                    repaint();
-                }
-            });
+            // todo
         }
     }
 
