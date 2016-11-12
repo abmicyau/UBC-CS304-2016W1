@@ -7,6 +7,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -103,10 +105,10 @@ public class DrugLookup extends JPanel {
         model.addColumn("CI");
 
         table.getColumnModel().getColumn(0).setPreferredWidth(100);
-        table.getColumnModel().getColumn(1).setPreferredWidth(150);
-        table.getColumnModel().getColumn(2).setPreferredWidth(200);
-        table.getColumnModel().getColumn(3).setPreferredWidth(200);
-        table.getColumnModel().getColumn(4).setPreferredWidth(200);
+        table.getColumnModel().getColumn(1).setPreferredWidth(250);
+        table.getColumnModel().getColumn(2).setPreferredWidth(250);
+        table.getColumnModel().getColumn(3).setPreferredWidth(250);
+        table.getColumnModel().getColumn(4).setPreferredWidth(250);
 
         table.setFillsViewportHeight(true);
         JScrollPane tableContainer = new JScrollPane(table);
@@ -125,9 +127,60 @@ public class DrugLookup extends JPanel {
         buttonBack.addActionListener(new BackButton());
     }
 
+    private void fillTable(DefaultTableModel model, ResultSet rs) {
+        model.setRowCount(0);
+        if (rs != null) {
+            try {
+                while(rs.next()){
+                    int din = rs.getInt("DIN");
+                    String inn = rs.getString("drug_name_INN");
+                    String trade = rs.getString("drug_name_trade");
+                    String desc = rs.getString("drug_description");
+                    String contra = rs.getString("contraindications");
+                    model.addRow(new Object[] {String.format("%08d", din), inn, trade, desc, contra});
+                }
+            } catch (SQLException e) {
+                // stop
+            }
+        }
+    }
+
     private class SearchButton implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            // todo
+            searchMessage.setText("Searching...");
+            searchMessage.setVisible(true);
+
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    StringBuilder query = new StringBuilder();
+                    StringBuilder message = new StringBuilder();
+
+                    query.append("SELECT * FROM Drug WHERE LOWER(drug_name_INN) LIKE LOWER('%");
+                    query.append(textName1.getText());
+                    query.append("%') AND LOWER(drug_name_trade) LIKE LOWER ('%");
+                    query.append(textName2.getText());
+                    query.append("%')");
+
+                    String din = textID.getText();
+
+                    if (din.length() != 0) {
+                        query.append(" AND din = ");
+                        query.append(din);
+                    }
+
+                    query.append(" ORDER BY din");
+
+                    fillTable(model, Pharmacy_DB.getResults(query.toString()));
+
+                    message.append(model.getRowCount());
+                    message.append(" results found.");
+
+                    searchMessage.setText(message.toString());
+                    revalidate();
+                    repaint();
+                }
+            });
         }
     }
 

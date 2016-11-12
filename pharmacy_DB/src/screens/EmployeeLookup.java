@@ -7,6 +7,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -115,6 +117,24 @@ public class EmployeeLookup extends JPanel {
         buttonBack.addActionListener(new BackButton());
     }
 
+    private void fillTable(DefaultTableModel model, ResultSet rs) {
+        model.setRowCount(0);
+        if (rs != null) {
+            try {
+                while (rs.next()) {
+                    int id = rs.getInt("emp_id");
+                    String email = rs.getString("email");
+                    String address = rs.getString("address");
+                    String name = rs.getString("name");
+                    String phone = rs.getString("phone_number");
+                    model.addRow(new Object[]{String.format("%08d", id), name, email, phone, address});
+                }
+            } catch (SQLException e) {
+                // stop
+            }
+        }
+    }
+
     private class SearchButton implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             searchMessage.setText("Searching...");
@@ -139,7 +159,7 @@ public class EmployeeLookup extends JPanel {
 
                     query.append(" ORDER BY emp_id");
 
-                    Pharmacy_DB.fillEmployees(model, query.toString());
+                    fillTable(model, Pharmacy_DB.getResults(query.toString()));
 
                     message.append(model.getRowCount());
                     message.append(" results found.");

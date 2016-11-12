@@ -98,26 +98,13 @@ public class Pharmacy_DB extends JFrame {
         mainFrame.repaint();
     }
 
-    public static void fillEmployees(DefaultTableModel model, String query) {
-
-        model.setRowCount(0);
-
+    public static ResultSet getResults(String query) {
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
-
-            while(rs.next()){
-                int id = rs.getInt("emp_id");
-                String email = rs.getString("email");
-                String address = rs.getString("address");
-                String name = rs.getString("name");
-                String phone = rs.getString("phone_number");
-
-                model.addRow(new Object[] {String.format("%08d", id), name, email, phone, address});
-            }
+            return stmt.executeQuery(query);
         }
         catch (SQLException e) {
-            // e.printStackTrace();
+            return null;
         }
     }
 
