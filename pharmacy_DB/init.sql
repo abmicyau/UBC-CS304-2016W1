@@ -9,14 +9,14 @@ drop table Prescription_item_has;
 drop table Prescription_by_is_for;
 drop table Over_the_counter_drug;
 drop table Stock_drug;
-drop table Drug;
 drop table Doctor;
 drop table Subsidizes;
 drop table Insurance_coverage;
 drop table Payment_paid_by;
-drop table Pharmacy_record_has;
+drop table Purchase_record;
 drop table Patient;
 drop table Walk_in_Client;
+drop table Drug;
 drop table Customer;
 
 ----------------------------------------------------------------
@@ -63,7 +63,7 @@ create table Pharmacy_Technician
  	);
 
 create table Customer
-	(customer_id char(8) not null,
+	(customer_id int not null,
 	 name varchar2(32) null,
  	 phone_number varchar2(32) null,
 	 insurance_info varchar2(32) null,
@@ -71,20 +71,20 @@ create table Customer
  	);
 
  create table Patient
- 	(customer_Id char(8) not null,
- 	 care_card_number char(16) not null unique,
+ 	(customer_id int not null,
+ 	 care_card_number char(16) not null,
  	 address char(32) null,
  	 birthdate date null,
  	 gender char(1) null,
- 	 primary key (customer_Id), 
- 	 foreign key (customer_Id) references Customer ON DELETE CASCADE
+ 	 primary key (customer_id), 
+ 	 foreign key (customer_id) references Customer ON DELETE CASCADE
  	);
 
  create table Prescription_by_is_for
- 	(service_id char(8) not null,
+ 	(service_id int not null,
 	 doctor_id int not null,
- 	 customer_id char(8) not null,
- 	 prescription_id char(8) not null, 
+ 	 customer_id int not null,
+ 	 prescription_id int not null, 
  	 date_prescribed date not null, 
 	 primary key (service_id), 
  	 foreign key (doctor_id) references Doctor ON DELETE CASCADE, 
@@ -92,8 +92,8 @@ create table Customer
  	);
 
 create table Prescription_item_has
-	(item_id char(8) not null unique,
- 	 prescription_id char(8) not null,
+	(item_id int not null unique,
+ 	 prescription_id int not null,
 	 dose varchar2(16) not null,
  	 duration varchar2(32) not null,
  	 frequency varchar2(32) not null,
@@ -101,25 +101,18 @@ create table Prescription_item_has
  	 foreign key (prescription_id) references Prescription_by_is_for ON DELETE CASCADE
 	);
 
-create table Pharmacy_record_has 
- 	(record_id char(10) not null,
- 	 care_card_number char(16) not null,
- 	 purchasing_history varchar2(128),
- 	 primary key (record_id, care_card_number),
- 	 foreign key (care_card_number) references Patient (care_card_number) ON DELETE CASCADE
- 	);
 
 create table Service_provides
-	(service_id char(8) not null unique,
+	(service_id int not null unique,
 	 emp_id int not null,
 	 primary key (service_id, emp_id), 
 	 foreign key (emp_id) references Pharmacist ON DELETE CASCADE
 	); 
 
 create table Vaccination 
-	(service_id char(8) not null, 
- 	 vaccination_id char(8) null,
-	 date_vaccinated char(10) null,
+	(service_id int not null, 
+ 	 vaccination_id int null,
+	 date_vaccinated date null,
  	 dose varchar2(16) null,
  	 primary key (service_id), 
  	 foreign key (service_id) references Service_provides (service_id) ON DELETE CASCADE
@@ -151,7 +144,7 @@ create table Stock_drug
 	);
 
 create table Item_consistof_drug 
-	(item_id char(8) not null,
+	(item_id int not null,
 	 DIN int not null,
 	 primary key (item_id, DIN), 
 	 foreign key (item_id) references Prescription_item_has (item_id) ON DELETE CASCADE, 
@@ -159,8 +152,8 @@ create table Item_consistof_drug
 	);
 
 create table Payment_paid_by
- 	(paymentId char(8) not null, 
- 	customer_id char(8) not null,
+ 	(paymentId int not null, 
+ 	customer_id int not null,
  	transdate date not null,
  	total char(10) not null,
  	cardNumber char(12) not null,
@@ -170,8 +163,18 @@ create table Payment_paid_by
  	foreign key (customer_id) references Customer ON DELETE CASCADE 
  	); 
 
+create table Purchase_record
+ 	(record_id int not null,
+ 	 customer_id int not null,
+ 	 din int not null,
+ 	 quantity int null,
+ 	 primary key (record_id, customer_id),
+ 	 foreign key (customer_id) references Customer ON DELETE CASCADE,
+ 	 foreign key (din) references Drug ON DELETE CASCADE
+ 	);
+
 create table Insurance_coverage
- 	(policyId char(8) not null,
+ 	(policyId int not null,
 	 expDate date null,
  	 maxAllowance int null,
    	 company varchar (40) null,
@@ -179,15 +182,15 @@ create table Insurance_coverage
  	); 
 
 create table Subsidizes
-	(paymentId char(8) not null, 
-	 policyId char(8) not null, 
+	(paymentId int not null, 
+	 policyId int not null, 
  	 primary key (paymentId, policyId), 
  	 foreign key (paymentId) references Payment_paid_by ON DELETE CASCADE, 
  	 foreign key (policyId) references Insurance_coverage ON DELETE CASCADE
 	); 
 
 create table Walk_in_Client
-	(customer_id char(8) not null, 
+	(customer_id int not null, 
  	 primary key (customer_id), 
  	 foreign key (customer_id) references Customer ON DELETE CASCADE
 	); 
@@ -302,42 +305,6 @@ insert into Doctor (doctor_id, phone_number, name) values (29, '33-(304)952-2368
 insert into Doctor (doctor_id, phone_number, name) values (30, '47-(915)758-2797', 'Dr. Jose Green');
 insert into Doctor (doctor_id, phone_number, name) values (31, '269-(393)997-4413', 'Dr. Charles Morris');
 insert into Doctor (doctor_id, phone_number, name) values (32, '63-(464)764-0419', 'Dr. Brandon Bryant');
-
-insert into Customer values ('00000000', 'Harry Potter', '7781129876', 'Westland Insurance');
-insert into Customer values ('00000001', 'Pikachu Chu', '6045525673', 'Westland Insurance');
-insert into Customer values ('00000002', 'Angelina Jolie', '6042346754', 'Blue Cross');
-insert into Customer values ('00000003', 'Ken Bone', '7783324326', 'Eastland Insurance');
-insert into Customer values ('00000004', 'Oprah Winfrey', '6048320986', 'Blue Cross');
-
-insert into Patient values ('00000000', '9123456798342343', '22B Baker Street', '1954-01-29', 'F');
-insert into Patient values ('00000001', '9100567832130097', '1766 Willow St.', '1975-06-04', 'F');
-insert into Patient values ('00000002', '9322998812344631', '567 Evergreen Ave.', '1980-07-31', 'M');
-
-insert into Prescription_by_is_for values ('00000000', 1, '00000000', '00000000', '2016-10-16');
-insert into Prescription_by_is_for values ('00000001', 1, '00000001', '00000001', '2016-10-16');
-insert into Prescription_by_is_for values ('00000002', 2, '00000002', '00000002', '2016-10-16');
-insert into Prescription_by_is_for values ('00000003', 2, '00000002', '00000003', '2016-10-16');
-insert into Prescription_by_is_for values ('00000004', 2, '00000000', '00000004', '2016-10-16');
-
-insert into Prescription_item_has values ('00000000', '00000000', '20 mg', '3 weeks', '1 capsule QID');
-insert into Prescription_item_has values ('00000001', '00000000', '80 mg', '2 weeks', '3 pills QD');
-insert into Prescription_item_has values ('00000002', '00000000', '100 mg', '2 weeks', '2 capsules TID');
-insert into Prescription_item_has values ('00000003', '00000001', '15 mg', '5 days', '1 pill every 3 hours');
-insert into Prescription_item_has values ('00000004', '00000001', '180 mg', '5 days', '2 tablets every 8 hours');
-
-insert into Pharmacy_record_has values ('0000000000', '9123456798342343', 'Patient is up to date with all medication');
-insert into Pharmacy_record_has values ('0000000001', '9100567832130097', 'Patient switched brand of birth control');
-insert into Pharmacy_record_has values ('0000000002', '9322998812344631', 'Patient is up to date with all medication');
-
-insert into Service_provides values ('00000000', 2);
-insert into Service_provides values ('00000001', 3);
-insert into Service_provides values ('00000002', 2);
-insert into Service_provides values ('00000003', 3);
-insert into Service_provides values ('00000004', 3);
-
-insert into Vaccination values ('00000000', '10000000', '2016-02-23', '3ml');
-insert into Vaccination values ('00000001', '20000000', '2015-12-03', '2ml'); 
-insert into Vaccination values ('00000002', '30000000', '2016-06-03', '1ml');
 
 insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (1, 'Dimethicone', 'Photocil', 'Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat.', 'Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.');
 insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (2, 'Eucalyptol, menthol, methyl salicylate, thymol', 'Tartar control plus', 'Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros.', 'Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus.');
@@ -541,18 +508,3 @@ insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (93, 1117596, 
 insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (95, 554931, 198);
 insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (97, 1391539, 307);
 insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (99, 903718, 301);
-
-insert into Item_consistof_drug (item_id, DIN) values ('00000000', 1);
-insert into Item_consistof_drug (item_id, DIN) values ('00000001', 2);
-insert into Item_consistof_drug (item_id, DIN) values ('00000002', 3);
-insert into Item_consistof_drug (item_id, DIN) values ('00000003', 4);
-insert into Item_consistof_drug (item_id, DIN) values ('00000004', 5);
-
-insert into Payment_paid_by values ('11111111', '00000000', '2016-11-23', '$22.30', '123456789012', '2018-08-29', '13:00');
-insert into Payment_paid_by values ('22222222', '00000001', '2016-01-03', '$2.30', '412398792345', '2020-01-31', '14:45');
-insert into Payment_paid_by values ('33333333', '00000002', '2016-04-20', '$11.02', '543098672345', '2016-12-14', '09:11');
-insert into Payment_paid_by values ('44444444', '00000003', '2015-12-31', '$44.44', '432898761239', '2018-08-11', '11:37');
-insert into Payment_paid_by values ('55555555', '00000004', '2016-10-18', '$9.35', '543687931112', '2017-02-01', '16:07');
-
-insert into Walk_in_Client (customer_Id) values ('00000003');
-insert into Walk_in_Client (customer_Id) values ('00000004');
