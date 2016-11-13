@@ -152,8 +152,8 @@ create table Drug
 
 create table Over_the_counter_drug 
 	(DIN int not null,
-	 brand varchar2(32) null,
-	 cost varchar2(16) null,
+	 brand varchar2(64) null,
+	 cost_cents int null,
 	 quantity int null,
 	 primary key (DIN), 
 	 foreign key (DIN) references Drug ON DELETE CASCADE
@@ -161,8 +161,8 @@ create table Over_the_counter_drug
 
 create table Stock_drug
 	(DIN int not null,
-	 amount_g float(16) null,
-	 cost_per_g varchar2(16) null,
+	 amount_mg int null,
+	 cost_per_mg_cents int null,
 	 primary key (DIN), 
 	 foreign key (DIN) references Drug ON DELETE CASCADE
 	);
@@ -468,107 +468,107 @@ insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contrai
 insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (99, 'Acetaminophen, dextromethorphan HBr, guaifenesin, phenylephrine HCl, diphenhydramine HCl', 'TopCare Mucus Relief and Cold and Flu', 'Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.', 'Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem.');
 insert into Drug (DIN, drug_name_INN, drug_name_trade, drug_description, contraindications) values (100, 'Iron, Cyanocobalamin and Folic Acid', 'Iferex 150 Forte', 'Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.', 'Proin leo odio, porttitor id, consequat in, consequat ut, nulla. Sed accumsan felis. Ut at dolor quis odio consequat varius.');
 
-insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (1, 'Topco Associates LLC', '$9.93', 95);
-insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (2, 'Dollar General', '$8.67', 167);
-insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (3, 'Conopco Inc. d/b/a Unilever', '$15.58', 68);
-insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (4, 'Navarro Discount Pharmacies,LLC', '$7.38', 109);
-insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (5, 'AMOREPACIFIC', '$15.24', 140);
-insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (6, 'UDL Laboratories, Inc.', '$10.22', 49);
-insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (7, 'Mallinckrodt, Inc.', '$26.01', 152);
-insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (8, 'STAT RX USA LLC', '$26.22', 25);
-insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (9, 'Ventura Corporation, Ltd.', '$15.93', 144);
-insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (10, 'KAS Direct LLC dba BabyGanics', '$27.95', 70);
-insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (11, 'Kroger Company', '$22.51', 15);
-insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (12, 'Walgreen Company', '$22.64', 135);
-insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (13, 'Pharmacia and Upjohn Company', '$6.94', 200);
-insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (14, 'St Marys Medical Park Pharmacy', '$16.35', 39);
-insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (15, 'Cardinal Health', '$23.15', 55);
-insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (16, 'Aidarex Pharmaceuticals LLC', '$19.33', 78);
-insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (17, 'JHP Pharmaceuticals, LLC', '$14.65', 103);
-insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (18, 'Cederroth AB', '$5.03', 22);
-insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (19, 'Piramal Critical Care Inc.', '$24.17', 21);
-insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (20, 'Galderma Laboratories, L.P.', '$17.23', 21);
-insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (21, 'Sun Pharma Global Inc.', '$23.27', 167);
-insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (22, 'Allergy Laboratories, Inc.', '$15.50', 52);
-insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (23, 'AMERICAN SALES COMPANY', '$29.24', 14);
-insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (24, 'H E B', '$26.69', 190);
-insert into Over_the_counter_drug (DIN, brand, cost, quantity) values (25, 'GOWOONSESANG COSMETICS CO., LTD.', '$10.45', 15);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (2, 'Kinray Inc.', 2178, 40);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (4, 'Paddock Laboratories, LLC', 1894, 72);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (6, 'Paddock Laboratories, LLC', 1183, 142);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (8, 'Erno Laszlo, Inc.', 2802, 97);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (10, 'Natural Health Supply', 686, 64);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (12, 'STAT Rx USA LLC', 1715, 77);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (14, 'State of Florida DOH Central Pharmacy', 2918, 68);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (16, 'APP Pharmaceuticals, LLC', 805, 49);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (18, 'STAT Rx USA LLC', 2683, 82);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (20, 'American Health Packaging', 2054, 193);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (22, 'Procter Manufacturing Co.', 1980, 185);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (24, 'PUREMEDY', 1932, 180);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (26, 'CVS Pharmacy', 783, 37);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (28, 'Hospira, Inc.', 1518, 167);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (30, 'Ricola USA Inc.', 2814, 83);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (32, 'Hi-Tech Pharmacal Co., Inc.', 1557, 140);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (34, 'Torrent Pharmaceuticals Limited', 2932, 187);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (36, 'Sandoz Inc', 794, 23);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (38, 'Watson Laboratories, Inc.', 2661, 59);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (40, 'Walgreens', 1472, 173);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (42, 'Integrative Healing Institute, LLC', 2450, 41);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (44, 'Physicians Total Care, Inc.', 2288, 177);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (46, 'Biocosmetic Research Labs', 1585, 137);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (48, 'Par Pharmaceutical Inc.', 1015, 199);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (50, 'Amerisource Bergen', 1529, 137);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (52, 'Barr Laboratories Inc.', 1213, 131);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (54, 'Preferred Pharmaceuticals, Inc.', 1893, 87);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (56, 'Wal-Mart Stores Inc', 2521, 169);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (58, 'Supervalu Inc', 1566, 38);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (60, 'Hospira, Inc.', 1549, 134);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (62, 'Ventura International LTD', 1736, 182);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (64, 'AvKARE, Inc.', 1284, 35);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (66, 'Gurwitch Products', 1647, 54);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (68, 'Meijer Distribution Inc', 2162, 142);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (70, 'Nelco Laboratories, Inc.', 2583, 136);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (72, 'Deseret Biologicals, Inc.', 629, 24);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (74, 'ALK-Abello, Inc.', 2361, 18);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (76, 'L Perrigo Company', 2346, 69);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (78, 'NUGA MEDICAL CO., LTD.', 1138, 91);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (80, 'Baxter Healthcare Corporation', 2623, 163);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (82, 'Aurobindo Pharma Limited', 2504, 166);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (84, 'Kinray Inc.', 1446, 23);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (86, 'Carlsbad Technology, Inc.', 2820, 31);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (88, 'McKesson', 1956, 20);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (90, 'Cardinal Health', 2848, 159);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (92, 'Gadal Laboratories Inc', 2022, 57);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (94, 'Wyeth Pharmaceuticals Inc., a subsidiary of Pfizer Inc.', 1331, 95);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (96, 'A-S Medication Solutions LLC', 1851, 62);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (98, 'SHISEIDO AMERICA INC.', 529, 43);
+insert into Over_the_counter_drug (DIN, brand, cost_cents, quantity) values (100, 'Mylan Pharmaceuticals Inc.', 2900, 150);
 
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (26, 636.694, '$0.58');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (27, 532.452, '$0.32');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (28, 1776.931, '$3.86');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (29, 448.076, '$0.76');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (30, 407.492, '$1.19');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (31, 262.36, '$3.25');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (32, 207.774, '$4.57');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (33, 1159.894, '$3.15');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (34, 1333.352, '$2.29');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (35, 270.821, '$1.37');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (36, 1215.134, '$0.70');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (37, 379.333, '$1.69');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (38, 768.871, '$0.60');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (39, 1762.674, '$4.62');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (40, 1062.691, '$0.42');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (41, 1564.646, '$2.61');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (42, 1330.503, '$4.86');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (43, 1734.498, '$2.25');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (44, 1274.059, '$3.62');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (45, 1666.156, '$1.11');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (46, 642.549, '$3.33');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (47, 1787.179, '$2.60');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (48, 275.032, '$0.33');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (49, 739.586, '$0.78');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (50, 1335.879, '$4.07');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (51, 672.19, '$1.62');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (52, 1478.965, '$3.93');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (53, 302.73, '$1.19');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (54, 542.667, '$0.90');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (55, 733.841, '$4.62');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (56, 786.528, '$3.36');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (57, 496.97, '$2.38');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (58, 1371.204, '$4.23');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (59, 1938.016, '$1.74');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (60, 1030.642, '$1.65');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (61, 1059.618, '$4.97');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (62, 1569.22, '$3.51');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (63, 734.286, '$0.48');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (64, 891.191, '$2.22');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (65, 1543.677, '$0.40');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (66, 1559.45, '$4.10');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (67, 1544.774, '$4.77');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (68, 281.328, '$3.61');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (69, 867.676, '$1.76');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (70, 799.758, '$3.12');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (71, 717.561, '$1.31');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (72, 688.873, '$1.92');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (73, 1894.478, '$4.60');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (74, 1849.906, '$2.83');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (75, 1132.724, '$3.24');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (76, 378.11, '$0.78');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (77, 194.444, '$1.03');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (78, 323.182, '$2.58');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (79, 1101.888, '$2.60');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (80, 1416.001, '$1.24');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (81, 492.223, '$4.11');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (82, 1337.578, '$4.41');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (83, 1113.343, '$2.58');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (84, 596.86, '$0.16');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (85, 935.459, '$1.70');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (86, 1647.581, '$2.20');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (87, 1292.904, '$3.68');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (88, 1628.029, '$3.14');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (89, 1896.873, '$0.21');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (90, 1731.927, '$1.73');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (91, 1691.696, '$4.80');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (92, 344.484, '$0.69');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (93, 1484.625, '$2.94');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (94, 798.978, '$0.64');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (95, 1393.552, '$3.74');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (96, 1784.968, '$4.05');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (97, 1411.892, '$0.37');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (98, 1113.438, '$1.70');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (99, 1516.43, '$4.74');
-insert into Stock_drug (DIN, amount_g, cost_per_g) values (100, 453.487, '$0.65');
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (1, 734174, 139);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (3, 975335, 88);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (5, 1039243, 46);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (7, 1339680, 101);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (9, 512513, 308);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (11, 924461, 321);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (13, 1236782, 140);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (15, 402697, 312);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (17, 500666, 260);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (19, 784319, 301);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (21, 799932, 408);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (23, 1153315, 156);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (25, 937398, 408);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (27, 1266987, 281);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (29, 249283, 99);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (31, 359900, 441);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (33, 1473890, 291);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (35, 772026, 395);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (37, 1037310, 225);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (39, 371517, 493);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (41, 951216, 118);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (43, 1103434, 438);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (45, 887888, 183);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (47, 415521, 413);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (49, 909993, 70);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (51, 1478879, 131);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (53, 213969, 18);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (55, 1075790, 57);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (57, 1194797, 471);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (59, 1084019, 238);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (61, 749324, 252);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (63, 1071438, 328);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (65, 316218, 2);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (67, 249887, 385);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (69, 207339, 64);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (71, 656590, 486);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (73, 1349618, 117);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (75, 720608, 389);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (77, 773844, 383);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (79, 1273970, 399);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (81, 1499718, 249);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (83, 1307107, 139);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (85, 1487672, 317);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (87, 302617, 149);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (89, 610777, 164);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (91, 670081, 171);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (93, 1117596, 2);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (95, 554931, 198);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (97, 1391539, 307);
+insert into Stock_drug (DIN, amount_mg, cost_per_mg_cents) values (99, 903718, 301);
 
 insert into Item_consistof_drug (item_id, DIN) values ('00000000', 1);
 insert into Item_consistof_drug (item_id, DIN) values ('00000001', 2);
