@@ -73,7 +73,7 @@ create table Works_in
 -- TODO: Add tuples for Works_in
 
  create table Doctor 
- 	(doctor_id char(8) not null,
+ 	(doctor_id int not null,
  	 phone_number varchar2(32) not null,
  	 name varchar2(32),
  	 primary key (doctor_id)
@@ -99,7 +99,7 @@ create table Customer
 
  create table Prescription_by_is_for
  	(service_id char(8) not null,
-	 doctor_id char(8) not null,
+	 doctor_id int not null,
  	 customer_id char(8) not null,
  	 prescription_id char(8) not null, 
  	 date_prescribed date not null, 
@@ -298,11 +298,38 @@ insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) val
 insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) values (9, 27, '815 Southridge Lane', 'Reilly, Schulist and Padberg', '86-(889)805-7821');
 insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) values (10, 30, '962 Dwight Avenue', 'Borer LLC', '359-(751)761-7881');
 
-insert into Doctor values ('00000000', '7788881234', 'Dr. Miranda Bailey');
-insert into Doctor values ('00000001', '6045681234', 'Dr. Meredith Grey');
-insert into Doctor values ('00000002', '6045969923', 'Dr. Gregory House');
-insert into Doctor values ('00000003', '7782217865', 'Dr. Derek Shepherd');
-insert into Doctor values ('00000004', '4035552213', 'Dr. Christina Yang');
+insert into Doctor (doctor_id, phone_number, name) values (1, '420-(551)118-3438', 'Dr. Earl Myers');
+insert into Doctor (doctor_id, phone_number, name) values (2, '86-(670)500-6063', 'Dr. John Carr');
+insert into Doctor (doctor_id, phone_number, name) values (3, '216-(399)229-3176', 'Dr. Andrew Hudson');
+insert into Doctor (doctor_id, phone_number, name) values (4, '30-(636)316-4597', 'Dr. Jonathan Medina');
+insert into Doctor (doctor_id, phone_number, name) values (5, '86-(512)534-2157', 'Dr. Frank Robinson');
+insert into Doctor (doctor_id, phone_number, name) values (6, '7-(315)408-7400', 'Dr. Christine Davis');
+insert into Doctor (doctor_id, phone_number, name) values (7, '598-(919)917-9778', 'Dr. Gregory Henry');
+insert into Doctor (doctor_id, phone_number, name) values (8, '48-(674)105-4685', 'Dr. Clarence Dunn');
+insert into Doctor (doctor_id, phone_number, name) values (9, '47-(972)989-4515', 'Dr. Stephanie Lawrence');
+insert into Doctor (doctor_id, phone_number, name) values (10, '7-(238)240-7374', 'Dr. Judith Fisher');
+insert into Doctor (doctor_id, phone_number, name) values (11, '62-(276)618-7753', 'Dr. Henry Young');
+insert into Doctor (doctor_id, phone_number, name) values (12, '55-(275)556-0303', 'Dr. Carlos Anderson');
+insert into Doctor (doctor_id, phone_number, name) values (13, '55-(259)603-0640', 'Dr. Jennifer Graham');
+insert into Doctor (doctor_id, phone_number, name) values (14, '60-(232)642-0445', 'Dr. Frances Wheeler');
+insert into Doctor (doctor_id, phone_number, name) values (15, '7-(169)377-5573', 'Dr. David Snyder');
+insert into Doctor (doctor_id, phone_number, name) values (16, '234-(848)956-6570', 'Dr. Barbara Johnston');
+insert into Doctor (doctor_id, phone_number, name) values (17, '39-(454)687-3125', 'Dr. Julia Sanchez');
+insert into Doctor (doctor_id, phone_number, name) values (18, '55-(535)395-3986', 'Dr. Donna Lewis');
+insert into Doctor (doctor_id, phone_number, name) values (19, '62-(187)666-9045', 'Dr. Julie Morgan');
+insert into Doctor (doctor_id, phone_number, name) values (20, '86-(884)291-7131', 'Dr. Ruth Cole');
+insert into Doctor (doctor_id, phone_number, name) values (21, '62-(451)936-0769', 'Dr. Maria Burke');
+insert into Doctor (doctor_id, phone_number, name) values (22, '86-(164)288-1242', 'Dr. John Lawrence');
+insert into Doctor (doctor_id, phone_number, name) values (23, '48-(371)684-0196', 'Dr. Mildred Stanley');
+insert into Doctor (doctor_id, phone_number, name) values (24, '54-(625)198-9732', 'Dr. Frances Nguyen');
+insert into Doctor (doctor_id, phone_number, name) values (25, '48-(617)324-7182', 'Dr. John Brown');
+insert into Doctor (doctor_id, phone_number, name) values (26, '380-(695)517-4806', 'Dr. Ann Dunn');
+insert into Doctor (doctor_id, phone_number, name) values (27, '509-(235)307-1786', 'Dr. Gloria Evans');
+insert into Doctor (doctor_id, phone_number, name) values (28, '86-(624)143-0324', 'Dr. Johnny Ortiz');
+insert into Doctor (doctor_id, phone_number, name) values (29, '33-(304)952-2368', 'Dr. Christina Martin');
+insert into Doctor (doctor_id, phone_number, name) values (30, '47-(915)758-2797', 'Dr. Jose Green');
+insert into Doctor (doctor_id, phone_number, name) values (31, '269-(393)997-4413', 'Dr. Charles Morris');
+insert into Doctor (doctor_id, phone_number, name) values (32, '63-(464)764-0419', 'Dr. Brandon Bryant');
 
 insert into Customer values ('00000000', 'Harry Potter', '7781129876', 'Westland Insurance');
 insert into Customer values ('00000001', 'Pikachu Chu', '6045525673', 'Westland Insurance');
@@ -314,11 +341,11 @@ insert into Patient values ('00000000', '9123456798342343', '22B Baker Street', 
 insert into Patient values ('00000001', '9100567832130097', '1766 Willow St.', '1975-06-04', 'F');
 insert into Patient values ('00000002', '9322998812344631', '567 Evergreen Ave.', '1980-07-31', 'M');
 
-insert into Prescription_by_is_for values ('00000000', '00000000', '00000000', '00000000', '2016-10-16');
-insert into Prescription_by_is_for values ('00000001', '00000000', '00000001', '00000001', '2016-10-16');
-insert into Prescription_by_is_for values ('00000002', '00000001', '00000002', '00000002', '2016-10-16');
-insert into Prescription_by_is_for values ('00000003', '00000001', '00000002', '00000003', '2016-10-16');
-insert into Prescription_by_is_for values ('00000004', '00000001', '00000000', '00000004', '2016-10-16');
+insert into Prescription_by_is_for values ('00000000', 1, '00000000', '00000000', '2016-10-16');
+insert into Prescription_by_is_for values ('00000001', 1, '00000001', '00000001', '2016-10-16');
+insert into Prescription_by_is_for values ('00000002', 2, '00000002', '00000002', '2016-10-16');
+insert into Prescription_by_is_for values ('00000003', 2, '00000002', '00000003', '2016-10-16');
+insert into Prescription_by_is_for values ('00000004', 2, '00000000', '00000004', '2016-10-16');
 
 insert into Prescription_item_has values ('00000000', '00000000', '20 mg', '3 weeks', '1 capsule QID');
 insert into Prescription_item_has values ('00000001', '00000000', '80 mg', '2 weeks', '3 pills QD');

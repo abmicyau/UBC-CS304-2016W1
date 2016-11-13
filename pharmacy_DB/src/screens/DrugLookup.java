@@ -20,6 +20,9 @@ public class DrugLookup extends JPanel {
     private JTextField textName1 = new JTextField(20);
     private JLabel labelName2 = new JLabel("Nonproprietary Name: ");
     private JTextField textName2 = new JTextField(20);
+    private JCheckBox otc = new JCheckBox("Over the counter drug");
+    private JCheckBox stock = new JCheckBox("Stock drug");
+
     private JButton buttonSearch = new JButton("Search");
     private JButton buttonBack = new JButton("Back");
 
@@ -81,18 +84,33 @@ public class DrugLookup extends JPanel {
         constraints.gridx = 1;
         left.add(textName2, constraints);
 
+        constraints.insets.set(10, 10, 2, 10);
 
         constraints.gridx = 0;
         constraints.gridy = 3;
         constraints.gridwidth = 2;
-        constraints.anchor = GridBagConstraints.CENTER;
-        left.add(buttonSearch, constraints);
+        left.add(otc, constraints);
 
+        constraints.gridx = 0;
         constraints.gridy = 4;
-        left.add(buttonBack, constraints);
+        constraints.insets.set(2, 10, 10, 10);
+        left.add(stock, constraints);
+
+        otc.doClick();
+        stock.doClick();
+
+        constraints.insets.set(10, 10, 10, 10);
 
         constraints.gridx = 0;
         constraints.gridy = 5;
+        constraints.anchor = GridBagConstraints.CENTER;
+        left.add(buttonSearch, constraints);
+
+        constraints.gridy = 6;
+        left.add(buttonBack, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 7;
         constraints.gridwidth = 2;
         messageContainer.add(searchMessage);
         left.add(messageContainer, constraints);
@@ -156,22 +174,42 @@ public class DrugLookup extends JPanel {
                     StringBuilder query = new StringBuilder();
                     StringBuilder message = new StringBuilder();
 
-                    query.append("SELECT * FROM Drug WHERE LOWER(drug_name_INN) LIKE LOWER('%");
-                    query.append(textName1.getText());
-                    query.append("%') AND LOWER(drug_name_trade) LIKE LOWER ('%");
-                    query.append(textName2.getText());
-                    query.append("%')");
+                    if (otc.isSelected() || stock.isSelected()) {
+                        query.append("SELECT * FROM (");
+                        if (otc.isSelected()) {
+                            query.append("SELECT d.DIN, drug_name_INN, drug_name_trade, drug_description, contraindications " +
+                                         "FROM Drug d, Over_the_counter_drug o " +
+                                         "WHERE d.DIN = o.DIN");
+                        }
+                        if (otc.isSelected() && stock.isSelected()) {
+                            query.append(" UNION ");
+                        }
+                        if (stock.isSelected()) {
+                            query.append("SELECT d.DIN, drug_name_INN, drug_name_trade, drug_description, contraindications " +
+                                         "FROM Drug d, Stock_drug s " +
+                                         "WHERE d.DIN = s.DIN");
+                        }
+                        query.append(") ");
 
-                    String din = textID.getText();
+                        query.append(" WHERE LOWER(drug_name_INN) LIKE LOWER('%");
+                        query.append(textName1.getText());
+                        query.append("%') AND LOWER(drug_name_trade) LIKE LOWER ('%");
+                        query.append(textName2.getText());
+                        query.append("%')");
 
-                    if (din.length() != 0) {
-                        query.append(" AND din = ");
-                        query.append(din);
+                        String din = textID.getText();
+
+                        if (din.length() != 0) {
+                            query.append(" AND din = ");
+                            query.append(din);
+                        }
+
+                        query.append(" ORDER BY din");
+
+                        fillTable(model, Pharmacy_DB.getResults(query.toString()));
+                    } else {
+                        fillTable(model, null);
                     }
-
-                    query.append(" ORDER BY din");
-
-                    fillTable(model, Pharmacy_DB.getResults(query.toString()));
 
                     message.append(model.getRowCount());
                     message.append(" results found.");
