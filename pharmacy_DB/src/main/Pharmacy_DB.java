@@ -1,14 +1,10 @@
 package main;
 
-import entities.Employee;
 import screens.*;
 
 import java.sql.*;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.Vector;
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 
 
 public class Pharmacy_DB {
