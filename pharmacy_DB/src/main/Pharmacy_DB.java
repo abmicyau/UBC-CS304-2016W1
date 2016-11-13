@@ -1,10 +1,7 @@
 package main;
 
 import entities.Employee;
-import screens.DrugLookup;
-import screens.EmployeeLookup;
-import screens.Home;
-import screens.Login;
+import screens.*;
 
 import java.sql.*;
 import java.awt.event.*;
@@ -30,6 +27,7 @@ public class Pharmacy_DB {
     private static JPanel login;
     private static JPanel home;
     private static JPanel employeeLookup;
+    private static JPanel doctorLookup;
     private static JPanel drugLookup;
 
     // Main method creates new database application
@@ -57,6 +55,7 @@ public class Pharmacy_DB {
         login = new Login();
         home = new Home();
         employeeLookup = new EmployeeLookup();
+        doctorLookup = new DoctorLookup();
         drugLookup = new DrugLookup();
     }
 
@@ -113,6 +112,7 @@ public class Pharmacy_DB {
     public static JPanel getLoginPanel() { return login; }
     public static JPanel getHomePanel() { return home; }
     public static JPanel getEmployeeLookupPanel() { return employeeLookup; }
+    public static JPanel getDoctorLookupPanel() { return doctorLookup; }
     public static JPanel getDrugLookup() { return drugLookup; }
 
 }

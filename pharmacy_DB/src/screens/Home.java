@@ -21,70 +21,88 @@ public class Home extends JPanel {
     private JButton actionButton10 = new JButton("Check Prescription");
     private JButton buttonLogout = new JButton("Logout");
 
+    private JPanel left;
+    private JPanel middle;
+    private JPanel right;
+
+    private GridBagConstraints constraints = new GridBagConstraints();
+
     public Home() {
 
         // important! call JPanel constructor and pass GridBagLayout
-        super(new GridBagLayout());
+        super(new GridLayout(1, 3));
 
         placeElements();
         addActions();
     }
 
     private void placeElements() {
+
+        left = new JPanel(new GridBagLayout());
+        middle = new JPanel(new GridBagLayout());
+        right = new JPanel(new GridBagLayout());
+
+        add(left);
+        add(middle);
+        add(right);
+
         // set contraints and padding
-        GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.WEST;
-        constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.insets = new Insets(10, 10, 10, 10);
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 0;
 
         constraints.gridx = 0;
         constraints.gridy = 0;
-        add(actionButton7, constraints);
+        left.add(actionButton5, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 1;
-        add(actionButton5, constraints);
+        left.add(actionButton4, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 2;
-        add(actionButton3, constraints);
+        left.add(actionButton10, constraints);
 
         constraints.gridx = 0;
-        constraints.gridy = 3;
-        add(actionButton4, constraints);
-
-        constraints.gridx = 0;
-        constraints.gridy = 4;
-        add(actionButton10, constraints);
-
-        constraints.gridx = 1;
         constraints.gridy = 0;
-        add(actionButton1, constraints);
-
-        constraints.gridx = 1;
-        constraints.gridy = 1;
-        add(actionButton6, constraints);
-
-        constraints.gridx = 1;
-        constraints.gridy = 2;
-        add(actionButton2, constraints);
-
-        constraints.gridx = 1;
-        constraints.gridy = 3;
-        add(actionButton8, constraints);
-
-        constraints.gridx = 1;
-        constraints.gridy = 4;
-        add(actionButton9, constraints);
+        middle.add(actionButton7, constraints);
 
         constraints.gridx = 0;
-        constraints.gridy = 5;
-        constraints.gridwidth = 2;
-        constraints.anchor = GridBagConstraints.CENTER;
-        add(buttonLogout, constraints);
+        constraints.gridy = 1;
+        middle.add(actionButton8, constraints);
 
-        // set border for the panel
-        setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Home"));
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        middle.add(actionButton1, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 3;
+        middle.add(buttonLogout, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        right.add(actionButton6, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        right.add(actionButton2, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        right.add(actionButton3, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 3;
+        right.add(actionButton9, constraints);
+
+        // set border for the panels
+        left.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Drugs"));
+        middle.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Employees"));
+        right.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Patients"));
+
+        revalidate();
+        repaint();
     }
 
     private void addActions() {
@@ -106,6 +124,13 @@ public class Home extends JPanel {
         actionButton7.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Pharmacy_DB.switchScreen(Pharmacy_DB.getEmployeeLookupPanel());
+            }
+        });
+
+        // doctor lookup button action
+        actionButton8.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Pharmacy_DB.switchScreen(Pharmacy_DB.getDoctorLookupPanel());
             }
         });
     }

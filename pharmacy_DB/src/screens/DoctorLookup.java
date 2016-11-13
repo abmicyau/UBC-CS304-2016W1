@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Vector;
 
-public class EmployeeLookup extends JPanel {
+public class DoctorLookup extends JPanel {
 
     private JLabel labelID = new JLabel("ID: ");
     private JTextField textID = new JTextField(20);
@@ -32,7 +32,7 @@ public class EmployeeLookup extends JPanel {
     private JPanel left = new JPanel(new GridBagLayout());;
     private JPanel right = new JPanel(new BorderLayout());;
 
-    public EmployeeLookup() {
+    public DoctorLookup() {
 
         // important! call JPanel constructor and pass GridBagLayout
         super(new GridBagLayout());
@@ -87,15 +87,11 @@ public class EmployeeLookup extends JPanel {
 
         model.addColumn("ID");
         model.addColumn("Name");
-        model.addColumn("Email");
         model.addColumn("Phone");
-        model.addColumn("Address");
 
         table.getColumnModel().getColumn(0).setPreferredWidth(100);
-        table.getColumnModel().getColumn(1).setPreferredWidth(150);
+        table.getColumnModel().getColumn(1).setPreferredWidth(200);
         table.getColumnModel().getColumn(2).setPreferredWidth(200);
-        table.getColumnModel().getColumn(3).setPreferredWidth(200);
-        table.getColumnModel().getColumn(4).setPreferredWidth(200);
 
         table.setFillsViewportHeight(true);
         JScrollPane tableContainer = new JScrollPane(table);
@@ -108,7 +104,7 @@ public class EmployeeLookup extends JPanel {
 
         // set border for the panel
         right.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createEtchedBorder(), "Employees"));
+                BorderFactory.createEtchedBorder(), "Doctors"));
 
         buttonSearch.addActionListener(new SearchButton());
         buttonBack.addActionListener(new BackButton());
@@ -119,12 +115,10 @@ public class EmployeeLookup extends JPanel {
         if (rs != null) {
             try {
                 while (rs.next()) {
-                    int id = rs.getInt("emp_id");
-                    String email = rs.getString("email");
-                    String address = rs.getString("address");
+                    int id = rs.getInt("doctor_id");
                     String name = rs.getString("name");
                     String phone = rs.getString("phone_number");
-                    model.addRow(new Object[]{String.format("%08d", id), name, email, phone, address});
+                    model.addRow(new Object[]{String.format("%08d", id), name, phone});
                 }
             } catch (SQLException e) {
                 // stop
@@ -143,18 +137,18 @@ public class EmployeeLookup extends JPanel {
                     StringBuilder query = new StringBuilder();
                     StringBuilder message = new StringBuilder();
 
-                    query.append("SELECT * FROM Employee WHERE LOWER(name) LIKE LOWER('%");
+                    query.append("SELECT * FROM Doctor WHERE LOWER(name) LIKE LOWER('%");
                     query.append(textName.getText());
                     query.append("%')");
 
                     String id = textID.getText();
 
                     if (id.length() != 0) {
-                        query.append(" AND emp_id = ");
+                        query.append(" AND doctor_id = ");
                         query.append(id);
                     }
 
-                    query.append(" ORDER BY emp_id");
+                    query.append(" ORDER BY doctor_id");
 
                     fillTable(model, Pharmacy_DB.getResults(query.toString()));
 
