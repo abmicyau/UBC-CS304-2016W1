@@ -39,11 +39,11 @@ public class Home extends JPanel {
 
         constraints.gridx = 0;
         constraints.gridy = 0;
-        add(actionButton1, constraints);
+        add(actionButton7, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 1;
-        add(actionButton2, constraints);
+        add(actionButton5, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 2;
@@ -59,7 +59,7 @@ public class Home extends JPanel {
 
         constraints.gridx = 1;
         constraints.gridy = 0;
-        add(actionButton5, constraints);
+        add(actionButton1, constraints);
 
         constraints.gridx = 1;
         constraints.gridy = 1;
@@ -67,7 +67,7 @@ public class Home extends JPanel {
 
         constraints.gridx = 1;
         constraints.gridy = 2;
-        add(actionButton7, constraints);
+        add(actionButton2, constraints);
 
         constraints.gridx = 1;
         constraints.gridy = 3;

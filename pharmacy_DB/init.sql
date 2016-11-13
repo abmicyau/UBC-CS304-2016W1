@@ -29,7 +29,7 @@ create table Employee
 	date_of_birth date null, 
 	address varchar2(64) null,
 	name varchar2(32) null,
-	phone_number varchar2(16) null, 
+	phone_number varchar2(32) null, 
 	gender char(1) null,
 	sin char(9) not null,
 	username varchar2(32) null,
@@ -59,7 +59,7 @@ create table Pharmacy_managed
 	emp_id int not null, 
 	address char(64) not null,
 	name char(64) not null,
-	phone_number varchar2(16) null,
+	phone_number varchar2(32) null,
 	primary key (store_id),
 	foreign key (emp_id) references Employee ON DELETE CASCADE);
 
@@ -74,7 +74,7 @@ create table Works_in
 
  create table Doctor 
  	(doctor_id char(8) not null,
- 	 phone_number char(16) not null,
+ 	 phone_number varchar2(32) not null,
  	 name varchar2(32),
  	 primary key (doctor_id)
  	);
@@ -82,7 +82,7 @@ create table Works_in
 create table Customer
 	(customer_id char(8) not null,
 	 name varchar2(32) null,
- 	 phone_number char(16) null,
+ 	 phone_number varchar2(32) null,
 	 insurance_info varchar2(32) null,
  	 primary key (customer_id)
  	);
@@ -90,7 +90,7 @@ create table Customer
  create table Patient
  	(customer_Id char(8) not null,
  	 care_card_number char(16) not null unique,
- 	 address char(20) null,
+ 	 address char(32) null,
  	 birthdate date null,
  	 gender char(1) null,
  	 primary key (customer_Id), 

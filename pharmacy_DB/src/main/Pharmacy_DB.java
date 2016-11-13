@@ -14,7 +14,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 
-public class Pharmacy_DB extends JFrame {
+public class Pharmacy_DB {
 
     private static JFrame mainFrame;
 
