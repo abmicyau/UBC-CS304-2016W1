@@ -119,14 +119,16 @@ public class DrugLookup extends JPanel {
         model.addColumn("DIN");
         model.addColumn("TN");
         model.addColumn("INN");
+        model.addColumn("Stock");
         model.addColumn("Description");
         model.addColumn("CI");
 
         table.getColumnModel().getColumn(0).setPreferredWidth(100);
         table.getColumnModel().getColumn(1).setPreferredWidth(250);
         table.getColumnModel().getColumn(2).setPreferredWidth(250);
-        table.getColumnModel().getColumn(3).setPreferredWidth(250);
+        table.getColumnModel().getColumn(3).setPreferredWidth(100);
         table.getColumnModel().getColumn(4).setPreferredWidth(250);
+        table.getColumnModel().getColumn(5).setPreferredWidth(250);
 
         table.setFillsViewportHeight(true);
         JScrollPane tableContainer = new JScrollPane(table);
@@ -155,7 +157,16 @@ public class DrugLookup extends JPanel {
                     String trade = rs.getString("drug_name_trade");
                     String desc = rs.getString("drug_description");
                     String contra = rs.getString("contraindications");
-                    model.addRow(new Object[] {String.format("%08d", din), inn, trade, desc, contra});
+                    String type = rs.getString("type");
+                    String stock = rs.getString("stock");
+
+                    if (type.equals("otc")) {
+                        stock = stock + " units";
+                    } else if (type.equals("stock")) {
+                        stock = stock + " mg";
+                    }
+
+                    model.addRow(new Object[] {String.format("%08d", din), inn, trade, stock, desc, contra});
                 }
             } catch (SQLException e) {
                 // stop
@@ -177,7 +188,7 @@ public class DrugLookup extends JPanel {
                     if (otc.isSelected() || stock.isSelected()) {
                         query.append("SELECT * FROM (");
                         if (otc.isSelected()) {
-                            query.append("SELECT d.DIN, drug_name_INN, drug_name_trade, drug_description, contraindications " +
+                            query.append("SELECT d.DIN, drug_name_INN, drug_name_trade, drug_description, contraindications, quantity stock, 'otc' type " +
                                          "FROM Drug d, Over_the_counter_drug o " +
                                          "WHERE d.DIN = o.DIN");
                         }
@@ -185,7 +196,7 @@ public class DrugLookup extends JPanel {
                             query.append(" UNION ");
                         }
                         if (stock.isSelected()) {
-                            query.append("SELECT d.DIN, drug_name_INN, drug_name_trade, drug_description, contraindications " +
+                            query.append("SELECT d.DIN, drug_name_INN, drug_name_trade, drug_description, contraindications, amount_mg stock, 'stock' type " +
                                          "FROM Drug d, Stock_drug s " +
                                          "WHERE d.DIN = s.DIN");
                         }
