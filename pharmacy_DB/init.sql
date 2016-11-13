@@ -3,8 +3,6 @@ drop table Service_provides;
 drop table Pharmacy_Assistant;
 drop table Pharmacist;
 drop table Pharmacy_Technician;
-drop table Works_in;
-drop table Pharmacy_managed;
 drop table Employee;
 drop table Item_consistof_drug;
 drop table Prescription_item_has;
@@ -54,21 +52,6 @@ create table Pharmacy_Technician
 	primary key (emp_id),
 	foreign key (emp_id) references Employee ON DELETE CASCADE);
 
-create table Pharmacy_managed
-	(store_id int not null, 
-	emp_id int not null, 
-	address char(64) not null,
-	name char(64) not null,
-	phone_number varchar2(32) null,
-	primary key (store_id),
-	foreign key (emp_id) references Employee ON DELETE CASCADE);
-
-create table Works_in
-	(emp_id int not null,
-	 store_id int not null,
-	 primary key (emp_id, store_id), 
-	 foreign key (emp_id) references Employee ON DELETE CASCADE, 
-	 foreign key (store_Id) references Pharmacy_managed ON DELETE CASCADE);
 
 -- TODO: Add tuples for Works_in
 
@@ -286,17 +269,6 @@ insert into Pharmacist values (3, 'Eastland Insurance', '00000001');
 
 insert into Pharmacy_Technician values (4, '00000002');
 insert into Pharmacy_Technician values (5, '00000003');
-
-insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) values (1, 3, '5 Eagle Crest Park', 'Boyle, Mitchell and Lynch', '86-(616)156-6771');
-insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) values (2, 6, '6803 Portage Center', 'Schmidt and Sons', '60-(904)278-2579');
-insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) values (3, 9, '270 Graedel Drive', 'Muller and Sons', '62-(791)338-5236');
-insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) values (4, 12, '4036 Longview Street', 'Altenwerth-Jaskolski', '48-(591)914-3482');
-insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) values (5, 15, '142 Clarendon Place', 'Larkin, Tremblay and Gislason', '972-(416)202-1722');
-insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) values (6, 18, '99344 Lakewood Crossing', 'Davis, Daniel and Davis', '63-(781)616-8390');
-insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) values (7, 21, '64789 Jay Parkway', 'Nienow-Kessler', '57-(154)834-0106');
-insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) values (8, 24, '4134 Thompson Crossing', 'Towne-Upton', '51-(138)186-9980');
-insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) values (9, 27, '815 Southridge Lane', 'Reilly, Schulist and Padberg', '86-(889)805-7821');
-insert into Pharmacy_managed (store_id, emp_id, address, name, phone_number) values (10, 30, '962 Dwight Avenue', 'Borer LLC', '359-(751)761-7881');
 
 insert into Doctor (doctor_id, phone_number, name) values (1, '420-(551)118-3438', 'Dr. Earl Myers');
 insert into Doctor (doctor_id, phone_number, name) values (2, '86-(670)500-6063', 'Dr. John Carr');
