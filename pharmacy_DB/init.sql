@@ -75,15 +75,15 @@ create table Works_in
  create table Doctor 
  	(doctor_id char(8) not null,
  	 phone_number char(16) not null,
- 	 name varchar(20),
+ 	 name varchar2(32),
  	 primary key (doctor_id)
  	);
 
 create table Customer
 	(customer_id char(8) not null,
-	 name varchar(25) null,
+	 name varchar2(32) null,
  	 phone_number char(16) null,
-	 insurance_info varchar(30) null,
+	 insurance_info varchar2(32) null,
  	 primary key (customer_id)
  	);
 
@@ -111,9 +111,9 @@ create table Customer
 create table Prescription_item_has
 	(item_id char(8) not null unique,
  	 prescription_id char(8) not null,
-	 dose varchar(16) not null,
- 	 duration varchar(32) not null,
- 	 frequency varchar(32) not null,
+	 dose varchar2(16) not null,
+ 	 duration varchar2(32) not null,
+ 	 frequency varchar2(32) not null,
  	 primary key (item_id, prescription_id), 
  	 foreign key (prescription_id) references Prescription_by_is_for ON DELETE CASCADE
 	);
@@ -121,7 +121,7 @@ create table Prescription_item_has
 create table Pharmacy_record_has 
  	(record_id char(10) not null,
  	 care_card_number char(16) not null,
- 	 purchasing_history varchar(100),
+ 	 purchasing_history varchar2(128),
  	 primary key (record_id, care_card_number),
  	 foreign key (care_card_number) references Patient (care_card_number) ON DELETE CASCADE
  	);
@@ -137,7 +137,7 @@ create table Vaccination
 	(service_id char(8) not null, 
  	 vaccination_id char(8) null,
 	 date_vaccinated char(10) null,
- 	 dose varchar(16) null,
+ 	 dose varchar2(16) null,
  	 primary key (service_id), 
  	 foreign key (service_id) references Service_provides (service_id) ON DELETE CASCADE
  	); 
