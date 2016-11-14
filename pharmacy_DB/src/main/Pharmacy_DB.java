@@ -72,12 +72,7 @@ public class Pharmacy_DB {
             }
         });
 
-        // set look and feel to the system look and feel
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+
 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -105,6 +100,26 @@ public class Pharmacy_DB {
         catch (SQLException e) {
             return null;
         }
+    }
+
+    public static int executeUpdate(String query) {
+        try {
+            Statement stmt = connection.createStatement();
+            return stmt.executeUpdate(query);
+        } catch (SQLException e) {
+            return -1;
+        }
+    }
+
+    // yolo method for checking integers
+    //
+    public static boolean isInteger(String s) {
+        try {
+            Integer.parseInt(s);
+        } catch(Exception e) {
+            return false;
+        }
+        return true;
     }
 
     // SCREEN GETTERS
