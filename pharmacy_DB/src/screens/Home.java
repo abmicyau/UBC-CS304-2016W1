@@ -127,6 +127,13 @@ public class Home extends JPanel {
             }
         });
 
+        // record lookup button action
+        actionButton6.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Pharmacy_DB.switchScreen(Pharmacy_DB.getCustomerLookup());
+            }
+        });
+
         // employee lookup button action
         actionButton7.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

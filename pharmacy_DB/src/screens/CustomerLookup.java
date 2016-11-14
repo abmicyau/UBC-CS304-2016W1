@@ -87,15 +87,13 @@ public class CustomerLookup extends JPanel {
 
         model.addColumn("ID");
         model.addColumn("Name");
-        model.addColumn("Email");
         model.addColumn("Phone");
-        model.addColumn("Address");
+        model.addColumn("Policy ID");
 
         table.getColumnModel().getColumn(0).setPreferredWidth(100);
-        table.getColumnModel().getColumn(1).setPreferredWidth(150);
-        table.getColumnModel().getColumn(2).setPreferredWidth(200);
-        table.getColumnModel().getColumn(3).setPreferredWidth(200);
-        table.getColumnModel().getColumn(4).setPreferredWidth(200);
+        table.getColumnModel().getColumn(1).setPreferredWidth(250);
+        table.getColumnModel().getColumn(2).setPreferredWidth(250);
+        table.getColumnModel().getColumn(3).setPreferredWidth(100);
 
         table.setFillsViewportHeight(true);
         JScrollPane tableContainer = new JScrollPane(table);
@@ -108,7 +106,7 @@ public class CustomerLookup extends JPanel {
 
         // set border for the panel
         right.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createEtchedBorder(), "Employees"));
+                BorderFactory.createEtchedBorder(), "Customers"));
 
         buttonSearch.addActionListener(new SearchButton());
         buttonBack.addActionListener(new BackButton());
@@ -119,12 +117,11 @@ public class CustomerLookup extends JPanel {
         if (rs != null) {
             try {
                 while (rs.next()) {
-                    int id = rs.getInt("emp_id");
-                    String email = rs.getString("email");
-                    String address = rs.getString("address");
+                    int id = rs.getInt("customer_id");
                     String name = rs.getString("name");
                     String phone = rs.getString("phone_number");
-                    model.addRow(new Object[]{String.format("%08d", id), name, email, phone, address});
+                    int policy = rs.getInt("insurance_policy_id");
+                    model.addRow(new Object[]{String.format("%08d", id), name, phone, String.format("%08d", policy)});
                 }
             } catch (SQLException e) {
                 // stop
@@ -143,18 +140,18 @@ public class CustomerLookup extends JPanel {
                     StringBuilder query = new StringBuilder();
                     StringBuilder message = new StringBuilder();
 
-                    query.append("SELECT * FROM Employee WHERE LOWER(name) LIKE LOWER('%");
+                    query.append("SELECT * FROM Customer WHERE LOWER(name) LIKE LOWER('%");
                     query.append(textName.getText());
                     query.append("%')");
 
                     String id = textID.getText();
 
                     if (id.length() != 0) {
-                        query.append(" AND emp_id = ");
+                        query.append(" AND customer_id = ");
                         query.append(id);
                     }
 
-                    query.append(" ORDER BY emp_id");
+                    query.append(" ORDER BY customer_id");
 
                     fillTable(model, Pharmacy_DB.getResults(query.toString()));
 

@@ -23,6 +23,7 @@ public class Pharmacy_DB {
     private static JPanel login;
     private static JPanel home;
     private static JPanel employeeLookup;
+    private static JPanel customerLookup;
     private static JPanel doctorLookup;
     private static JPanel drugLookup;
     private static JPanel drugRestock;
@@ -60,6 +61,7 @@ public class Pharmacy_DB {
         login = new Login();
         home = new Home();
         employeeLookup = new EmployeeLookup();
+        customerLookup = new CustomerLookup();
         doctorLookup = new DoctorLookup();
         drugLookup = new DrugLookup();
         drugRestock = new DrugRestock();
@@ -135,6 +137,7 @@ public class Pharmacy_DB {
     public static JPanel getLoginPanel() { return login; }
     public static JPanel getHomePanel() { return home; }
     public static JPanel getEmployeeLookupPanel() { return employeeLookup; }
+    public static JPanel getCustomerLookup() { return customerLookup; }
     public static JPanel getDoctorLookupPanel() { return doctorLookup; }
     public static JPanel getDrugLookup() { return drugLookup; }
     public static JPanel getDrugRestock() { return drugRestock; }
