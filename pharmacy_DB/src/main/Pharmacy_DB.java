@@ -25,6 +25,7 @@ public class Pharmacy_DB {
     private static JPanel employeeLookup;
     private static JPanel doctorLookup;
     private static JPanel drugLookup;
+    private static JPanel drugRestock;
 
     // Main method creates new database application
     //
@@ -53,6 +54,7 @@ public class Pharmacy_DB {
         employeeLookup = new EmployeeLookup();
         doctorLookup = new DoctorLookup();
         drugLookup = new DrugLookup();
+        drugRestock = new DrugRestock();
     }
 
     private static void initializeWindow() {
@@ -93,6 +95,8 @@ public class Pharmacy_DB {
         mainFrame.repaint();
     }
 
+    // Gets a result set given a query
+    //
     public static ResultSet getResults(String query) {
         try {
             Statement stmt = connection.createStatement();
@@ -110,5 +114,6 @@ public class Pharmacy_DB {
     public static JPanel getEmployeeLookupPanel() { return employeeLookup; }
     public static JPanel getDoctorLookupPanel() { return doctorLookup; }
     public static JPanel getDrugLookup() { return drugLookup; }
+    public static JPanel getDrugRestock() { return drugRestock; }
 
 }

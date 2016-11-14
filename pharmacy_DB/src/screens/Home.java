@@ -113,6 +113,13 @@ public class Home extends JPanel {
             }
         });
 
+        // drug restock button action
+        actionButton4.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Pharmacy_DB.switchScreen(Pharmacy_DB.getDrugRestock());
+            }
+        });
+
         // drug lookup button action
         actionButton5.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

@@ -15,11 +15,11 @@ import java.util.Vector;
 public class DrugLookup extends JPanel {
 
     private JLabel labelID = new JLabel("DIN: ");
-    private JTextField textID = new JTextField(20);
+    private JTextField textID = new JTextField(10);
     private JLabel labelName1 = new JLabel("Trade Name: ");
-    private JTextField textName1 = new JTextField(20);
+    private JTextField textName1 = new JTextField(10);
     private JLabel labelName2 = new JLabel("Nonproprietary Name: ");
-    private JTextField textName2 = new JTextField(20);
+    private JTextField textName2 = new JTextField(10);
     private JCheckBox otc = new JCheckBox("Over the counter drug");
     private JCheckBox stock = new JCheckBox("Stock drug");
 

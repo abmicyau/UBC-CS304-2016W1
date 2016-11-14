@@ -15,9 +15,9 @@ import java.util.Vector;
 public class EmployeeLookup extends JPanel {
 
     private JLabel labelID = new JLabel("ID: ");
-    private JTextField textID = new JTextField(20);
+    private JTextField textID = new JTextField(10);
     private JLabel labelName = new JLabel("Name: ");
-    private JTextField textName = new JTextField(20);
+    private JTextField textName = new JTextField(10);
     private JButton buttonSearch = new JButton("Search");
     private JButton buttonBack = new JButton("Back");
 
