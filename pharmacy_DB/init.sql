@@ -10,14 +10,14 @@ drop table Prescription_by_is_for;
 drop table Over_the_counter_drug;
 drop table Stock_drug;
 drop table Doctor;
-drop table Subsidizes;
-drop table Insurance_coverage;
-drop table Payment_paid_by;
 drop table Purchase_record;
 drop table Patient;
 drop table Walk_in_Client;
 drop table Drug;
+drop table Subsidizes;
+drop table Payment_paid_by;
 drop table Customer;
+drop table Insurance_coverage;
 
 ----------------------------------------------------------------
 
@@ -52,9 +52,6 @@ create table Pharmacy_Technician
 	primary key (emp_id),
 	foreign key (emp_id) references Employee ON DELETE CASCADE);
 
-
--- TODO: Add tuples for Works_in
-
  create table Doctor 
  	(doctor_id int not null,
  	 phone_number varchar2(32) not null,
@@ -62,12 +59,21 @@ create table Pharmacy_Technician
  	 primary key (doctor_id)
  	);
 
+ create table Insurance_coverage
+ 	(policyId int not null,
+	 expDate date null,
+ 	 maxAllowance int null,
+   	 company varchar (40) null,
+ 	 primary key (policyId)
+ 	); 
+
 create table Customer
 	(customer_id int not null,
 	 name varchar2(32) null,
  	 phone_number varchar2(32) null,
-	 insurance_info varchar2(32) null,
- 	 primary key (customer_id)
+	 insurance_policy_id int null,
+ 	 primary key (customer_id),
+ 	 foreign key (insurance_policy_id) references Insurance_coverage
  	);
 
  create table Patient
@@ -172,14 +178,6 @@ create table Purchase_record
  	 foreign key (customer_id) references Customer ON DELETE CASCADE,
  	 foreign key (din) references Drug ON DELETE CASCADE
  	);
-
-create table Insurance_coverage
- 	(policyId int not null,
-	 expDate date null,
- 	 maxAllowance int null,
-   	 company varchar (40) null,
- 	 primary key (policyId)
- 	); 
 
 create table Subsidizes
 	(paymentId int not null, 
