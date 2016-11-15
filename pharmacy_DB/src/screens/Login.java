@@ -115,6 +115,7 @@ public class Login extends JPanel {
 
                 //authentication
                 if (fieldPassword.getText().equals(fetchUserPass(textUsername.getText()))) {
+                    loginMsg.setVisible(false);
                     Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
                 } else {
                     loginMsg.setText("Login failed. Invalid username/password.");
