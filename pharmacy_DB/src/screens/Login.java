@@ -24,7 +24,6 @@ public class Login extends JPanel {
 
     private String fetchUserPass(String uname) {
         StringBuilder query = new StringBuilder();
-        StringBuilder query2 = new StringBuilder();
         query.append("SELECT password FROM Employee WHERE username = ");
         query.append("'");
         query.append(uname);
@@ -119,6 +118,7 @@ public class Login extends JPanel {
                     Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
                 } else {
                     loginMsg.setText("Login failed. Invalid username/password.");
+                    loginMsg.setVisible(true);
                 }
 
             }
