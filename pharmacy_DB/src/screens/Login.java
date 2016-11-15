@@ -38,25 +38,7 @@ public class Login extends JPanel {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        System.out.println(pw);
         return pw;
-
-    }
-
-    private String rsToString(ResultSet rs) {
-        if (rs != null) {
-            try {
-                while (rs.next()) {
-                    String pw = rs.getString("password");
-                    System.out.println(pw);
-                    return pw;
-                }
-            } catch (SQLException e) {
-
-            }
-        }
-        return null;
     }
 
     public Login() {
