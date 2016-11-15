@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class Login extends JPanel {
 
@@ -15,6 +17,48 @@ public class Login extends JPanel {
     private JTextField textUsername = new JTextField(20);
     private JPasswordField fieldPassword = new JPasswordField(20);
     private JButton buttonLogin = new JButton("Login");
+
+    private JLabel loginMsg = new JLabel(" ");
+
+
+
+    private String fetchUserPass(String uname) {
+        StringBuilder query = new StringBuilder();
+        StringBuilder query2 = new StringBuilder();
+        query.append("SELECT password FROM Employee WHERE username = ");
+        query.append("'");
+        query.append(uname);
+        query.append("'");
+        ResultSet rs = Pharmacy_DB.getResults(query.toString());
+        String pw = null;
+
+        try {
+            while (rs.next()) {
+                pw = rs.getString("PASSWORD");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(pw);
+        return pw;
+
+    }
+
+    private String rsToString(ResultSet rs) {
+        if (rs != null) {
+            try {
+                while (rs.next()) {
+                    String pw = rs.getString("password");
+                    System.out.println(pw);
+                    return pw;
+                }
+            } catch (SQLException e) {
+
+            }
+        }
+        return null;
+    }
 
     public Login() {
 
@@ -58,10 +102,24 @@ public class Login extends JPanel {
         setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(), "Login"));
 
+        constraints.gridx = 0;
+        constraints.gridy = 5;
+
+        add(loginMsg, constraints);
+
+
+
         // login button action
         buttonLogin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
+
+                //authentication
+                if (fieldPassword.getText().equals(fetchUserPass(textUsername.getText()))) {
+                    Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
+                } else {
+                    loginMsg.setText("Login failed. Invalid username/password.");
+                }
+
             }
         });
     }
