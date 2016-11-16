@@ -85,10 +85,7 @@ public class Login extends JPanel {
 
         constraints.gridx = 0;
         constraints.gridy = 5;
-
         add(loginMsg, constraints);
-
-
 
         // login button action
         buttonLogin.addActionListener(new ActionListener() {

@@ -27,6 +27,7 @@ public class Pharmacy_DB {
     private static JPanel doctorLookup;
     private static JPanel drugLookup;
     private static JPanel drugRestock;
+    private static JPanel checkPrescription;
 
     // Main method creates new database application
     //
@@ -65,6 +66,7 @@ public class Pharmacy_DB {
         doctorLookup = new DoctorLookup();
         drugLookup = new DrugLookup();
         drugRestock = new DrugRestock();
+        checkPrescription = new CheckPrescription();
     }
 
     private static void initializeWindow() {
@@ -141,5 +143,6 @@ public class Pharmacy_DB {
     public static JPanel getDoctorLookupPanel() { return doctorLookup; }
     public static JPanel getDrugLookup() { return drugLookup; }
     public static JPanel getDrugRestock() { return drugRestock; }
+    public static JPanel getCheckPrescriptionPanel() { return checkPrescription; }
 
 }

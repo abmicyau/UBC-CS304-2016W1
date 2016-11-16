@@ -147,5 +147,10 @@ public class Home extends JPanel {
                 Pharmacy_DB.switchScreen(Pharmacy_DB.getDoctorLookupPanel());
             }
         });
+
+        actionButton10.addActionListener((new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) { Pharmacy_DB.switchScreen(Pharmacy_DB.getCheckPrescriptionPanel()); }
+        }));
     }
 }
