@@ -1,6 +1,5 @@
 package screens;
 
-import com.sun.codemodel.internal.JOp;
 import main.Pharmacy_DB;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
