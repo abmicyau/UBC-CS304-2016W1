@@ -1,7 +1,7 @@
 package screens;
 
 import main.Pharmacy_DB;
-import sun.jvm.hotspot.types.JIntField;
+//import sun.jvm.hotspot.types.JIntField;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
