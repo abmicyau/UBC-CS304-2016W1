@@ -1,12 +1,15 @@
 package screens;
 
 import main.Pharmacy_DB;
+import models.DBTableModel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -26,7 +29,7 @@ public class EmployeeLookup extends JPanel {
 
     private GridBagConstraints constraints = new GridBagConstraints();
 
-    DefaultTableModel model = new DefaultTableModel();
+    DefaultTableModel model = new DBTableModel();
     JTable table = new JTable(model);
 
     private JPanel left = new JPanel(new GridBagLayout());;
@@ -112,6 +115,30 @@ public class EmployeeLookup extends JPanel {
 
         buttonSearch.addActionListener(new SearchButton());
         buttonBack.addActionListener(new BackButton());
+
+        final JPopupMenu contextMenu = new JPopupMenu();
+        contextMenu.add(new JMenuItem("Edit"));
+        contextMenu.add(new JMenuItem("Delete"));
+        // add items
+
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                int r = table.rowAtPoint(e.getPoint());
+                if (r >= 0 && r < table.getRowCount()) {
+                    table.setRowSelectionInterval(r, r);
+                } else {
+                    table.clearSelection();
+                }
+
+                int rowindex = table.getSelectedRow();
+                if (rowindex < 0)
+                    return;
+                if (e.isPopupTrigger() && e.getComponent() instanceof JTable ) {
+                    contextMenu.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
     }
 
     private void fillTable(DefaultTableModel model, ResultSet rs) {

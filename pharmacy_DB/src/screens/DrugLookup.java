@@ -1,6 +1,7 @@
 package screens;
 
 import main.Pharmacy_DB;
+import models.DBTableModel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -31,7 +32,7 @@ public class DrugLookup extends JPanel {
 
     private GridBagConstraints constraints = new GridBagConstraints();
 
-    DefaultTableModel model = new DefaultTableModel();
+    DefaultTableModel model = new DBTableModel();
     JTable table = new JTable(model);
 
     private JPanel left;
