@@ -3,6 +3,7 @@ package main;
 import screens.*;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.*;
@@ -89,11 +90,12 @@ public class Pharmacy_DB {
             }
         });
 
-
-
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                mainFrame.setIconImage(
+                        (Toolkit.getDefaultToolkit().getImage(getClass()
+                                .getClassLoader().getResource("Pill-512.png"))));
                 mainFrame.setVisible(true);
             }
         });
