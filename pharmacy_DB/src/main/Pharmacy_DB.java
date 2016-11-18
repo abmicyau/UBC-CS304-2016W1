@@ -2,9 +2,10 @@ package main;
 
 import screens.*;
 
-import java.sql.*;
-import java.awt.event.*;
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.*;
 
 
 public class Pharmacy_DB {

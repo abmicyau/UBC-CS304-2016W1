@@ -27,6 +27,8 @@ c/http_client
 *.iml
 .idea/
 pharmacy_DB/.idea/
+pharmacy_DB/out/
+pharmacy_DB/src/META-INF/
 
 # Common text editor backup files
 *~
