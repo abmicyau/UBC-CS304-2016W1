@@ -39,7 +39,7 @@ public class EmployeeLookup extends JPanel {
 
         // important! call JPanel constructor and pass GridBagLayout
         super(new GridBagLayout());
-
+        
         // set contraints and padding
         constraints.anchor = GridBagConstraints.WEST;
         constraints.insets = new Insets(10, 10, 10, 10);
@@ -117,7 +117,9 @@ public class EmployeeLookup extends JPanel {
         buttonBack.addActionListener(new BackButton());
 
         final JPopupMenu contextMenu = new JPopupMenu();
-        contextMenu.add(new JMenuItem("Edit"));
+        JMenuItem menuItem = new JMenuItem("Edit");
+        menuItem.addActionListener(new ContextMenuListener());
+        contextMenu.add(menuItem);
         contextMenu.add(new JMenuItem("Delete"));
         // add items
 
@@ -199,6 +201,12 @@ public class EmployeeLookup extends JPanel {
     private class BackButton implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
+        }
+    }
+
+    private class ContextMenuListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            System.out.println(table.getValueAt(table.getSelectedRow(), 0));
         }
     }
 
