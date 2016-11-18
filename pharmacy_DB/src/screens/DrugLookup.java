@@ -144,6 +144,8 @@ public class DrugLookup extends JPanel {
 
         buttonSearch.addActionListener(new SearchButton());
         buttonBack.addActionListener(new BackButton());
+
+        search();
     }
 
     private void fillTable(DefaultTableModel model, ResultSet rs) {
@@ -173,6 +175,55 @@ public class DrugLookup extends JPanel {
         }
     }
 
+    private void search() {
+        StringBuilder query = new StringBuilder();
+        StringBuilder message = new StringBuilder();
+
+        if (otc.isSelected() || stock.isSelected()) {
+            query.append("SELECT * FROM (");
+            if (otc.isSelected()) {
+                query.append("SELECT d.DIN, drug_name_INN, drug_name_trade, drug_description, contraindications, quantity stock, 'otc' type " +
+                        "FROM Drug d, Over_the_counter_drug o " +
+                        "WHERE d.DIN = o.DIN");
+            }
+            if (otc.isSelected() && stock.isSelected()) {
+                query.append(" UNION ");
+            }
+            if (stock.isSelected()) {
+                query.append("SELECT d.DIN, drug_name_INN, drug_name_trade, drug_description, contraindications, amount_mg stock, 'stock' type " +
+                        "FROM Drug d, Stock_drug s " +
+                        "WHERE d.DIN = s.DIN");
+            }
+            query.append(") ");
+
+            query.append(" WHERE LOWER(drug_name_INN) LIKE LOWER('%");
+            query.append(textName1.getText());
+            query.append("%') AND LOWER(drug_name_trade) LIKE LOWER ('%");
+            query.append(textName2.getText());
+            query.append("%')");
+
+            String din = textID.getText();
+
+            if (din.length() != 0) {
+                query.append(" AND din = ");
+                query.append(din);
+            }
+
+            query.append(" ORDER BY din");
+
+            fillTable(model, Pharmacy_DB.getResults(query.toString()));
+        } else {
+            fillTable(model, null);
+        }
+
+        message.append(model.getRowCount());
+        message.append(" results found.");
+
+        searchMessage.setText(message.toString());
+        revalidate();
+        repaint();
+    }
+
     private class SearchButton implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             searchMessage.setText("Searching...");
@@ -181,52 +232,7 @@ public class DrugLookup extends JPanel {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    StringBuilder query = new StringBuilder();
-                    StringBuilder message = new StringBuilder();
-
-                    if (otc.isSelected() || stock.isSelected()) {
-                        query.append("SELECT * FROM (");
-                        if (otc.isSelected()) {
-                            query.append("SELECT d.DIN, drug_name_INN, drug_name_trade, drug_description, contraindications, quantity stock, 'otc' type " +
-                                         "FROM Drug d, Over_the_counter_drug o " +
-                                         "WHERE d.DIN = o.DIN");
-                        }
-                        if (otc.isSelected() && stock.isSelected()) {
-                            query.append(" UNION ");
-                        }
-                        if (stock.isSelected()) {
-                            query.append("SELECT d.DIN, drug_name_INN, drug_name_trade, drug_description, contraindications, amount_mg stock, 'stock' type " +
-                                         "FROM Drug d, Stock_drug s " +
-                                         "WHERE d.DIN = s.DIN");
-                        }
-                        query.append(") ");
-
-                        query.append(" WHERE LOWER(drug_name_INN) LIKE LOWER('%");
-                        query.append(textName1.getText());
-                        query.append("%') AND LOWER(drug_name_trade) LIKE LOWER ('%");
-                        query.append(textName2.getText());
-                        query.append("%')");
-
-                        String din = textID.getText();
-
-                        if (din.length() != 0) {
-                            query.append(" AND din = ");
-                            query.append(din);
-                        }
-
-                        query.append(" ORDER BY din");
-
-                        fillTable(model, Pharmacy_DB.getResults(query.toString()));
-                    } else {
-                        fillTable(model, null);
-                    }
-
-                    message.append(model.getRowCount());
-                    message.append(" results found.");
-
-                    searchMessage.setText(message.toString());
-                    revalidate();
-                    repaint();
+                    search();
                 }
             });
         }

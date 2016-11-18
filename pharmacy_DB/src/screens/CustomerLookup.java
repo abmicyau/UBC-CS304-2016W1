@@ -128,6 +128,8 @@ public class CustomerLookup extends JPanel {
 
         buttonSearch.addActionListener(new SearchButton());
         buttonBack.addActionListener(new BackButton());
+
+        search();
     }
 
     private void fillTable(DefaultTableModel model, ResultSet rs) {
@@ -155,6 +157,40 @@ public class CustomerLookup extends JPanel {
         }
     }
 
+    private void search() {
+        StringBuilder query = new StringBuilder();
+        StringBuilder message = new StringBuilder();
+
+        query.append("SELECT * FROM Customer, Insurance_coverage " +
+                "WHERE insurance_policy_id = policy_id AND " +
+                "LOWER(name) LIKE LOWER('%");
+        query.append(textName.getText());
+        query.append("%')");
+
+        String id = textID.getText();
+        String policyId = textPolicyID.getText();
+
+        if (id.length() != 0) {
+            query.append(" AND customer_id = ");
+            query.append(id);
+        }
+        if (policyId.length() != 0) {
+            query.append(" AND insurance_policy_id = ");
+            query.append(policyId);
+        }
+
+        query.append(" ORDER BY customer_id");
+
+        fillTable(model, Pharmacy_DB.getResults(query.toString()));
+
+        message.append(model.getRowCount());
+        message.append(" results found.");
+
+        searchMessage.setText(message.toString());
+        revalidate();
+        repaint();
+    }
+
     private class SearchButton implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             searchMessage.setText("Searching...");
@@ -163,37 +199,7 @@ public class CustomerLookup extends JPanel {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    StringBuilder query = new StringBuilder();
-                    StringBuilder message = new StringBuilder();
-
-                    query.append("SELECT * FROM Customer, Insurance_coverage " +
-                                 "WHERE insurance_policy_id = policy_id AND " +
-                                 "LOWER(name) LIKE LOWER('%");
-                    query.append(textName.getText());
-                    query.append("%')");
-
-                    String id = textID.getText();
-                    String policyId = textPolicyID.getText();
-
-                    if (id.length() != 0) {
-                        query.append(" AND customer_id = ");
-                        query.append(id);
-                    }
-                    if (policyId.length() != 0) {
-                        query.append(" AND insurance_policy_id = ");
-                        query.append(policyId);
-                    }
-
-                    query.append(" ORDER BY customer_id");
-
-                    fillTable(model, Pharmacy_DB.getResults(query.toString()));
-
-                    message.append(model.getRowCount());
-                    message.append(" results found.");
-
-                    searchMessage.setText(message.toString());
-                    revalidate();
-                    repaint();
+                    search();
                 }
             });
         }

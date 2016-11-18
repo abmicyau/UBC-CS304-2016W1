@@ -142,6 +142,9 @@ public class EmployeeLookup extends JPanel {
                 }
             }
         });
+
+        // fill table rows beforehand
+        search();
     }
 
     private void fillTable(DefaultTableModel model, ResultSet rs) {

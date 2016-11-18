@@ -107,6 +107,8 @@ public class DoctorLookup extends JPanel {
 
         buttonSearch.addActionListener(new SearchButton());
         buttonBack.addActionListener(new BackButton());
+
+        search();
     }
 
     private void fillTable(DefaultTableModel model, ResultSet rs) {
@@ -125,6 +127,33 @@ public class DoctorLookup extends JPanel {
         }
     }
 
+    private void search() {
+        StringBuilder query = new StringBuilder();
+        StringBuilder message = new StringBuilder();
+
+        query.append("SELECT * FROM Doctor WHERE LOWER(name) LIKE LOWER('%");
+        query.append(textName.getText());
+        query.append("%')");
+
+        String id = textID.getText();
+
+        if (id.length() != 0) {
+            query.append(" AND doctor_id = ");
+            query.append(id);
+        }
+
+        query.append(" ORDER BY doctor_id");
+
+        fillTable(model, Pharmacy_DB.getResults(query.toString()));
+
+        message.append(model.getRowCount());
+        message.append(" results found.");
+
+        searchMessage.setText(message.toString());
+        revalidate();
+        repaint();
+    }
+
     private class SearchButton implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             searchMessage.setText("Searching...");
@@ -133,30 +162,7 @@ public class DoctorLookup extends JPanel {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    StringBuilder query = new StringBuilder();
-                    StringBuilder message = new StringBuilder();
-
-                    query.append("SELECT * FROM Doctor WHERE LOWER(name) LIKE LOWER('%");
-                    query.append(textName.getText());
-                    query.append("%')");
-
-                    String id = textID.getText();
-
-                    if (id.length() != 0) {
-                        query.append(" AND doctor_id = ");
-                        query.append(id);
-                    }
-
-                    query.append(" ORDER BY doctor_id");
-
-                    fillTable(model, Pharmacy_DB.getResults(query.toString()));
-
-                    message.append(model.getRowCount());
-                    message.append(" results found.");
-
-                    searchMessage.setText(message.toString());
-                    revalidate();
-                    repaint();
+                    search();
                 }
             });
         }
