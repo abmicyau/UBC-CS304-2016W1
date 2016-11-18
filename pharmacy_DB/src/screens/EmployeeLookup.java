@@ -35,7 +35,7 @@ public class EmployeeLookup extends JPanel {
     private JPanel left = new JPanel(new GridBagLayout());;
     private JPanel right = new JPanel(new BorderLayout());;
 
-    private EmployeeLookup panel = this;
+    private JPopupMenu contextMenu = new JPopupMenu();
 
     public EmployeeLookup() {
 
@@ -118,9 +118,8 @@ public class EmployeeLookup extends JPanel {
         buttonSearch.addActionListener(new SearchButton());
         buttonBack.addActionListener(new BackButton());
 
-        final JPopupMenu contextMenu = new JPopupMenu();
         JMenuItem menuItem = new JMenuItem("Delete");
-        menuItem.addActionListener(new ContextMenuListener());
+        menuItem.addActionListener(new DeleteButton());
         contextMenu.add(menuItem);
         // add items
 
@@ -144,7 +143,7 @@ public class EmployeeLookup extends JPanel {
         });
 
         // fill table rows beforehand
-        search();
+        update();
     }
 
     private void fillTable(DefaultTableModel model, ResultSet rs) {
@@ -165,7 +164,7 @@ public class EmployeeLookup extends JPanel {
         }
     }
 
-    private void search() {
+    private void update() {
         StringBuilder query = new StringBuilder();
         StringBuilder message = new StringBuilder();
 
@@ -201,7 +200,7 @@ public class EmployeeLookup extends JPanel {
 
         Pharmacy_DB.executeUpdate(query.toString());
 
-        search();
+        update();
 
         revalidate();
         repaint();
@@ -215,7 +214,7 @@ public class EmployeeLookup extends JPanel {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    search();
+                    update();
                 }
             });
         }
@@ -227,10 +226,10 @@ public class EmployeeLookup extends JPanel {
         }
     }
 
-    private class ContextMenuListener implements ActionListener {
+    private class DeleteButton implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             int n = JOptionPane.showConfirmDialog(
-                    panel,
+                    Pharmacy_DB.getEmployeeLookupPanel(),
                     "Are you sure you want to delete the following employee?\n\n" +
                             "(" + table.getValueAt(table.getSelectedRow(), 0).toString() + ") " +
                             table.getValueAt(table.getSelectedRow(), 1).toString() + "\n\n",
@@ -240,17 +239,16 @@ public class EmployeeLookup extends JPanel {
                 try {
                     // check for result > 0???
                     deleteEmployee(Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString()));
-                    JOptionPane.showMessageDialog(panel,
+                    JOptionPane.showMessageDialog(Pharmacy_DB.getEmployeeLookupPanel(),
                             "Employee successfully deleted.",
                             "Delete Employee",
                             JOptionPane.PLAIN_MESSAGE);
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(panel,
+                    JOptionPane.showMessageDialog(Pharmacy_DB.getEmployeeLookupPanel(),
                             "Unexpected error. Could not delete employee.",
                             "Delete Employee",
                             JOptionPane.ERROR_MESSAGE);
                 }
-
             }
         }
     }

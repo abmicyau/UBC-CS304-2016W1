@@ -8,10 +8,14 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
+import static javax.swing.JOptionPane.YES_OPTION;
 
 public class CustomerLookup extends JPanel {
 
@@ -36,6 +40,8 @@ public class CustomerLookup extends JPanel {
     private JPanel right = new JPanel(new BorderLayout());;
 
     private SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
+
+    private JPopupMenu contextMenu = new JPopupMenu();
 
     public CustomerLookup() {
 
@@ -129,7 +135,31 @@ public class CustomerLookup extends JPanel {
         buttonSearch.addActionListener(new SearchButton());
         buttonBack.addActionListener(new BackButton());
 
-        search();
+        JMenuItem menuItem = new JMenuItem("Delete");
+        menuItem.addActionListener(new DeleteButton());
+        contextMenu.add(menuItem);
+        // add items
+
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                int r = table.rowAtPoint(e.getPoint());
+                if (r >= 0 && r < table.getRowCount()) {
+                    table.setRowSelectionInterval(r, r);
+                } else {
+                    table.clearSelection();
+                }
+
+                int rowindex = table.getSelectedRow();
+                if (rowindex < 0)
+                    return;
+                if (e.isPopupTrigger() && e.getComponent() instanceof JTable ) {
+                    contextMenu.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
+
+        update();
     }
 
     private void fillTable(DefaultTableModel model, ResultSet rs) {
@@ -157,7 +187,7 @@ public class CustomerLookup extends JPanel {
         }
     }
 
-    private void search() {
+    private void update() {
         StringBuilder query = new StringBuilder();
         StringBuilder message = new StringBuilder();
 
@@ -191,6 +221,21 @@ public class CustomerLookup extends JPanel {
         repaint();
     }
 
+    private void deleteCustomer(int id) throws SQLException {
+        StringBuilder query = new StringBuilder();
+        StringBuilder message = new StringBuilder();
+
+        query.append("DELETE FROM Customer WHERE customer_id = ");
+        query.append(id);
+
+        Pharmacy_DB.executeUpdate(query.toString());
+
+        update();
+
+        revalidate();
+        repaint();
+    }
+
     private class SearchButton implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             searchMessage.setText("Searching...");
@@ -199,7 +244,7 @@ public class CustomerLookup extends JPanel {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    search();
+                    update();
                 }
             });
         }
@@ -208,6 +253,33 @@ public class CustomerLookup extends JPanel {
     private class BackButton implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
+        }
+    }
+
+    private class DeleteButton implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            int n = JOptionPane.showConfirmDialog(
+                    Pharmacy_DB.getEmployeeLookupPanel(),
+                    "Are you sure you want to delete the following customer record?\n\n" +
+                            "(" + table.getValueAt(table.getSelectedRow(), 0).toString() + ") " +
+                            table.getValueAt(table.getSelectedRow(), 1).toString() + "\n\n",
+                    "Delete Customer Record",
+                    JOptionPane.YES_NO_OPTION);
+            if (n == YES_OPTION) {
+                try {
+                    // check for result > 0???
+                    deleteCustomer(Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString()));
+                    JOptionPane.showMessageDialog(Pharmacy_DB.getEmployeeLookupPanel(),
+                            "Customer record successfully deleted.",
+                            "Delete Customer Record",
+                            JOptionPane.PLAIN_MESSAGE);
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(Pharmacy_DB.getEmployeeLookupPanel(),
+                            "Unexpected error. Could not delete employee.",
+                            "Delete Customer Record",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
         }
     }
 
