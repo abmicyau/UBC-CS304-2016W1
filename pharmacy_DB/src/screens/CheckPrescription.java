@@ -82,7 +82,7 @@ public class CheckPrescription extends JPanel {
         searchMessage.setVisible(false);
 
         model.addColumn("Customer ID");
-            model.addColumn("Doctor Name");
+        model.addColumn("Doctor Name");
         model.addColumn("Doctor Phone Number");
         model.addColumn("Date Prescribed");
         model.addColumn("Dosage");
