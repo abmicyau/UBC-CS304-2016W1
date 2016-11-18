@@ -123,13 +123,14 @@ public class CheckPrescription extends JPanel {
         if (rs != null) {
             try {
                 while (rs.next()) {
-                    int cid = rs.getInt("customer_id");
-                    String dname = rs.getString("name");
-                    String dphone = rs.getString("phone_number");
-                    String dateprescribed = rs.getString("date_prescribed");
-                    String dosage = rs.getString("dosage");
-                    String duration = rs.getString("duration");
-                    String freq = rs.getString("freqeuency");
+                    int cid = rs.getInt("CUSTOMER_ID");
+                    String dname = rs.getString("NAME");
+                    String dphone = rs.getString("PHONE_NUMBER");
+                    String dateprescribed = rs.getString("DATE_PRESCRIBED");
+                    String dosage = rs.getString("DOSE");
+                    String duration = rs.getString("DURATION");
+                    String freq = rs.getString("FREQUENCY");
+                    model.addRow(new Object[]{String.format("%08d", cid), dname, dphone, dateprescribed, dosage, duration, freq});
                 }
             } catch (SQLException e) {
 
@@ -151,12 +152,14 @@ public class CheckPrescription extends JPanel {
                     @Override
                     public void run() {
                         StringBuilder query = new StringBuilder();
-                        query.append("SELECT * FROM Prescription_item_has pi AND Prescription_by_is_for pbf " +
-                                "AND Doctor d WHERE pi.prescription_id = pbf.prescription_id AND " +
-                                "d.doctor_id = pbf.doctor_id AND d.doctor_id = ");
+                        query.append("SELECT * FROM Prescription_item_has pi, Prescription_by_is_for pbf, Doctor do, " +
+                                "Item_consistof_drug icd WHERE pi.prescription_id = pbf.prescription_id AND do.doctor_id=" +
+                                "pbf.doctor_id AND pi.item_id = icd.item_id AND do.doctor_id=");
                         query.append(textDID.getText());
-                        query.append(" AND pi.prescription_id = ");
+                        query.append(" AND pi.prescription_id=");
                         query.append(textPID.getText());
+                        //print query to console
+                        System.out.println(query.toString());
 
                         fillTable(model, Pharmacy_DB.getResults(query.toString()));
 

@@ -90,7 +90,7 @@ create table Customer
  	(service_id int not null,
 	 doctor_id int not null,
  	 customer_id int not null,
- 	 prescription_id int not null, 
+ 	 prescription_id int not null,
  	 date_prescribed date not null, 
 	 primary key (service_id), 
  	 foreign key (doctor_id) references Doctor ON DELETE CASCADE, 
@@ -1059,6 +1059,24 @@ insert into Patient (customer_id, care_card_number, address, birthdate, gender) 
 insert into Patient (customer_id, care_card_number, address, birthdate, gender) values (194, 7026993981422528, '2617 Dapin Junction', '2000-06-03', 'F');
 insert into Patient (customer_id, care_card_number, address, birthdate, gender) values (196, 5187900983611282, '5577 Hoffman Park', '1972-01-21', 'F');
 insert into Patient (customer_id, care_card_number, address, birthdate, gender) values (198, 6501268727893778, '0 Carey Drive', '2009-11-12', 'F');
+
+insert into Prescription_by_is_for (service_id, doctor_id, customer_id, prescription_id, date_prescribed) values (0, 1, 42, 0, '2011-11-11');
+insert into Prescription_by_is_for (service_id, doctor_id, customer_id, prescription_id, date_prescribed) values (1, 1, 38, 1, '2012-03-01');
+insert into Prescription_by_is_for (service_id, doctor_id, customer_id, prescription_id, date_prescribed) values (2, 1, 24, 2, '2012-03-04');
+
+insert into Prescription_item_has (item_id, prescription_id, dose, duration, frequency) values (0, 0, '20 mg', '2 weeks',  '4 times a day');
+insert into Prescription_item_has (item_id, prescription_id, dose, duration, frequency) values (1, 0, '20 mL', '1 week',  '2 times a day');
+insert into Prescription_item_has (item_id, prescription_id, dose, duration, frequency) values (2, 0, '10 mL', '3 days',  '3 times a day');
+insert into Prescription_item_has (item_id, prescription_id, dose, duration, frequency) values (3, 1, '15 mL', '5 days',  '1 time a day');
+insert into Prescription_item_has (item_id, prescription_id, dose, duration, frequency) values (4, 2, '650 mg', '3 weeks',  'BID');
+insert into Prescription_item_has (item_id, prescription_id, dose, duration, frequency) values (5, 2, '250 mg', '9 days',  'TID');
+
+insert into Item_consistof_drug (item_id, DIN) values (0, 1);
+insert into Item_consistof_drug (item_id, DIN) values (1, 1);
+insert into Item_consistof_drug (item_id, DIN) values (2, 2);
+insert into Item_consistof_drug (item_id, DIN) values (3, 3);
+insert into Item_consistof_drug (item_id, DIN) values (4, 78);
+insert into Item_consistof_drug (item_id, DIN) values (5, 5);
 
 insert into Walk_in_client (customer_id) values (1);
 insert into Walk_in_client (customer_id) values (3);
