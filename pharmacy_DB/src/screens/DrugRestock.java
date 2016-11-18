@@ -207,10 +207,13 @@ public class DrugRestock extends JPanel {
             buttonConfirm.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-
-                    if (Pharmacy_DB.executeUpdate(updateQuery) > 0) {
-                        restockMessage.setText("Successfully restocked.");
-                    } else {
+                    try {
+                        if (Pharmacy_DB.executeUpdate(updateQuery) > 0) {
+                            restockMessage.setText("Successfully restocked.");
+                        } else {
+                            restockMessage.setText("Item not found.");
+                        }
+                    } catch (SQLException ex) {
                         restockMessage.setText("Unexpected error.");
                     }
 

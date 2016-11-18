@@ -13,6 +13,8 @@ import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static javax.swing.JOptionPane.YES_OPTION;
+
 public class EmployeeLookup extends JPanel {
 
     private JLabel labelID = new JLabel("ID: ");
@@ -32,6 +34,8 @@ public class EmployeeLookup extends JPanel {
 
     private JPanel left = new JPanel(new GridBagLayout());;
     private JPanel right = new JPanel(new BorderLayout());;
+
+    private EmployeeLookup panel = this;
 
     public EmployeeLookup() {
 
@@ -115,10 +119,9 @@ public class EmployeeLookup extends JPanel {
         buttonBack.addActionListener(new BackButton());
 
         final JPopupMenu contextMenu = new JPopupMenu();
-        JMenuItem menuItem = new JMenuItem("Edit");
+        JMenuItem menuItem = new JMenuItem("Delete");
         menuItem.addActionListener(new ContextMenuListener());
         contextMenu.add(menuItem);
-        contextMenu.add(new JMenuItem("Delete"));
         // add items
 
         table.addMouseListener(new MouseAdapter() {
@@ -159,6 +162,48 @@ public class EmployeeLookup extends JPanel {
         }
     }
 
+    private void search() {
+        StringBuilder query = new StringBuilder();
+        StringBuilder message = new StringBuilder();
+
+        query.append("SELECT * FROM Employee WHERE LOWER(name) LIKE LOWER('%");
+        query.append(textName.getText());
+        query.append("%')");
+
+        String id = textID.getText();
+
+        if (id.length() != 0) {
+            query.append(" AND emp_id = ");
+            query.append(id);
+        }
+
+        query.append(" ORDER BY emp_id");
+
+        fillTable(model, Pharmacy_DB.getResults(query.toString()));
+
+        message.append(model.getRowCount());
+        message.append(" results found.");
+
+        searchMessage.setText(message.toString());
+        revalidate();
+        repaint();
+    }
+
+    private void deleteEmployee(int id) throws SQLException {
+        StringBuilder query = new StringBuilder();
+        StringBuilder message = new StringBuilder();
+
+        query.append("DELETE FROM Employee WHERE emp_id = ");
+        query.append(id);
+
+        Pharmacy_DB.executeUpdate(query.toString());
+
+        search();
+
+        revalidate();
+        repaint();
+    }
+
     private class SearchButton implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             searchMessage.setText("Searching...");
@@ -167,30 +212,7 @@ public class EmployeeLookup extends JPanel {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    StringBuilder query = new StringBuilder();
-                    StringBuilder message = new StringBuilder();
-
-                    query.append("SELECT * FROM Employee WHERE LOWER(name) LIKE LOWER('%");
-                    query.append(textName.getText());
-                    query.append("%')");
-
-                    String id = textID.getText();
-
-                    if (id.length() != 0) {
-                        query.append(" AND emp_id = ");
-                        query.append(id);
-                    }
-
-                    query.append(" ORDER BY emp_id");
-
-                    fillTable(model, Pharmacy_DB.getResults(query.toString()));
-
-                    message.append(model.getRowCount());
-                    message.append(" results found.");
-
-                    searchMessage.setText(message.toString());
-                    revalidate();
-                    repaint();
+                    search();
                 }
             });
         }
@@ -204,7 +226,29 @@ public class EmployeeLookup extends JPanel {
 
     private class ContextMenuListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            System.out.println(table.getValueAt(table.getSelectedRow(), 0));
+            int n = JOptionPane.showConfirmDialog(
+                    panel,
+                    "Are you sure you want to delete the following employee?\n\n" +
+                            "(" + table.getValueAt(table.getSelectedRow(), 0).toString() + ") " +
+                            table.getValueAt(table.getSelectedRow(), 1).toString() + "\n\n",
+                    "Delete Employee",
+                    JOptionPane.YES_NO_OPTION);
+            if (n == YES_OPTION) {
+                try {
+                    // check for result > 0???
+                    deleteEmployee(Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString()));
+                    JOptionPane.showMessageDialog(panel,
+                            "Employee successfully deleted.",
+                            "Delete Employee",
+                            JOptionPane.PLAIN_MESSAGE);
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(panel,
+                            "Unexpected error. Could not delete employee.",
+                            "Delete Employee",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+
+            }
         }
     }
 

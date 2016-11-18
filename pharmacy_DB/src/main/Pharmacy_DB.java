@@ -115,13 +115,9 @@ public class Pharmacy_DB {
         }
     }
 
-    public static int executeUpdate(String query) {
-        try {
-            Statement stmt = connection.createStatement();
-            return stmt.executeUpdate(query);
-        } catch (SQLException e) {
-            return -1;
-        }
+    public static int executeUpdate(String query) throws SQLException {
+        Statement stmt = connection.createStatement();
+        return stmt.executeUpdate(query);
     }
 
     // yolo method for checking integers
