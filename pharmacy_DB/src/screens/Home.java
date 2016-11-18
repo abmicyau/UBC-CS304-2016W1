@@ -113,6 +113,20 @@ public class Home extends JPanel {
             }
         });
 
+        // adds patient record
+        actionButton2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Pharmacy_DB.switchScreen(Pharmacy_DB.getRecordAddition());
+            }
+        });
+
+        // removes patient record
+        actionButton3.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Pharmacy_DB.switchScreen(Pharmacy_DB.getRecordDeletion());
+            }
+        });
+
         // drug restock button action
         actionButton4.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

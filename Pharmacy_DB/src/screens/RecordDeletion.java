@@ -46,6 +46,11 @@ public class RecordDeletion extends JPanel{
         add(buttonDelete, constraints);
 
         constraints.gridy = 3;
+        constraints.gridwidth = 3;
+        add(deleteMessage, constraints);
+
+        constraints.gridy = 4;
+        constraints.gridwidth = 2;
         add(buttonBack, constraints);
 
         //Listeners
@@ -125,10 +130,13 @@ public class RecordDeletion extends JPanel{
             buttonConfirm.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-
-                    if (Pharmacy_DB.executeUpdate(deleteQuery) > 0) {
-                        deleteMessage.setText("Successfully deleted.");
-                    } else {
+                    try {
+                        if (Pharmacy_DB.executeUpdate(deleteQuery) > 0) {
+                            deleteMessage.setText("Successfully deleted.");
+                        } else {
+                            deleteMessage.setText("Customer not found.");
+                        }
+                    } catch (SQLException ex){
                         deleteMessage.setText("Unexpected error.");
                     }
 
