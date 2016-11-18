@@ -1,6 +1,7 @@
 package screens;
 
 import main.Pharmacy_DB;
+import models.DBTableModel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -9,8 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Vector;
 
 public class DoctorLookup extends JPanel {
 
@@ -26,7 +25,7 @@ public class DoctorLookup extends JPanel {
 
     private GridBagConstraints constraints = new GridBagConstraints();
 
-    DefaultTableModel model = new DefaultTableModel();
+    DefaultTableModel model = new DBTableModel();
     JTable table = new JTable(model);
 
     private JPanel left = new JPanel(new GridBagLayout());;

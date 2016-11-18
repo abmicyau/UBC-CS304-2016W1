@@ -2,9 +2,10 @@ package main;
 
 import screens.*;
 
-import java.sql.*;
-import java.awt.event.*;
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.*;
 
 
 public class Pharmacy_DB {
@@ -114,13 +115,9 @@ public class Pharmacy_DB {
         }
     }
 
-    public static int executeUpdate(String query) {
-        try {
-            Statement stmt = connection.createStatement();
-            return stmt.executeUpdate(query);
-        } catch (SQLException e) {
-            return -1;
-        }
+    public static int executeUpdate(String query) throws SQLException {
+        Statement stmt = connection.createStatement();
+        return stmt.executeUpdate(query);
     }
 
     // yolo method for checking integers

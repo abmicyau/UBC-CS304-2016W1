@@ -90,15 +90,16 @@ public class Login extends JPanel {
         // login button action
         buttonLogin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
 
-                //authentication
-                if (fieldPassword.getText().equals(fetchUserPass(textUsername.getText()))) {
-                    loginMsg.setVisible(false);
-                    Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
-                } else {
-                    loginMsg.setText("Login failed. Invalid username/password.");
-                    loginMsg.setVisible(true);
-                }
+                // disable login for convenience for now
+//                if (fieldPassword.getText().equals(fetchUserPass(textUsername.getText()))) {
+//                    loginMsg.setVisible(false);
+//                    Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
+//                } else {
+//                    loginMsg.setText("Login failed. Invalid username/password.");
+//                    loginMsg.setVisible(true);
+//                }
 
             }
         });

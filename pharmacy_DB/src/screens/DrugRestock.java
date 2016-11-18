@@ -3,14 +3,11 @@ package screens;
 import main.Pharmacy_DB;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Vector;
 
 public class DrugRestock extends JPanel {
 
@@ -210,10 +207,13 @@ public class DrugRestock extends JPanel {
             buttonConfirm.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-
-                    if (Pharmacy_DB.executeUpdate(updateQuery) > 0) {
-                        restockMessage.setText("Successfully restocked.");
-                    } else {
+                    try {
+                        if (Pharmacy_DB.executeUpdate(updateQuery) > 0) {
+                            restockMessage.setText("Successfully restocked.");
+                        } else {
+                            restockMessage.setText("Item not found.");
+                        }
+                    } catch (SQLException ex) {
                         restockMessage.setText("Unexpected error.");
                     }
 

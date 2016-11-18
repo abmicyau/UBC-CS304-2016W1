@@ -1,7 +1,6 @@
 package screens;
 
 import main.Pharmacy_DB;
-import sun.jvm.hotspot.types.JIntField;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -10,8 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Vector;
 
 
 public class CheckPrescription extends JPanel {
@@ -29,6 +26,7 @@ public class CheckPrescription extends JPanel {
     private JTable table = new JTable(model);
     private JPanel left = new JPanel(new GridBagLayout());;
     private JPanel right = new JPanel(new BorderLayout());;
+    private JFrame warningFrame = new JFrame("Warning");
 
     public CheckPrescription() {
         super(new GridLayout());
@@ -84,16 +82,20 @@ public class CheckPrescription extends JPanel {
         searchMessage.setVisible(false);
 
         model.addColumn("Customer ID");
+            model.addColumn("Doctor Name");
+        model.addColumn("Doctor Phone Number");
         model.addColumn("Date Prescribed");
         model.addColumn("Dosage");
         model.addColumn("Duration");
         model.addColumn("Frequency");
 
         table.getColumnModel().getColumn(0).setPreferredWidth(100);
-        table.getColumnModel().getColumn(1).setPreferredWidth(150);
+        table.getColumnModel().getColumn(1).setPreferredWidth(100);
         table.getColumnModel().getColumn(2).setPreferredWidth(150);
-        table.getColumnModel().getColumn(3).setPreferredWidth(150);
-        table.getColumnModel().getColumn(4).setPreferredWidth(200);
+        table.getColumnModel().getColumn(3).setPreferredWidth(100);
+        table.getColumnModel().getColumn(4).setPreferredWidth(100);
+        table.getColumnModel().getColumn(5).setPreferredWidth(100);
+        table.getColumnModel().getColumn(6).setPreferredWidth(200);
 
         table.setFillsViewportHeight(true);
         JScrollPane tableContainer = new JScrollPane(table);
@@ -115,10 +117,60 @@ public class CheckPrescription extends JPanel {
     private class BackButton implements ActionListener {
         public void actionPerformed(ActionEvent e) { Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel()); }
     }
+
+    private void fillTable(DefaultTableModel model, ResultSet rs) {
+        model.setRowCount(0);
+        if (rs != null) {
+            try {
+                while (rs.next()) {
+                    int cid = rs.getInt("customer_id");
+                    String dname = rs.getString("name");
+                    String dphone = rs.getString("phone_number");
+                    String dateprescribed = rs.getString("date_prescribed");
+                    String dosage = rs.getString("dosage");
+                    String duration = rs.getString("duration");
+                    String freq = rs.getString("freqeuency");
+                }
+            } catch (SQLException e) {
+
+            }
+        }
+    }
+
     private class SearchButton implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             searchButton.setText("Searching...");
-            searchButton.setVisible(true);
+
+            if ((textPID.getText().length() == 0 || textDID.getText().length() == 0) ||
+                    (textPID.getText().matches("[0-9]+") == false) || (textDID.getText().matches("[0-9]+") == false)) {
+                JOptionPane.showMessageDialog(warningFrame, "Please enter a valid Doctor ID and/or Prescription ID.");
+                searchButton.setText("Search");
+
+            } else {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        StringBuilder query = new StringBuilder();
+                        query.append("SELECT * FROM Prescription_item_has pi AND Prescription_by_is_for pbf " +
+                                "AND Doctor d WHERE pi.prescription_id = pbf.prescription_id AND " +
+                                "d.doctor_id = pbf.doctor_id AND d.doctor_id = ");
+                        query.append(textDID.getText());
+                        query.append(" AND pi.prescription_id = ");
+                        query.append(textPID.getText());
+
+                        fillTable(model, Pharmacy_DB.getResults(query.toString()));
+
+                        if (model.getRowCount() == 0) {
+                            JOptionPane.showMessageDialog(warningFrame, "No such prescription exists in the database");
+                        }
+
+                        searchButton.setText("Search");
+
+                        revalidate();
+                        repaint();
+                    }
+                });
+            }
         }
 
     }

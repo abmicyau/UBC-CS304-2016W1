@@ -14,7 +14,7 @@ public class Home extends JPanel {
     private JButton actionButton3 = new JButton("Delete Record");
     private JButton actionButton4 = new JButton("Drug Restock");
     private JButton actionButton5 = new JButton("Drug Lookup");
-    private JButton actionButton6 = new JButton("Record Lookup");
+    private JButton actionButton6 = new JButton("Customer Lookup");
     private JButton actionButton7 = new JButton("Employee Lookup");
     private JButton actionButton8 = new JButton("Doctor Lookup");
     private JButton actionButton9 = new JButton("Insurance Lookup");
