@@ -101,6 +101,7 @@ public class Pharmacy_DB {
         });
     }
 
+
     // Switches the current panel to the specified one
     //
     public static void switchScreen(JPanel panel) {

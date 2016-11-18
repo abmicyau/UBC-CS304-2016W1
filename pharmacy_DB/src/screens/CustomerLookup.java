@@ -112,8 +112,8 @@ public class CustomerLookup extends JPanel {
         model.addColumn("Provider");
 
         table.getColumnModel().getColumn(0).setPreferredWidth(100);
-        table.getColumnModel().getColumn(1).setPreferredWidth(200);
-        table.getColumnModel().getColumn(2).setPreferredWidth(200);
+        table.getColumnModel().getColumn(1).setPreferredWidth(120);
+        table.getColumnModel().getColumn(2).setPreferredWidth(120);
         table.getColumnModel().getColumn(3).setPreferredWidth(100);
         table.getColumnModel().getColumn(4).setPreferredWidth(150);
         table.getColumnModel().getColumn(5).setPreferredWidth(150);
@@ -135,10 +135,13 @@ public class CustomerLookup extends JPanel {
         buttonSearch.addActionListener(new SearchButton());
         buttonBack.addActionListener(new BackButton());
 
-        JMenuItem menuItem = new JMenuItem("Delete");
-        menuItem.addActionListener(new DeleteButton());
-        contextMenu.add(menuItem);
-        // add items
+        JMenuItem menuDetails = new JMenuItem("Details");
+        menuDetails.addActionListener(new DetailsButton());
+        contextMenu.add(menuDetails);
+
+        JMenuItem menuDelete = new JMenuItem("Delete");
+        menuDelete.addActionListener(new DeleteButton());
+        contextMenu.add(menuDelete);
 
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -253,6 +256,15 @@ public class CustomerLookup extends JPanel {
     private class BackButton implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
+        }
+    }
+
+    private class DetailsButton implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            String idString = table.getValueAt(table.getSelectedRow(), 0).toString();
+            int id = Integer.parseInt(idString);
+
+            // todo
         }
     }
 
