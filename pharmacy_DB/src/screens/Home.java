@@ -11,13 +11,11 @@ public class Home extends JPanel {
 
     private JButton actionButton1 = new JButton("Process Payment");
     private JButton actionButton2 = new JButton("Add Record");
-    private JButton actionButton3 = new JButton("Delete Record");
     private JButton actionButton4 = new JButton("Drug Restock");
     private JButton actionButton5 = new JButton("Drug Lookup");
     private JButton actionButton6 = new JButton("Customer Lookup");
     private JButton actionButton7 = new JButton("Employee Lookup");
     private JButton actionButton8 = new JButton("Doctor Lookup");
-    private JButton actionButton9 = new JButton("Insurance Lookup");
     private JButton actionButton10 = new JButton("Check Prescription");
     private JButton buttonLogout = new JButton("Logout");
 
@@ -88,13 +86,6 @@ public class Home extends JPanel {
         constraints.gridy = 1;
         right.add(actionButton2, constraints);
 
-        constraints.gridx = 0;
-        constraints.gridy = 2;
-        right.add(actionButton3, constraints);
-
-        constraints.gridx = 0;
-        constraints.gridy = 3;
-        right.add(actionButton9, constraints);
 
         // set border for the panels
         left.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Drugs"));
@@ -117,13 +108,6 @@ public class Home extends JPanel {
         actionButton2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Pharmacy_DB.switchScreen(Pharmacy_DB.getRecordAddition());
-            }
-        });
-
-        // removes patient record
-        actionButton3.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                Pharmacy_DB.switchScreen(Pharmacy_DB.getRecordDeletion());
             }
         });
 

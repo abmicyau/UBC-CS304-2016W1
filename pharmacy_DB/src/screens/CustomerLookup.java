@@ -109,17 +109,11 @@ public class CustomerLookup extends JPanel {
         model.addColumn("Name");
         model.addColumn("Phone");
         model.addColumn("Policy ID");
-        model.addColumn("Max Allowance");
-        model.addColumn("Expiry Date");
-        model.addColumn("Provider");
 
-        table.getColumnModel().getColumn(0).setPreferredWidth(100);
-        table.getColumnModel().getColumn(1).setPreferredWidth(120);
-        table.getColumnModel().getColumn(2).setPreferredWidth(120);
-        table.getColumnModel().getColumn(3).setPreferredWidth(100);
-        table.getColumnModel().getColumn(4).setPreferredWidth(150);
-        table.getColumnModel().getColumn(5).setPreferredWidth(150);
-        table.getColumnModel().getColumn(6).setPreferredWidth(250);
+        table.getColumnModel().getColumn(0).setPreferredWidth(200);
+        table.getColumnModel().getColumn(1).setPreferredWidth(200);
+        table.getColumnModel().getColumn(2).setPreferredWidth(200);
+        table.getColumnModel().getColumn(3).setPreferredWidth(200);
 
         table.setFillsViewportHeight(true);
         JScrollPane tableContainer = new JScrollPane(table);
@@ -176,17 +170,12 @@ public class CustomerLookup extends JPanel {
                     String name = rs.getString("name");
                     String phone = rs.getString("phone_number");
                     int policy = rs.getInt("insurance_policy_id");
-                    float allowance = (float) rs.getInt("maxAllowance_cents");
-                    String expDate = rs.getString("expDate");
-                    String provider = rs.getString("company");
 
                     model.addRow(new Object[]{String.format("%08d", id), name, phone,
-                            String.format("%08d", policy), String.format("$%.2f", allowance/100),
-                            dt.format(dt.parse(expDate)), provider});
+                            String.format("%08d", policy)});
+
                 }
             } catch (SQLException e) {
-                // stop
-            } catch (ParseException e) {
                 // stop
             }
         }
@@ -196,9 +185,8 @@ public class CustomerLookup extends JPanel {
         StringBuilder query = new StringBuilder();
         StringBuilder message = new StringBuilder();
 
-        query.append("SELECT * FROM Customer, Insurance_coverage " +
-                "WHERE insurance_policy_id = policy_id AND " +
-                "LOWER(name) LIKE LOWER('%");
+        query.append("SELECT * FROM Customer " +
+                "WHERE LOWER(name) LIKE LOWER('%");
         query.append(textName.getText());
         query.append("%')");
 
@@ -271,8 +259,7 @@ public class CustomerLookup extends JPanel {
                 detailsDialog.setLocationRelativeTo(Pharmacy_DB.getCustomerLookup());
                 detailsDialog.setVisible(true);
             } catch (SQLException ex) {
-                ex.printStackTrace();
-                // todo: change this to dialog
+                // TODO: change this to a dialog
                 System.out.println("Unexpected error");
             }
         }
@@ -308,22 +295,19 @@ public class CustomerLookup extends JPanel {
     private class DetailsDialog extends JDialog implements ActionListener {
 
         private JPanel dialogPanel = new JPanel(new GridBagLayout());
-        private JLabel customerID = new JLabel("");
-        private JLabel customerName = new JLabel("");
-        private JLabel customerPhone = new JLabel("");
         private JButton closeButton = new JButton("Close");
 
         // labels
-        private JLabel label1 = new JLabel("Basic Information");
+        private JLabel label1 = new JLabel("<html><b>Basic Information</b></html>");
         private JLabel label1_1 = new JLabel("Customer ID: ");
         private JLabel label1_2 = new JLabel("Name: ");
         private JLabel label1_3 = new JLabel("Phone #: ");
-        private JLabel label2 = new JLabel("Insurance");
+        private JLabel label2 = new JLabel("<html><b>Insurance</b></html>");
         private JLabel label2_1 = new JLabel("Policy ID: ");
         private JLabel label2_2 = new JLabel("Expiry Date: ");
         private JLabel label2_3 = new JLabel("Allowance: ");
         private JLabel label2_4 = new JLabel("Provider: ");
-        private JLabel label3 = new JLabel("Patient Record");
+        private JLabel label3 = new JLabel("<html><b>Patient Record</b></html>");
         private JLabel label3_1 = new JLabel("Care Card #: ");
         private JLabel label3_2 = new JLabel("Address: ");
         private JLabel label3_3 = new JLabel("Birthdate: ");
@@ -342,19 +326,21 @@ public class CustomerLookup extends JPanel {
         private JLabel info3_3 = new JLabel("");
         private JLabel info3_4 = new JLabel("");
 
+        private GridBagConstraints constraints = new GridBagConstraints();
+
         public DetailsDialog() {
 
             setTitle("Customer Details");
-            setSize(500, 500);
             constraints.anchor = GridBagConstraints.WEST;
             // TOP, LEFT, BOTTOM, RIGHT
             constraints.insets = new Insets(10, 10, 5, 10);
-            constraints.gridwidth = 1;
+            constraints.gridwidth = 2;
 
             constraints.gridx = 0;
             constraints.gridy = 0;
             dialogPanel.add(label1, constraints);
 
+            constraints.gridwidth = 1;
             constraints.insets.set(5, 20, 5, 10);
             constraints.gridy = 1;
             dialogPanel.add(label1_1, constraints);
@@ -373,11 +359,13 @@ public class CustomerLookup extends JPanel {
             constraints.gridx = 1;
             dialogPanel.add(info1_3, constraints);
 
+            constraints.gridwidth = 2;
             constraints.insets.set(5, 10, 5, 10);
             constraints.gridx = 0;
             constraints.gridy = 4;
             dialogPanel.add(label2, constraints);
 
+            constraints.gridwidth = 1;
             constraints.insets.set(5, 20, 5, 10);
             constraints.gridy = 5;
             dialogPanel.add(label2_1, constraints);
@@ -402,11 +390,13 @@ public class CustomerLookup extends JPanel {
             constraints.gridx = 1;
             dialogPanel.add(info2_4, constraints);
 
+            constraints.gridwidth = 2;
             constraints.insets.set(5, 10, 5, 10);
             constraints.gridx = 0;
             constraints.gridy = 9;
             dialogPanel.add(label3, constraints);
 
+            constraints.gridwidth = 1;
             constraints.insets.set(5, 20, 5, 10);
             constraints.gridy = 10;
             dialogPanel.add(label3_1, constraints);
@@ -443,6 +433,9 @@ public class CustomerLookup extends JPanel {
         }
 
         public void updateInfo(int id) throws SQLException {
+
+            // TODO: fix string formatting
+            // TODO: bug: search message persists (should show # of search results)
 
             ResultSet rs = Pharmacy_DB.getResults("SELECT * FROM Customer WHERE customer_id = " + id);
 

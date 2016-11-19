@@ -8,6 +8,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -27,6 +29,11 @@ public class DrugLookup extends JPanel {
 
     private JPanel messageContainer = new JPanel(new GridLayout(1, 1));
     private JLabel searchMessage = new JLabel("Searching...");
+
+    private JPopupMenu contextMenu = new JPopupMenu();
+
+    private DetailsDialog detailsDialog = new DetailsDialog();
+    private RestockDialog restockDialog = new RestockDialog();
 
     private GridBagConstraints constraints = new GridBagConstraints();
 
@@ -119,15 +126,11 @@ public class DrugLookup extends JPanel {
         model.addColumn("TN");
         model.addColumn("INN");
         model.addColumn("Stock");
-        model.addColumn("Description");
-        model.addColumn("CI");
 
         table.getColumnModel().getColumn(0).setPreferredWidth(100);
         table.getColumnModel().getColumn(1).setPreferredWidth(250);
         table.getColumnModel().getColumn(2).setPreferredWidth(250);
         table.getColumnModel().getColumn(3).setPreferredWidth(100);
-        table.getColumnModel().getColumn(4).setPreferredWidth(250);
-        table.getColumnModel().getColumn(5).setPreferredWidth(250);
 
         table.setFillsViewportHeight(true);
         JScrollPane tableContainer = new JScrollPane(table);
@@ -145,6 +148,33 @@ public class DrugLookup extends JPanel {
         buttonSearch.addActionListener(new SearchButton());
         buttonBack.addActionListener(new BackButton());
 
+        JMenuItem menuDetails = new JMenuItem("Details");
+        menuDetails.addActionListener(new DetailsButton());
+        contextMenu.add(menuDetails);
+
+        JMenuItem menuRestock = new JMenuItem("Restock");
+        menuRestock.addActionListener(new RestockButton());
+        contextMenu.add(menuRestock);
+
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                int r = table.rowAtPoint(e.getPoint());
+                if (r >= 0 && r < table.getRowCount()) {
+                    table.setRowSelectionInterval(r, r);
+                } else {
+                    table.clearSelection();
+                }
+
+                int rowindex = table.getSelectedRow();
+                if (rowindex < 0)
+                    return;
+                if (e.isPopupTrigger() && e.getComponent() instanceof JTable ) {
+                    contextMenu.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
+
         search();
     }
 
@@ -156,8 +186,6 @@ public class DrugLookup extends JPanel {
                     int din = rs.getInt("DIN");
                     String inn = rs.getString("drug_name_INN");
                     String trade = rs.getString("drug_name_trade");
-                    String desc = rs.getString("drug_description");
-                    String contra = rs.getString("contraindications");
                     String type = rs.getString("type");
                     String stock = rs.getString("stock");
 
@@ -167,7 +195,7 @@ public class DrugLookup extends JPanel {
                         stock = stock + " mg";
                     }
 
-                    model.addRow(new Object[] {String.format("%08d", din), inn, trade, stock, desc, contra});
+                    model.addRow(new Object[] {String.format("%08d", din), inn, trade, stock});
                 }
             } catch (SQLException e) {
                 // stop
@@ -182,7 +210,7 @@ public class DrugLookup extends JPanel {
         if (otc.isSelected() || stock.isSelected()) {
             query.append("SELECT * FROM (");
             if (otc.isSelected()) {
-                query.append("SELECT d.DIN, drug_name_INN, drug_name_trade, drug_description, contraindications, quantity stock, 'otc' type " +
+                query.append("SELECT d.DIN, drug_name_INN, drug_name_trade, quantity stock, 'otc' type " +
                         "FROM Drug d, Over_the_counter_drug o " +
                         "WHERE d.DIN = o.DIN");
             }
@@ -190,7 +218,7 @@ public class DrugLookup extends JPanel {
                 query.append(" UNION ");
             }
             if (stock.isSelected()) {
-                query.append("SELECT d.DIN, drug_name_INN, drug_name_trade, drug_description, contraindications, amount_mg stock, 'stock' type " +
+                query.append("SELECT d.DIN, drug_name_INN, drug_name_trade, amount_mg stock, 'stock' type " +
                         "FROM Drug d, Stock_drug s " +
                         "WHERE d.DIN = s.DIN");
             }
@@ -243,5 +271,219 @@ public class DrugLookup extends JPanel {
             Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
         }
     }
+
+    // button that triggers details dialog
+    //
+    private class DetailsButton implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            String idString = table.getValueAt(table.getSelectedRow(), 0).toString();
+            int id = Integer.parseInt(idString);
+
+            try {
+                detailsDialog.updateInfo(id);
+                detailsDialog.pack();
+                detailsDialog.setLocationRelativeTo(Pharmacy_DB.getDrugLookup());
+                detailsDialog.setVisible(true);
+            } catch (SQLException ex) {
+                // TODO: change this to a dialog
+                System.out.println("Unexpected error");
+            }
+        }
+    }
+
+    // dialog displaying drug details
+    //
+    private class DetailsDialog extends JDialog implements ActionListener {
+
+        private JPanel dialogPanel = new JPanel(new GridBagLayout());
+        private JButton closeButton = new JButton("Close");
+
+        // labels
+        private JLabel label1 = new JLabel("<html><b>Basic Information</b></html>");
+        private JLabel label1_1 = new JLabel("DIN: ");
+        private JLabel label1_2 = new JLabel("Nonproprietary: ");
+        private JLabel label1_3 = new JLabel("Trade: ");
+        private JLabel label2 = new JLabel("<html><b>Stock Information</b></html>");
+        private JLabel label2_1 = new JLabel("Type: ");
+        private JLabel label2_2 = new JLabel("Amount: ");
+        private JLabel label2_3 = new JLabel("Price: ");
+        private JLabel label3 = new JLabel("<html><b>Description</b></html>");
+        private JLabel label4 = new JLabel("<html><b>Contraindications</b></html>");
+
+        // info
+        private JLabel info1_1 = new JLabel("");
+        private JLabel info1_2 = new JLabel("");
+        private JLabel info1_3 = new JLabel("");
+        private JLabel info2_1 = new JLabel("");
+        private JLabel info2_2 = new JLabel("");
+        private JLabel info2_3 = new JLabel("");
+        private JTextArea info_3 = new JTextArea(5, 40);
+        private JTextArea info_4 = new JTextArea(5, 40);
+
+        private GridBagConstraints constraints = new GridBagConstraints();
+
+        public DetailsDialog() {
+            setTitle("Drug Details");
+            constraints.anchor = GridBagConstraints.WEST;
+            // TOP, LEFT, BOTTOM, RIGHT
+            constraints.insets = new Insets(10, 10, 5, 10);
+            constraints.gridwidth = 2;
+
+            constraints.gridx = 0;
+            constraints.gridy = 0;
+            dialogPanel.add(label1, constraints);
+
+            constraints.gridwidth = 1;
+            constraints.insets.set(5, 20, 5, 10);
+            constraints.gridy = 1;
+            dialogPanel.add(label1_1, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(info1_1, constraints);
+
+            constraints.gridy = 2;
+            constraints.gridx = 0;
+            dialogPanel.add(label1_2, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(info1_2, constraints);
+
+            constraints.gridy = 3;
+            constraints.gridx = 0;
+            dialogPanel.add(label1_3, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(info1_3, constraints);
+
+            constraints.gridwidth = 2;
+            constraints.insets.set(5, 10, 5, 10);
+            constraints.gridx = 0;
+            constraints.gridy = 4;
+            dialogPanel.add(label2, constraints);
+
+            constraints.gridwidth = 1;
+            constraints.insets.set(5, 20, 5, 10);
+            constraints.gridy = 5;
+            dialogPanel.add(label2_1, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(info2_1, constraints);
+
+            constraints.gridy = 6;
+            constraints.gridx = 0;
+            dialogPanel.add(label2_2, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(info2_2, constraints);
+
+            constraints.gridy = 7;
+            constraints.gridx = 0;
+            dialogPanel.add(label2_3, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(info2_3, constraints);
+
+            constraints.gridwidth = 2;
+            constraints.insets.set(5, 10, 5, 10);
+            constraints.gridx = 0;
+            constraints.gridy = 8;
+            dialogPanel.add(label3, constraints);
+
+            constraints.insets.set(5, 20, 5, 10);
+            constraints.gridy = 9;
+            info_3.setEditable(false);
+            info_3.setLineWrap(true);
+            info_3.setWrapStyleWord(true);
+            info_3.setFont(new Font("Sans-serif", Font.PLAIN, 10));
+            JScrollPane scroll1 = new JScrollPane(info_3, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            dialogPanel.add(scroll1, constraints);
+
+            constraints.insets.set(5, 10, 5, 10);
+            constraints.gridx = 0;
+            constraints.gridy = 10;
+            dialogPanel.add(label4, constraints);
+
+            constraints.insets.set(5, 20, 5, 10);
+            constraints.gridy = 11;
+            info_4.setEditable(false);
+            info_4.setLineWrap(true);
+            info_4.setWrapStyleWord(true);
+            info_4.setFont(new Font("Sans-serif", Font.PLAIN, 10));
+            JScrollPane scroll2 = new JScrollPane(info_4, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            dialogPanel.add(scroll2, constraints);
+
+            constraints.insets.set(15, 10, 10, 10);
+            constraints.gridx = 0;
+            constraints.gridy = 12;
+            dialogPanel.add(closeButton, constraints);
+
+            closeButton.addActionListener(this);
+
+            setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            setContentPane(dialogPanel);
+        }
+
+        public void updateInfo(int id) throws SQLException {
+            ResultSet rs0 = Pharmacy_DB.getResults("SELECT * FROM Drug WHERE DIN = " + id);
+            ResultSet rs1 = Pharmacy_DB.getResults("SELECT * FROM Over_the_counter_drug WHERE DIN = " + id);
+            ResultSet rs2 = Pharmacy_DB.getResults("SELECT * FROM Stock_drug WHERE DIN = " + id);
+
+            if (rs0.next()) {
+                info1_1.setText(rs0.getString("DIN"));
+                info1_2.setText(rs0.getString("drug_name_INN"));
+                info1_3.setText(rs0.getString("drug_name_trade"));
+                info_3.setText(rs0.getString("drug_description"));
+                info_4.setText(rs0.getString("contraindications"));
+            } else {
+                throw new SQLException();
+            }
+
+            if (rs1.next()) {
+                info2_1.setText("Over-the-counter");
+                info2_2.setText(rs1.getString("quantity") + " units");
+                info2_3.setText(String.format("$%.2f", ((float) rs1.getInt("cost_cents")) / 100) + " per unit");
+            } else if (rs2.next()) {
+                info2_1.setText("Stock");
+                info2_2.setText(rs2.getString("amount_mg") + " mg");
+                info2_3.setText(String.format("$%.2f", ((float) rs2.getInt("cost_per_mg_cents")) / 100) + " per mg");
+            } else {
+                throw new SQLException();
+            }
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            dispose();
+        }
+    }
+
+    // button that triggers restock dialog
+    //
+    private class RestockButton implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            String idString = table.getValueAt(table.getSelectedRow(), 0).toString();
+            int id = Integer.parseInt(idString);
+
+            try {
+                restockDialog.updateInfo(id);
+                restockDialog.pack();
+                restockDialog.setLocationRelativeTo(Pharmacy_DB.getDrugLookup());
+                restockDialog.setVisible(true);
+            } catch (SQLException ex) {
+                // TODO: change this to a dialog
+                System.out.println("Unexpected error");
+            }
+        }
+    }
+
+    // dialog that displays drug restock options
+    //
+    private class RestockDialog extends JDialog implements ActionListener {
+
+        private GridBagConstraints constraints = new GridBagConstraints();
+
+        public void updateInfo(int id) throws SQLException {
+
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            dispose();
+        }
+    }
+
+
 
 }
