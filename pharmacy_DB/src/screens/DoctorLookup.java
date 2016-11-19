@@ -28,8 +28,8 @@ public class DoctorLookup extends JPanel {
     DefaultTableModel model = new DBTableModel();
     JTable table = new JTable(model);
 
-    private JPanel left = new JPanel(new GridBagLayout());;
-    private JPanel right = new JPanel(new BorderLayout());;
+    private JPanel left = new JPanel(new GridBagLayout());
+    private JPanel right = new JPanel(new BorderLayout());
 
     public DoctorLookup() {
 

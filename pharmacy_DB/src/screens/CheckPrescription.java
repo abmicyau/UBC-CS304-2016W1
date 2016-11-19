@@ -1,6 +1,7 @@
 package screens;
 
 import main.Pharmacy_DB;
+import models.DBTableModel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -19,14 +20,14 @@ public class CheckPrescription extends JPanel {
     private JTextField textPID = new JTextField(8);
     private JButton searchButton = new JButton("Search");
     private JButton buttonBack = new JButton("Back");
-    private JPanel messageContainer = new JPanel((new GridLayout(1,1)));
-    private JLabel searchMessage = new JLabel("Searching...");
     private GridBagConstraints constraints = new GridBagConstraints();
     private DefaultTableModel model = new DefaultTableModel();
     private JTable table = new JTable(model);
-    private JPanel left = new JPanel(new GridBagLayout());;
-    private JPanel right = new JPanel(new BorderLayout());;
+
     private JFrame warningFrame = new JFrame("Warning");
+
+    private JPanel left = new JPanel(new GridBagLayout());
+    private JPanel right = new JPanel(new BorderLayout());
 
     public CheckPrescription() {
         super(new GridLayout());
@@ -74,17 +75,11 @@ public class CheckPrescription extends JPanel {
         constraints.gridy = 3;
         left.add(buttonBack, constraints);
 
-        constraints.gridx = 0;
-        constraints.gridy = 4;
-        constraints.gridwidth = 2;
-        messageContainer.add(searchMessage);
-        left.add(messageContainer, constraints);
-        searchMessage.setVisible(false);
-
         model.addColumn("Customer ID");
         model.addColumn("Doctor Name");
         model.addColumn("Doctor Phone Number");
         model.addColumn("Date Prescribed");
+        model.addColumn("DIN");
         model.addColumn("Dosage");
         model.addColumn("Duration");
         model.addColumn("Frequency");
@@ -96,6 +91,7 @@ public class CheckPrescription extends JPanel {
         table.getColumnModel().getColumn(4).setPreferredWidth(100);
         table.getColumnModel().getColumn(5).setPreferredWidth(100);
         table.getColumnModel().getColumn(6).setPreferredWidth(200);
+        table.getColumnModel().getColumn(7).setPreferredWidth(200);
 
         table.setFillsViewportHeight(true);
         JScrollPane tableContainer = new JScrollPane(table);
@@ -127,10 +123,11 @@ public class CheckPrescription extends JPanel {
                     String dname = rs.getString("NAME");
                     String dphone = rs.getString("PHONE_NUMBER");
                     String dateprescribed = rs.getString("DATE_PRESCRIBED");
+                    String din = rs.getString("DIN");
                     String dosage = rs.getString("DOSE");
                     String duration = rs.getString("DURATION");
                     String freq = rs.getString("FREQUENCY");
-                    model.addRow(new Object[]{String.format("%08d", cid), dname, dphone, dateprescribed, dosage, duration, freq});
+                    model.addRow(new Object[]{String.format("%08d", cid), dname, dphone, dateprescribed, din, dosage, duration, freq});
                 }
             } catch (SQLException e) {
 
