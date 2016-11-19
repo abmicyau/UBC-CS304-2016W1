@@ -1075,7 +1075,7 @@ insert into Prescription_item_has (item_id, prescription_id, dose, duration, fre
 insert into Prescription_item_has (item_id, prescription_id, dose, duration, frequency) values (2, 0, '10 mL', '3 days', '3 times a day');
 insert into Prescription_item_has (item_id, prescription_id, dose, duration, frequency) values (3, 1, '15 mL', '5 days', '1 time a day');
 insert into Prescription_item_has (item_id, prescription_id, dose, duration, frequency) values (4, 2, '650 mg', '3 weeks', 'BID');
-insert into Prescription_item_has (item_id, prescription_id, dose, duration, frequency) values (5, 2, '250 mg', '9 days', 'TID');--
+insert into Prescription_item_has (item_id, prescription_id, dose, duration, frequency) values (5, 2, '250 mg', '9 days', 'TID');
 insert into Prescription_item_has (item_id, prescription_id, dose, duration, frequency) values (6, 3, '20 mg', '2 weeks', '4 times a day');
 insert into Prescription_item_has (item_id, prescription_id, dose, duration, frequency) values (7, 4, '20 mL', '1 week', '2 times a day');
 insert into Prescription_item_has (item_id, prescription_id, dose, duration, frequency) values (8, 4, '10 mL', '3 days', '3 times a day');
