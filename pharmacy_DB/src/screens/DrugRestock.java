@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DrugRestock extends JPanel {
+    // todo : integrate this with druglookup
 
     private JLabel restockType = new JLabel("Product type:");
 

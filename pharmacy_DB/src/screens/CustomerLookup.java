@@ -43,6 +43,8 @@ public class CustomerLookup extends JPanel {
 
     private JPopupMenu contextMenu = new JPopupMenu();
 
+    private DetailsDialog detailsDialog = new DetailsDialog();
+
     public CustomerLookup() {
 
         // important! call JPanel constructor and pass GridBagLayout
@@ -219,7 +221,6 @@ public class CustomerLookup extends JPanel {
         message.append(model.getRowCount());
         message.append(" results found.");
 
-        searchMessage.setText(message.toString());
         revalidate();
         repaint();
     }
@@ -264,7 +265,24 @@ public class CustomerLookup extends JPanel {
             String idString = table.getValueAt(table.getSelectedRow(), 0).toString();
             int id = Integer.parseInt(idString);
 
-            // todo
+            ResultSet rs = Pharmacy_DB.getResults("SELECT * FROM Customer WHERE customer_id = " + id);
+
+            try {
+                if (rs.next()) {
+                    detailsDialog.setCustomerID(rs.getString("customer_id"));
+                    detailsDialog.setCustomerName(rs.getString("name"));
+                    detailsDialog.setCustomerPhone(rs.getString("phone_number"));
+                    //detailsDialog.pack();
+                    detailsDialog.setLocationRelativeTo(Pharmacy_DB.getCustomerLookup());
+                    detailsDialog.setVisible(true);
+                } else {
+                    // todo: change this to dialog
+                    System.out.println("Customer not found");
+                }
+            } catch (SQLException ex) {
+                // todo: change this to dialog
+                System.out.println("Unexpected error");
+            }
         }
     }
 
@@ -292,6 +310,57 @@ public class CustomerLookup extends JPanel {
                             JOptionPane.ERROR_MESSAGE);
                 }
             }
+        }
+    }
+
+    private class DetailsDialog extends JDialog implements ActionListener {
+
+        private JPanel dialogPanel = new JPanel(new GridBagLayout());
+        private JLabel customerID = new JLabel("");
+        private JLabel customerName = new JLabel("");
+        private JLabel customerPhone = new JLabel("");
+        private JButton closeButton = new JButton("Close");
+
+        public DetailsDialog() {
+
+            setTitle("Customer Details");
+            setSize(500, 500);
+            constraints.anchor = GridBagConstraints.CENTER;
+            constraints.insets = new Insets(10, 10, 10, 10);
+            constraints.gridx = 0;
+            constraints.gridy = 0;
+            constraints.gridwidth = 1;
+            dialogPanel.add(customerID, constraints);
+
+            constraints.gridy = 1;
+            dialogPanel.add(customerName, constraints);
+
+            constraints.gridy = 2;
+            dialogPanel.add(customerPhone, constraints);
+
+            constraints.gridy = 3;
+            dialogPanel.add(closeButton, constraints);
+
+            closeButton.addActionListener(this);
+
+            setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            setContentPane(dialogPanel);
+        }
+
+        public void setCustomerID(String id) {
+            customerID.setText(id);
+        }
+
+        public void setCustomerName(String name) {
+            customerName.setText(name);
+        }
+
+        public void setCustomerPhone(String phone) {
+            customerPhone.setText(phone);
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            dispose();
         }
     }
 
