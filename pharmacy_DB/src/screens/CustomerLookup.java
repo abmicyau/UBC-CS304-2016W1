@@ -265,21 +265,13 @@ public class CustomerLookup extends JPanel {
             String idString = table.getValueAt(table.getSelectedRow(), 0).toString();
             int id = Integer.parseInt(idString);
 
-            ResultSet rs = Pharmacy_DB.getResults("SELECT * FROM Customer WHERE customer_id = " + id);
-
             try {
-                if (rs.next()) {
-                    detailsDialog.setCustomerID(rs.getString("customer_id"));
-                    detailsDialog.setCustomerName(rs.getString("name"));
-                    detailsDialog.setCustomerPhone(rs.getString("phone_number"));
-                    //detailsDialog.pack();
-                    detailsDialog.setLocationRelativeTo(Pharmacy_DB.getCustomerLookup());
-                    detailsDialog.setVisible(true);
-                } else {
-                    // todo: change this to dialog
-                    System.out.println("Customer not found");
-                }
+                detailsDialog.updateInfo(id);
+                detailsDialog.pack();
+                detailsDialog.setLocationRelativeTo(Pharmacy_DB.getCustomerLookup());
+                detailsDialog.setVisible(true);
             } catch (SQLException ex) {
+                ex.printStackTrace();
                 // todo: change this to dialog
                 System.out.println("Unexpected error");
             }
@@ -321,24 +313,127 @@ public class CustomerLookup extends JPanel {
         private JLabel customerPhone = new JLabel("");
         private JButton closeButton = new JButton("Close");
 
+        // labels
+        private JLabel label1 = new JLabel("Basic Information");
+        private JLabel label1_1 = new JLabel("Customer ID: ");
+        private JLabel label1_2 = new JLabel("Name: ");
+        private JLabel label1_3 = new JLabel("Phone #: ");
+        private JLabel label2 = new JLabel("Insurance");
+        private JLabel label2_1 = new JLabel("Policy ID: ");
+        private JLabel label2_2 = new JLabel("Expiry Date: ");
+        private JLabel label2_3 = new JLabel("Allowance: ");
+        private JLabel label2_4 = new JLabel("Provider: ");
+        private JLabel label3 = new JLabel("Patient Record");
+        private JLabel label3_1 = new JLabel("Care Card #: ");
+        private JLabel label3_2 = new JLabel("Address: ");
+        private JLabel label3_3 = new JLabel("Birthdate: ");
+        private JLabel label3_4 = new JLabel("Gender: ");
+
+        // info
+        private JLabel info1_1 = new JLabel("");
+        private JLabel info1_2 = new JLabel("");
+        private JLabel info1_3 = new JLabel("");
+        private JLabel info2_1 = new JLabel("");
+        private JLabel info2_2 = new JLabel("");
+        private JLabel info2_3 = new JLabel("");
+        private JLabel info2_4 = new JLabel("");
+        private JLabel info3_1 = new JLabel("");
+        private JLabel info3_2 = new JLabel("");
+        private JLabel info3_3 = new JLabel("");
+        private JLabel info3_4 = new JLabel("");
+
         public DetailsDialog() {
 
             setTitle("Customer Details");
             setSize(500, 500);
-            constraints.anchor = GridBagConstraints.CENTER;
-            constraints.insets = new Insets(10, 10, 10, 10);
+            constraints.anchor = GridBagConstraints.WEST;
+            // TOP, LEFT, BOTTOM, RIGHT
+            constraints.insets = new Insets(10, 10, 5, 10);
+            constraints.gridwidth = 1;
+
             constraints.gridx = 0;
             constraints.gridy = 0;
-            constraints.gridwidth = 1;
-            dialogPanel.add(customerID, constraints);
+            dialogPanel.add(label1, constraints);
 
+            constraints.insets.set(5, 20, 5, 10);
             constraints.gridy = 1;
-            dialogPanel.add(customerName, constraints);
+            dialogPanel.add(label1_1, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(info1_1, constraints);
 
             constraints.gridy = 2;
-            dialogPanel.add(customerPhone, constraints);
+            constraints.gridx = 0;
+            dialogPanel.add(label1_2, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(info1_2, constraints);
 
             constraints.gridy = 3;
+            constraints.gridx = 0;
+            dialogPanel.add(label1_3, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(info1_3, constraints);
+
+            constraints.insets.set(5, 10, 5, 10);
+            constraints.gridx = 0;
+            constraints.gridy = 4;
+            dialogPanel.add(label2, constraints);
+
+            constraints.insets.set(5, 20, 5, 10);
+            constraints.gridy = 5;
+            dialogPanel.add(label2_1, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(info2_1, constraints);
+
+            constraints.gridy = 6;
+            constraints.gridx = 0;
+            dialogPanel.add(label2_2, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(info2_2, constraints);
+
+            constraints.gridy = 7;
+            constraints.gridx = 0;
+            dialogPanel.add(label2_3, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(info2_3, constraints);
+
+            constraints.gridy = 8;
+            constraints.gridx = 0;
+            dialogPanel.add(label2_4, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(info2_4, constraints);
+
+            constraints.insets.set(5, 10, 5, 10);
+            constraints.gridx = 0;
+            constraints.gridy = 9;
+            dialogPanel.add(label3, constraints);
+
+            constraints.insets.set(5, 20, 5, 10);
+            constraints.gridy = 10;
+            dialogPanel.add(label3_1, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(info3_1, constraints);
+
+            constraints.gridy = 11;
+            constraints.gridx = 0;
+            dialogPanel.add(label3_2, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(info3_2, constraints);
+
+            constraints.gridy = 12;
+            constraints.gridx = 0;
+            dialogPanel.add(label3_3, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(info3_3, constraints);
+
+            constraints.gridy = 13;
+            constraints.gridx = 0;
+            dialogPanel.add(label3_4, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(info3_4, constraints);
+
+            constraints.insets.set(15, 10, 10, 10);
+            constraints.gridx = 0;
+            constraints.gridy = 14;
             dialogPanel.add(closeButton, constraints);
 
             closeButton.addActionListener(this);
@@ -347,16 +442,53 @@ public class CustomerLookup extends JPanel {
             setContentPane(dialogPanel);
         }
 
-        public void setCustomerID(String id) {
-            customerID.setText(id);
-        }
+        public void updateInfo(int id) throws SQLException {
 
-        public void setCustomerName(String name) {
-            customerName.setText(name);
-        }
+            ResultSet rs = Pharmacy_DB.getResults("SELECT * FROM Customer WHERE customer_id = " + id);
 
-        public void setCustomerPhone(String phone) {
-            customerPhone.setText(phone);
+            if (rs.next()) {
+                String customer_id = rs.getString("customer_id");
+                String policy_id = rs.getString("insurance_policy_id");
+
+                info1_1.setText(customer_id);
+                info1_2.setText(rs.getString("name"));
+                info1_3.setText(rs.getString("phone_number"));
+
+                if (policy_id != null) {
+                    info2_1.setText(policy_id);
+                    ResultSet rs2 = Pharmacy_DB.getResults("SELECT * FROM Insurance_coverage WHERE policy_id = " + policy_id);
+                    if (rs2.next()) {
+                        info2_2.setText(rs2.getString("expDate"));
+                        info2_3.setText(rs2.getString("maxAllowance_cents"));
+                        info2_4.setText(rs2.getString("company"));
+                    } else {
+                        info2_2.setText("Missing from database");
+                        info2_3.setText("Missing from database");
+                        info2_4.setText("Missing from database");
+                    }
+                } else {
+                    info2_2.setText("N/A");
+                    info2_3.setText("N/A");
+                    info2_4.setText("N/A");
+                }
+
+                ResultSet rs3 = Pharmacy_DB.getResults("SELECT * FROM Patient WHERE customer_id = " + customer_id);
+
+                if (rs3.next()) {
+                    info3_1.setText(rs3.getString("care_card_number"));
+                    info3_2.setText(rs3.getString("address"));
+                    info3_3.setText(rs3.getString("birthdate"));
+                    info3_4.setText(rs3.getString("gender"));
+                } else {
+                    info3_1.setText("N/A");
+                    info3_2.setText("N/A");
+                    info3_3.setText("N/A");
+                    info3_4.setText("N/A");
+                }
+
+            } else {
+                throw new SQLException();
+            }
         }
 
         public void actionPerformed(ActionEvent e) {
