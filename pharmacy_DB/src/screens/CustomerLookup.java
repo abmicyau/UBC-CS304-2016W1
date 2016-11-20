@@ -141,6 +141,23 @@ public class CustomerLookup extends JPanel {
 
         table.addMouseListener(new MouseAdapter() {
             @Override
+            public void mousePressed(MouseEvent e) {
+                int r = table.rowAtPoint(e.getPoint());
+                if (r >= 0 && r < table.getRowCount()) {
+                    table.setRowSelectionInterval(r, r);
+                } else {
+                    table.clearSelection();
+                }
+
+                int rowindex = table.getSelectedRow();
+                if (rowindex < 0)
+                    return;
+                if (e.isPopupTrigger() && e.getComponent() instanceof JTable ) {
+                    contextMenu.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+
+            @Override
             public void mouseReleased(MouseEvent e) {
                 int r = table.rowAtPoint(e.getPoint());
                 if (r >= 0 && r < table.getRowCount()) {
@@ -156,6 +173,8 @@ public class CustomerLookup extends JPanel {
                     contextMenu.show(e.getComponent(), e.getX(), e.getY());
                 }
             }
+
+
         });
 
         update();

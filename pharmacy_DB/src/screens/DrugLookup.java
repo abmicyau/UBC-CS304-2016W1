@@ -483,10 +483,11 @@ public class DrugLookup extends JPanel {
 
         private JPanel dialogPanel = new JPanel(new GridBagLayout());
         private JButton closeButton = new JButton("Close");
+        private JButton restockButton = new JButton("Restock");
 
         // labels
-        private JLabel label1 = new JLabel("You are restocking:");
-        private JLabel label2 = new JLabel("Please enter an amount to restock.");
+        private JLabel label1 = new JLabel("<html><b>You are restocking:</b></html>");
+        private JLabel label2 = new JLabel("<html><b>Please enter an amount to restock.</b></html>");
 
         // text fields
         private JTextField amount = new JTextField(6);
@@ -526,11 +527,16 @@ public class DrugLookup extends JPanel {
             constraints.gridx = 1;
             dialogPanel.add(info2, constraints);
 
-            constraints.insets.set(15, 10, 10, 10);
+            constraints.insets.set(15, 10, 5, 10);
             constraints.gridx = 0;
             constraints.gridy = 4;
+            dialogPanel.add(restockButton, constraints);
+
+            constraints.insets.set(15, 5, 5, 10);
+            constraints.gridx = 1;
             dialogPanel.add(closeButton, constraints);
 
+            restockButton.addActionListener(this);
             closeButton.addActionListener(this);
 
             setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -539,10 +545,38 @@ public class DrugLookup extends JPanel {
 
         public void updateInfo(int id) throws SQLException {
             DIN = id;
+
+            ResultSet rs0 = Pharmacy_DB.getResults("SELECT * FROM Drug WHERE DIN = " + id);
+            ResultSet rs1 = Pharmacy_DB.getResults("SELECT * FROM Over_the_counter_drug WHERE DIN = " + id);
+            ResultSet rs2 = Pharmacy_DB.getResults("SELECT * FROM Stock_drug WHERE DIN = " + id);
+
+            if (rs0.next()) {
+                String name = rs0.getString("drug_name_INN");
+
+                if (name.indexOf(',') != -1) {
+                    name = name.substring(0, name.indexOf(','));
+                }
+
+                info1.setText(name);
+            } else {
+                throw new SQLException();
+            }
+
+            if (rs1.next()) {
+                info2.setText("units");
+            } else if (rs2.next()) {
+                info2.setText("mg");
+            } else {
+                throw new SQLException();
+            }
         }
 
         public void actionPerformed(ActionEvent e) {
-            dispose();
+            if (e.getSource() == closeButton) {
+                dispose();
+            } else if (e.getSource() == restockButton) {
+                System.out.println("RESTOCK BUTTON CLICKED");
+            }
         }
     }
 
