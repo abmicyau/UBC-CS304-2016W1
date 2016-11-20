@@ -195,6 +195,14 @@ public class DrugLookup extends JPanel {
                         stock = stock + " mg";
                     }
 
+                    // take first name before commas
+                    if (inn.indexOf(',') != -1) {
+                        inn = inn.substring(0, inn.indexOf(','));
+                    }
+                    if (trade.indexOf(',') != -1) {
+                        trade = trade.substring(0, trade.indexOf(','));
+                    }
+
                     model.addRow(new Object[] {String.format("%08d", din), inn, trade, stock});
                 }
             } catch (SQLException e) {
@@ -473,10 +481,64 @@ public class DrugLookup extends JPanel {
     //
     private class RestockDialog extends JDialog implements ActionListener {
 
+        private JPanel dialogPanel = new JPanel(new GridBagLayout());
+        private JButton closeButton = new JButton("Close");
+
+        // labels
+        private JLabel label1 = new JLabel("You are restocking:");
+        private JLabel label2 = new JLabel("Please enter an amount to restock.");
+
+        // text fields
+        private JTextField amount = new JTextField(6);
+
+        // info
+        private JLabel info1 = new JLabel("");
+        private JLabel info2 = new JLabel("");
+
         private GridBagConstraints constraints = new GridBagConstraints();
 
-        public void updateInfo(int id) throws SQLException {
+        private int DIN = 0;
 
+        public RestockDialog() {
+            setTitle("Drug Restock");
+            constraints.anchor = GridBagConstraints.WEST;
+            // TOP, LEFT, BOTTOM, RIGHT
+            constraints.insets = new Insets(10, 10, 5, 10);
+            constraints.gridwidth = 2;
+            constraints.gridx = 0;
+            constraints.gridy = 0;
+            dialogPanel.add(label1, constraints);
+
+            constraints.insets.set(5, 20, 5, 10);
+            constraints.gridy = 1;
+            dialogPanel.add(info1, constraints);
+
+            constraints.insets.set(5, 10, 5, 10);
+            constraints.gridy = 2;
+            dialogPanel.add(label2, constraints);
+
+            constraints.insets.set(5, 20, 5, 10);
+            constraints.gridy = 3;
+            constraints.gridwidth = 1;
+            dialogPanel.add(amount, constraints);
+
+            constraints.insets.set(5, 10, 5, 10);
+            constraints.gridx = 1;
+            dialogPanel.add(info2, constraints);
+
+            constraints.insets.set(15, 10, 10, 10);
+            constraints.gridx = 0;
+            constraints.gridy = 4;
+            dialogPanel.add(closeButton, constraints);
+
+            closeButton.addActionListener(this);
+
+            setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            setContentPane(dialogPanel);
+        }
+
+        public void updateInfo(int id) throws SQLException {
+            DIN = id;
         }
 
         public void actionPerformed(ActionEvent e) {
