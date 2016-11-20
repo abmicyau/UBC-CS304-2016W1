@@ -53,6 +53,9 @@ public class RecordAddition extends JPanel{
 
         constraints.gridy = 3;
         left.add(buttonBack, constraints);
+
+        buttonBack.addActionListener(new BackButton());
+
     }
 
     private class BackButton implements ActionListener {
