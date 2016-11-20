@@ -13,6 +13,8 @@ import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static javax.swing.JOptionPane.YES_OPTION;
+
 public class DrugLookup extends JPanel {
 
     private JLabel labelID = new JLabel("DIN: ");
@@ -159,6 +161,15 @@ public class DrugLookup extends JPanel {
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
+                popup(e);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                popup(e);
+            }
+
+            private void popup(MouseEvent e) {
                 int r = table.rowAtPoint(e.getPoint());
                 if (r >= 0 && r < table.getRowCount()) {
                     table.setRowSelectionInterval(r, r);
@@ -431,9 +442,21 @@ public class DrugLookup extends JPanel {
             ResultSet rs2 = Pharmacy_DB.getResults("SELECT * FROM Stock_drug WHERE DIN = " + id);
 
             if (rs0.next()) {
+
+                String inn = rs0.getString("drug_name_INN");
+                String trade = rs0.getString("drug_name_trade");
+
+                // take first name before commas
+                if (inn.indexOf(',') != -1) {
+                    inn = inn.substring(0, inn.indexOf(','));
+                }
+                if (trade.indexOf(',') != -1) {
+                    trade = trade.substring(0, trade.indexOf(','));
+                }
+
                 info1_1.setText(rs0.getString("DIN"));
-                info1_2.setText(rs0.getString("drug_name_INN"));
-                info1_3.setText(rs0.getString("drug_name_trade"));
+                info1_2.setText(inn);
+                info1_3.setText(trade);
                 info_3.setText(rs0.getString("drug_description"));
                 info_4.setText(rs0.getString("contraindications"));
             } else {
@@ -499,6 +522,7 @@ public class DrugLookup extends JPanel {
         private GridBagConstraints constraints = new GridBagConstraints();
 
         private int DIN = 0;
+        private boolean otc = false;
 
         public RestockDialog() {
             setTitle("Drug Restock");
@@ -564,18 +588,74 @@ public class DrugLookup extends JPanel {
 
             if (rs1.next()) {
                 info2.setText("units");
+                otc = true;
             } else if (rs2.next()) {
                 info2.setText("mg");
+                otc = false;
             } else {
                 throw new SQLException();
             }
+
+            amount.setText("");
         }
 
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == closeButton) {
                 dispose();
             } else if (e.getSource() == restockButton) {
-                System.out.println("RESTOCK BUTTON CLICKED");
+
+                String amountString = amount.getText().trim();
+
+                // error handling
+                //
+                if (amountString.isEmpty()) {
+                    JOptionPane.showMessageDialog(Pharmacy_DB.getDrugLookup(),
+                            "You must enter an amount.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                } else if (!Pharmacy_DB.isInteger(amountString)) {
+                    JOptionPane.showMessageDialog(Pharmacy_DB.getDrugLookup(),
+                            "Amount must be an integer.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                } else {
+                    int n = JOptionPane.showConfirmDialog(
+                            Pharmacy_DB.getDrugLookup(),
+                            "Are you sure you want to restock " + amountString + " " + info2.getText() +
+                                    " of:\n\n<html><b>" + info1.getText() + "</b></html>\n\n",
+                            "Restock",
+                            JOptionPane.YES_NO_OPTION);
+                    if (n == YES_OPTION) {
+                        String updateQuery = "UPDATE " +
+                                (otc ? "Over_the_counter_drug" : "Stock_drug") +
+                                " SET " +
+                                (otc ? "quantity = quantity + " : "amount_mg = amount_mg + ") + amountString +
+                                " WHERE DIN = " + DIN;
+                        try {
+                            if (Pharmacy_DB.executeUpdate(updateQuery) > 0) {
+                                search();
+                                revalidate();
+                                repaint();
+
+                                JOptionPane.showMessageDialog(Pharmacy_DB.getDrugLookup(),
+                                        "Item successfully restocked.",
+                                        "Restocked",
+                                        JOptionPane.PLAIN_MESSAGE);
+                                dispose();
+                            } else {
+                                JOptionPane.showMessageDialog(Pharmacy_DB.getDrugLookup(),
+                                        "Item not found. Try refreshing your view.",
+                                        "Error",
+                                        JOptionPane.ERROR_MESSAGE);
+                            }
+                        } catch (SQLException ex) {
+                            JOptionPane.showMessageDialog(Pharmacy_DB.getDrugLookup(),
+                                    "Unexpected error. Please try again.",
+                                    "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                }
             }
         }
     }

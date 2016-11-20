@@ -126,6 +126,15 @@ public class EmployeeLookup extends JPanel {
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
+                popup(e);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                popup(e);
+            }
+
+            private void popup(MouseEvent e) {
                 int r = table.rowAtPoint(e.getPoint());
                 if (r >= 0 && r < table.getRowCount()) {
                     table.setRowSelectionInterval(r, r);

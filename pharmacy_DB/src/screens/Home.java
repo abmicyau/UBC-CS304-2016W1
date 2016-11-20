@@ -57,10 +57,6 @@ public class Home extends JPanel {
 
         constraints.gridx = 0;
         constraints.gridy = 1;
-        left.add(actionButton4, constraints);
-
-        constraints.gridx = 0;
-        constraints.gridy = 2;
         left.add(actionButton10, constraints);
 
         constraints.gridx = 0;
@@ -108,13 +104,6 @@ public class Home extends JPanel {
         actionButton2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Pharmacy_DB.switchScreen(Pharmacy_DB.getRecordAddition());
-            }
-        });
-
-        // drug restock button action
-        actionButton4.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                Pharmacy_DB.switchScreen(Pharmacy_DB.getDrugRestock());
             }
         });
 
