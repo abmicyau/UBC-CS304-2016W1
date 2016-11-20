@@ -20,17 +20,17 @@ public class CheckPrescription extends JPanel {
     private JTextField textPID = new JTextField(8);
     private JButton searchButton = new JButton("Search");
     private JButton buttonBack = new JButton("Back");
-    private GridBagConstraints constraints = new GridBagConstraints();
-    private DefaultTableModel model = new DefaultTableModel();
-    private JTable table = new JTable(model);
-
     private JFrame warningFrame = new JFrame("Warning");
+    private GridBagConstraints constraints = new GridBagConstraints();
+    private DefaultTableModel model = new DBTableModel();
+    private JTable table = new JTable(model);
 
     private JPanel left = new JPanel(new GridBagLayout());
     private JPanel right = new JPanel(new BorderLayout());
 
     public CheckPrescription() {
         super(new GridLayout());
+
 
         // set contraints and padding
         constraints.anchor = GridBagConstraints.WEST;
@@ -55,7 +55,6 @@ public class CheckPrescription extends JPanel {
         left.add(labelPID, constraints);
 
         constraints.gridx = 1;
-        constraints.gridy = 0;
         left.add(textPID, constraints);
 
         constraints.gridx = 0;
@@ -63,7 +62,6 @@ public class CheckPrescription extends JPanel {
         left.add(labelDID, constraints);
 
         constraints.gridx = 1;
-        constraints.gridy = 1;
         left.add(textDID, constraints);
 
         constraints.gridx = 0;
@@ -74,6 +72,7 @@ public class CheckPrescription extends JPanel {
 
         constraints.gridy = 3;
         left.add(buttonBack, constraints);
+
 
         model.addColumn("Customer ID");
         model.addColumn("Doctor Name");
@@ -108,6 +107,7 @@ public class CheckPrescription extends JPanel {
 
         searchButton.addActionListener(new SearchButton());
         buttonBack.addActionListener(new BackButton());
+
     }
 
     private class BackButton implements ActionListener {
@@ -123,11 +123,11 @@ public class CheckPrescription extends JPanel {
                     String dname = rs.getString("NAME");
                     String dphone = rs.getString("PHONE_NUMBER");
                     String dateprescribed = rs.getString("DATE_PRESCRIBED");
-                    String din = rs.getString("DIN");
+                    int din = rs.getInt("DIN");
                     String dosage = rs.getString("DOSE");
                     String duration = rs.getString("DURATION");
                     String freq = rs.getString("FREQUENCY");
-                    model.addRow(new Object[]{String.format("%08d", cid), dname, dphone, dateprescribed, din, dosage, duration, freq});
+                    model.addRow(new Object[]{String.format("%08d", cid), dname, dphone, dateprescribed, String.format("%08d", din), dosage, duration, freq});
                 }
             } catch (SQLException e) {
 

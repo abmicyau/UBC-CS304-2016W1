@@ -19,6 +19,7 @@ public class Home extends JPanel {
     private JButton actionButton10 = new JButton("Check Prescription");
     private JButton buttonLogout = new JButton("Logout");
 
+
     private JPanel left;
     private JPanel middle;
     private JPanel right;
@@ -86,7 +87,6 @@ public class Home extends JPanel {
         constraints.gridy = 1;
         right.add(actionButton2, constraints);
 
-
         // set border for the panels
         left.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Drugs"));
         middle.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Employees"));
@@ -147,8 +147,9 @@ public class Home extends JPanel {
         });
 
         actionButton10.addActionListener((new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) { Pharmacy_DB.switchScreen(Pharmacy_DB.getCheckPrescriptionPanel()); }
         }));
+
+
     }
 }
