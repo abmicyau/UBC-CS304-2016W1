@@ -101,7 +101,7 @@ public class RecordDeletion extends JPanel{
 
             try {
                 if (results != null && results.next()) {
-                    confirmMessage.setText("Are you sure you would like to delete the following record?");
+                    confirmMessage.setText("Are you sure you would like to delete the following patient ID?");
                     constraints.gridy = 1;
                     add(new JLabel(results.getString("customer_id")), constraints);
                     constraints.gridy = 2;

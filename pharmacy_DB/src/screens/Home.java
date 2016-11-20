@@ -17,7 +17,9 @@ public class Home extends JPanel {
     private JButton actionButton7 = new JButton("Employee Lookup");
     private JButton actionButton8 = new JButton("Doctor Lookup");
     private JButton actionButton10 = new JButton("Check Prescription");
+    private JButton actionButton11 = new JButton("Delete Record");
     private JButton buttonLogout = new JButton("Logout");
+
 
     private JPanel left;
     private JPanel middle;
@@ -86,6 +88,10 @@ public class Home extends JPanel {
         constraints.gridy = 1;
         right.add(actionButton2, constraints);
 
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        right.add(actionButton11, constraints);
+
 
         // set border for the panels
         left.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Drugs"));
@@ -147,8 +153,12 @@ public class Home extends JPanel {
         });
 
         actionButton10.addActionListener((new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) { Pharmacy_DB.switchScreen(Pharmacy_DB.getCheckPrescriptionPanel()); }
+        }));
+
+        // record record button action
+        actionButton11.addActionListener((new ActionListener() {
+            public void actionPerformed(ActionEvent e) { Pharmacy_DB.switchScreen(Pharmacy_DB.getRecordDeletion()); }
         }));
     }
 }
