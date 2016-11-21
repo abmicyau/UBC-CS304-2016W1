@@ -34,6 +34,12 @@ public class Pharmacy_DB {
     private static JPanel recordAddition;
     private static JPanel processPayment;
 
+    public static enum User {
+        PHARMACIST, PHARMACY_ASSISTANT, PHARMACY_TECHNICIAN, OTHER
+    }
+
+    private static User user;
+
     // Main method creates new database application
     //
     public static void main(String[] args) {

@@ -20,8 +20,6 @@ public class Login extends JPanel {
 
     private JLabel loginMsg = new JLabel(" ");
 
-
-
     private String fetchUserPass(String uname) {
         StringBuilder query = new StringBuilder();
         query.append("SELECT password FROM Employee WHERE username = ");
@@ -110,6 +108,10 @@ public class Login extends JPanel {
 
             }
         });
+    }
+
+    private Pharmacy_DB.User getUser() {
+        return Pharmacy_DB.User.OTHER;
     }
 
 }

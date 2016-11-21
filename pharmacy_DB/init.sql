@@ -197,10 +197,10 @@ create table Walk_in_Client
 --------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------
 
-insert into Employee (emp_id, email, date_of_birth, address, name, phone_number, gender, sin, username, password) values (1, 'rwilliamson0@shutterfly.com', '1984-08-22', '98 Northridge Circle', 'Ryan Williamson', '351-(575)100-8228', 'M', '356265250', 'rwilliamson0', 'r8IwO11v709');
-insert into Employee (emp_id, email, date_of_birth, address, name, phone_number, gender, sin, username, password) values (2, 'ecunningham1@mayoclinic.com', '1977-08-12', '3639 Pond Court', 'Evelyn Cunningham', '56-(259)974-7710', 'F', '500235492', 'ecunningham1', 'bQipQg');
-insert into Employee (emp_id, email, date_of_birth, address, name, phone_number, gender, sin, username, password) values (3, 'scampbell2@nifty.com', '1989-04-01', '0844 Esker Terrace', 'Stephanie Campbell', '1-(508)516-9879', 'F', '352897899', 'scampbell2', 'zDhvZLE');
-insert into Employee (emp_id, email, date_of_birth, address, name, phone_number, gender, sin, username, password) values (4, 'agibson3@fc2.com', '1966-11-02', '7805 Arizona Plaza', 'Anna Gibson', '81-(573)167-8849', 'F', '300963289', 'agibson3', 'UYfcv0PVRQ');
+insert into Employee (emp_id, email, date_of_birth, address, name, phone_number, gender, sin, username, password) values (1, 'rwilliamson0@shutterfly.com', '1984-08-22', '98 Northridge Circle', 'Ryan Williamson', '351-(575)100-8228', 'M', '356265250', 'abc', 'def');
+insert into Employee (emp_id, email, date_of_birth, address, name, phone_number, gender, sin, username, password) values (2, 'ecunningham1@mayoclinic.com', '1977-08-12', '3639 Pond Court', 'Evelyn Cunningham', '56-(259)974-7710', 'F', '500235492', 'ghi', 'jkl');
+insert into Employee (emp_id, email, date_of_birth, address, name, phone_number, gender, sin, username, password) values (3, 'scampbell2@nifty.com', '1989-04-01', '0844 Esker Terrace', 'Stephanie Campbell', '1-(508)516-9879', 'F', '352897899', 'mno', 'pqr');
+insert into Employee (emp_id, email, date_of_birth, address, name, phone_number, gender, sin, username, password) values (4, 'agibson3@fc2.com', '1966-11-02', '7805 Arizona Plaza', 'Anna Gibson', '81-(573)167-8849', 'F', '300963289', 'stu', 'vwx');
 insert into Employee (emp_id, email, date_of_birth, address, name, phone_number, gender, sin, username, password) values (5, 'ahall4@creativecommons.org', '1970-07-08', '90369 Ronald Regan Way', 'Anne Hall', '7-(899)540-2238', 'F', '502060915', 'ahall4', 'Rz5gTdUXZ');
 insert into Employee (emp_id, email, date_of_birth, address, name, phone_number, gender, sin, username, password) values (6, 'dwillis5@hao123.com', '1958-03-10', '3441 Dexter Park', 'Doris Willis', '62-(749)173-8414', 'F', '560221657', 'dwillis5', 'oethNuw');
 insert into Employee (emp_id, email, date_of_birth, address, name, phone_number, gender, sin, username, password) values (7, 'jbailey6@i2i.jp', '1989-03-29', '954 Hoard Street', 'Juan Bailey', '1-(770)606-6941', 'M', '342827872', 'jbailey6', 'bpXlTg1');
@@ -265,10 +265,8 @@ insert into Employee (emp_id, email, date_of_birth, address, name, phone_number,
 insert into Pharmacy_Assistant values (1);
 
 insert into Pharmacist values (2, 'Westland Insurance', '00000000');
-insert into Pharmacist values (3, 'Eastland Insurance', '00000001');
 
-insert into Pharmacy_Technician values (4, '00000002');
-insert into Pharmacy_Technician values (5, '00000003');
+insert into Pharmacy_Technician values (3, '00000001');
 
 insert into Doctor (doctor_id, phone_number, name) values (1, '420-(551)118-3438', 'Dr. Earl Myers');
 insert into Doctor (doctor_id, phone_number, name) values (2, '86-(670)500-6063', 'Dr. John Carr');

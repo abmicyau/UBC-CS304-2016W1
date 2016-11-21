@@ -238,7 +238,7 @@ public class ProcessPayment extends JPanel implements ActionListener {
 
             try {
                 if (rs0.next()) {
-                    int itemOverStock = checkAndDepleteCartStocks();
+                    int itemOverStock = checkCartStocks();
                     if (itemOverStock == -1) {
                         int numRows = model.getRowCount();
                         int totalCost = 0;
@@ -287,7 +287,7 @@ public class ProcessPayment extends JPanel implements ActionListener {
         model.setRowCount(0);
     }
 
-    private int checkAndDepleteCartStocks() throws SQLException {
+    private int checkCartStocks() throws SQLException {
         int numRows = model.getRowCount();
         HashMap<Integer, Integer> totals = new HashMap<Integer, Integer>();
 
