@@ -218,6 +218,7 @@ public class CustomerLookup extends DBScreen {
 
         message.append(model.getRowCount());
         message.append(" results found.");
+        searchMessage.setText(message.toString());
 
         revalidate();
         repaint();
