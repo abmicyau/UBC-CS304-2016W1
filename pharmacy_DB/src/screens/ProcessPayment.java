@@ -640,7 +640,7 @@ public class ProcessPayment extends DBScreen implements ActionListener {
                     String dateString = new SimpleDateFormat("yyyy-MM-dd").format(date);
                     Pharmacy_DB.executeUpdate("INSERT INTO Payment_paid_by VALUES " +
                             "(" + getNextID("Payment_paid_by", "paymentId") + ", " + cid + ", '" + dateString + "', " +
-                            totalCost + ", " + cardNumber.getText() + ", '" +
+                            totalCost + ", '" + cardNumber.getText() + "', '" +
                             year.getSelectedItem() + "-" + month.getSelectedItem() + "-" + day.getSelectedItem() + "')");
 
                     createRecords();
