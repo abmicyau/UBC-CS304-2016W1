@@ -77,7 +77,7 @@ public class Pharmacy_DB {
 
     private static void initializeWindow() {
 
-        mainFrame.setSize(1280, 720);
+        mainFrame.setSize(1024, 768);
         // make window appear in the middle of the screen
         mainFrame.setLocationRelativeTo(null);
         // set the initial frame to the login window

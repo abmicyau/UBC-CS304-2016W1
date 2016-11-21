@@ -37,6 +37,8 @@ public class EmployeeLookup extends JPanel {
 
     private JPopupMenu contextMenu = new JPopupMenu();
 
+    private DetailsDialog detailsDialog = new DetailsDialog();
+
     public EmployeeLookup() {
 
         // important! call JPanel constructor and pass GridBagLayout
@@ -94,13 +96,11 @@ public class EmployeeLookup extends JPanel {
         model.addColumn("Name");
         model.addColumn("Email");
         model.addColumn("Phone");
-        model.addColumn("Address");
 
-        table.getColumnModel().getColumn(0).setPreferredWidth(100);
-        table.getColumnModel().getColumn(1).setPreferredWidth(150);
+        table.getColumnModel().getColumn(0).setPreferredWidth(150);
+        table.getColumnModel().getColumn(1).setPreferredWidth(200);
         table.getColumnModel().getColumn(2).setPreferredWidth(200);
         table.getColumnModel().getColumn(3).setPreferredWidth(200);
-        table.getColumnModel().getColumn(4).setPreferredWidth(200);
 
         table.setFillsViewportHeight(true);
         JScrollPane tableContainer = new JScrollPane(table);
@@ -118,10 +118,14 @@ public class EmployeeLookup extends JPanel {
         buttonSearch.addActionListener(new SearchButton());
         buttonBack.addActionListener(new BackButton());
 
-        JMenuItem menuItem = new JMenuItem("Delete");
-        menuItem.addActionListener(new DeleteButton());
-        contextMenu.add(menuItem);
-        // add items
+        JMenuItem menuDetails = new JMenuItem("Details");
+        menuDetails.addActionListener(new DetailsButton());
+        contextMenu.add(menuDetails);
+
+        JMenuItem menuDelete = new JMenuItem("Delete");
+        menuDelete.addActionListener(new DeleteButton());
+        contextMenu.add(menuDelete);
+
 
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -162,10 +166,9 @@ public class EmployeeLookup extends JPanel {
                 while (rs.next()) {
                     int id = rs.getInt("emp_id");
                     String email = rs.getString("email");
-                    String address = rs.getString("address");
                     String name = rs.getString("name");
                     String phone = rs.getString("phone_number");
-                    model.addRow(new Object[]{String.format("%08d", id), name, email, phone, address});
+                    model.addRow(new Object[]{String.format("%08d", id), name, email, phone});
                 }
             } catch (SQLException e) {
                 // stop
@@ -235,6 +238,23 @@ public class EmployeeLookup extends JPanel {
         }
     }
 
+    private class DetailsButton implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            String idString = table.getValueAt(table.getSelectedRow(), 0).toString();
+            int id = Integer.parseInt(idString);
+
+            try {
+                detailsDialog.updateInfo(id);
+                detailsDialog.pack();
+                detailsDialog.setLocationRelativeTo(Pharmacy_DB.getEmployeeLookupPanel());
+                detailsDialog.setVisible(true);
+            } catch (SQLException ex) {
+                // TODO: change this to a dialog
+                System.out.println("Unexpected error");
+            }
+        }
+    }
+
     private class DeleteButton implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             int n = JOptionPane.showConfirmDialog(
@@ -259,6 +279,145 @@ public class EmployeeLookup extends JPanel {
                             JOptionPane.ERROR_MESSAGE);
                 }
             }
+        }
+    }
+
+    private class DetailsDialog extends JDialog implements ActionListener {
+
+        private JPanel dialogPanel = new JPanel(new GridBagLayout());
+        private JButton closeButton = new JButton("Close");
+
+        // labels
+        private JLabel label1 = new JLabel("<html><b>Basic Information</b></html>");
+        private JLabel label1_1 = new JLabel("Employee ID: ");
+        private JLabel label1_2 = new JLabel("Name: ");
+        private JLabel label1_3 = new JLabel("Email: ");
+        private JLabel label1_4 = new JLabel("Phone #: ");
+        private JLabel label1_5 = new JLabel("Address: ");
+        private JLabel label2 = new JLabel("<html><b>Additional Information</b></html>");
+        private JLabel label2_1 = new JLabel("Position: ");
+        private JLabel label2_2 = new JLabel("License #: ");
+
+        // info
+        private JLabel info1_1 = new JLabel("");
+        private JLabel info1_2 = new JLabel("");
+        private JLabel info1_3 = new JLabel("");
+        private JLabel info1_4 = new JLabel("");
+        private JLabel info1_5 = new JLabel("");
+        private JLabel info2_1 = new JLabel("");
+        private JLabel info2_2 = new JLabel("");
+
+        public DetailsDialog() {
+
+            setTitle("Employee Details");
+            constraints.anchor = GridBagConstraints.WEST;
+            // TOP, LEFT, BOTTOM, RIGHT
+            constraints.insets = new Insets(10, 10, 5, 10);
+            constraints.gridwidth = 2;
+
+            constraints.gridx = 0;
+            constraints.gridy = 0;
+            dialogPanel.add(label1, constraints);
+
+            constraints.gridwidth = 1;
+            constraints.insets.set(5, 20, 5, 10);
+            constraints.gridy = 1;
+            dialogPanel.add(label1_1, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(info1_1, constraints);
+
+            constraints.gridy = 2;
+            constraints.gridx = 0;
+            dialogPanel.add(label1_2, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(info1_2, constraints);
+
+            constraints.gridy = 3;
+            constraints.gridx = 0;
+            dialogPanel.add(label1_3, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(info1_3, constraints);
+
+            constraints.gridy = 4;
+            constraints.gridx = 0;
+            dialogPanel.add(label1_4, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(info1_4, constraints);
+
+            constraints.gridy = 5;
+            constraints.gridx = 0;
+            dialogPanel.add(label1_5, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(info1_5, constraints);
+
+            constraints.gridwidth = 2;
+            constraints.insets.set(5, 10, 5, 10);
+            constraints.gridx = 0;
+            constraints.gridy = 6;
+            dialogPanel.add(label2, constraints);
+
+            constraints.gridwidth = 1;
+            constraints.insets.set(5, 20, 5, 10);
+            constraints.gridy = 7;
+            dialogPanel.add(label2_1, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(info2_1, constraints);
+
+            constraints.gridy = 8;
+            constraints.gridx = 0;
+            dialogPanel.add(label2_2, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(info2_2, constraints);
+
+            constraints.insets.set(15, 10, 10, 10);
+            constraints.gridx = 0;
+            constraints.gridy = 9;
+            dialogPanel.add(closeButton, constraints);
+
+            closeButton.addActionListener(this);
+
+            setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            setContentPane(dialogPanel);
+
+        }
+
+        public void updateInfo(int id) throws SQLException {
+            ResultSet rs = Pharmacy_DB.getResults("SELECT * FROM Employee WHERE emp_id = " + id);
+
+            if (rs.next()) {
+                String emp_id = rs.getString("emp_id");
+
+                info1_1.setText(rs.getString("emp_id"));
+                info1_2.setText(rs.getString("name"));
+                info1_3.setText(rs.getString("email"));
+                info1_4.setText(rs.getString("phone_number"));
+                info1_5.setText(rs.getString("address"));
+
+                ResultSet rs2 = Pharmacy_DB.getResults("SELECT * FROM Pharmacy_Assistant WHERE emp_id = " + id);
+                ResultSet rs3 = Pharmacy_DB.getResults("SELECT * FROM Pharmacist WHERE emp_id = " + id);
+                ResultSet rs4 = Pharmacy_DB.getResults("SELECT * FROM Pharmacy_Technician WHERE emp_id = " + id);
+
+                if (rs2.next()) {
+                    info2_1.setText("Pharmacy Assistant");
+                    info2_2.setText("N/A");
+                } else if (rs3.next()) {
+                    info2_1.setText("Pharmacist");
+                    info2_2.setText(rs3.getString("license_number"));
+                } else if (rs4.next()) {
+                    info2_1.setText("Pharmacy Technician");
+                    info2_2.setText(rs4.getString("license_number"));
+                } else {
+                    info2_1.setText("N/A");
+                    info2_2.setText("N/A");
+                }
+
+            } else {
+                throw new SQLException();
+            }
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            dispose();
         }
     }
 
