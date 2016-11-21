@@ -239,7 +239,7 @@ public class RecordAddition extends JPanel{
                         valueInsuranceQuery = valueInsuranceQuery + policy;
                         if (!expDate.isEmpty()) {
                             insertInsuranceQuery += ",expDate";
-                            valueInsuranceQuery += "," + expDate;
+                            valueInsuranceQuery += "," + "'" + expDate + "'";
                         }
                         if (!max.isEmpty()) {
                             insertInsuranceQuery += ",maxAllowance_cents";
@@ -247,7 +247,7 @@ public class RecordAddition extends JPanel{
                         }
                         if (!company.isEmpty()) {
                             insertInsuranceQuery += ",company";
-                            valueInsuranceQuery += "," + company;
+                            valueInsuranceQuery += "," + "'" + company + "'";
                         }
                         insertInsuranceQuery += ")";
                         valueInsuranceQuery += ")";
@@ -274,15 +274,15 @@ public class RecordAddition extends JPanel{
                     String insertPatientQuery = "INSERT INTO Patient (";
                     String valuePatientQuery = "VALUES (";
                     if (!card.isEmpty()) {
-                        insertPatientQuery = insertPatientQuery + "care_card_number";
-                        valuePatientQuery = valuePatientQuery + card;
+                        insertPatientQuery = insertPatientQuery + "customer_id, care_card_number";
+                        valuePatientQuery = valuePatientQuery + ID +",'" + card + "'";
                         if (!address.isEmpty()) {
                             insertPatientQuery += ",address";
-                            valuePatientQuery += "," + address;
+                            valuePatientQuery += "," + "'" +address + "'";
                         }
                         if (!DOB.isEmpty()) {
                             insertPatientQuery += ",birthdate";
-                            valuePatientQuery += "," + DOB;
+                            valuePatientQuery += "," + "'" + DOB + "'";
                         }
                         insertPatientQuery += ")";
                         valuePatientQuery += ")";
