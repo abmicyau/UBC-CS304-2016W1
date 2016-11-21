@@ -637,11 +637,11 @@ public class DrugLookup extends JPanel {
                                 revalidate();
                                 repaint();
 
+                                dispose();
                                 JOptionPane.showMessageDialog(Pharmacy_DB.getDrugLookup(),
                                         "Item successfully restocked.",
                                         "Restocked",
                                         JOptionPane.PLAIN_MESSAGE);
-                                dispose();
                             } else {
                                 JOptionPane.showMessageDialog(Pharmacy_DB.getDrugLookup(),
                                         "Item not found. Try refreshing your view.",
@@ -659,7 +659,4 @@ public class DrugLookup extends JPanel {
             }
         }
     }
-
-
-
 }

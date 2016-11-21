@@ -32,6 +32,7 @@ public class Pharmacy_DB {
     private static JPanel checkPrescription;
     private static JPanel recordDeletion;
     private static JPanel recordAddition;
+    private static JPanel processPayment;
 
     // Main method creates new database application
     //
@@ -73,6 +74,7 @@ public class Pharmacy_DB {
         checkPrescription = new CheckPrescription();
         recordDeletion = new RecordDeletion();
         recordAddition = new RecordAddition();
+        processPayment = new ProcessPayment();
     }
 
     private static void initializeWindow() {
@@ -138,6 +140,20 @@ public class Pharmacy_DB {
         return true;
     }
 
+    public static boolean isNumeric(String s) {
+        for (char c : s.toCharArray())
+        {
+            if (!Character.isDigit(c)) return false;
+        }
+        return true;
+    }
+
+    public static int currencyToCents(String s) {
+        String s2 = s.replace("$", "");
+        s2 = s2.replace(".", "");
+        return Integer.parseInt(s2);
+    }
+
     // SCREEN GETTERS
     //
     public static JPanel getLoginPanel() { return login; }
@@ -150,5 +166,6 @@ public class Pharmacy_DB {
     public static JPanel getCheckPrescriptionPanel() { return checkPrescription; }
     public static JPanel getRecordDeletion() { return recordDeletion; }
     public static JPanel getRecordAddition() { return recordAddition; }
+    public static JPanel getProcessPayment() { return processPayment; }
 
 }

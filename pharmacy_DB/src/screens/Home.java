@@ -100,6 +100,13 @@ public class Home extends JPanel {
             }
         });
 
+        // process payment
+        actionButton1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Pharmacy_DB.switchScreen(Pharmacy_DB.getProcessPayment());
+            }
+        });
+
         // adds patient record
         actionButton2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
