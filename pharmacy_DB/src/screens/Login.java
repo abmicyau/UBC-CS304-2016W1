@@ -41,6 +41,13 @@ public class Login extends JPanel {
         return pw;
     }
 
+    private void allowedAccess(){
+        String unionAllowedEmps = "(SELECT emp_id FROM Pharmacy_Assistant) " +
+                "UNION (SELECT emp_id FROM Pharmacist) " +
+                "UNION (SELECT emp_id FROM Pharmacy_Technician);";
+
+    }
+
     public Login() {
 
         // important! call JPanel constructor and pass GridBagLayout

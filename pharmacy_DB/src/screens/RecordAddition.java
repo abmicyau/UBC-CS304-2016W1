@@ -19,7 +19,7 @@ public class RecordAddition extends JPanel{
     private JCheckBox checkInsurance = new JCheckBox("Register Insurance");
 
     private JLabel labelPatient = new JLabel("Patient Information");
-    private JLabel labelCard = new JLabel("Service Card Number:");
+    private JLabel labelCard = new JLabel("Service Card Number (16 Digits):");
     private JLabel labelAddress = new JLabel("Address:");
     private JLabel labelDOB = new JLabel("Date of birth (YYYY-MM-DD):");
     private JLabel labelGender = new JLabel("Gender (M/F):");
@@ -33,7 +33,7 @@ public class RecordAddition extends JPanel{
     private JLabel labelCustomer = new JLabel("Customer Information");
     private JLabel labelID = new JLabel("ID:");
     private JLabel labelName = new JLabel("Name:");
-    private JLabel labelPhone = new JLabel("Phone Number:");
+    private JLabel labelPhone = new JLabel("Phone Number (123-456-7890):");
 
     //private JTextField textID = new JTextField(10);
     private JTextField textName = new JTextField(10);
@@ -41,7 +41,7 @@ public class RecordAddition extends JPanel{
 
     // Insurance info
     private JLabel labelInsurance = new JLabel("Insurance Information");
-    private JLabel labelPolicy = new JLabel("Policy ID: ");
+    private JLabel labelPolicy = new JLabel("Policy ID (5 digits) : ");
     private JLabel labelExpiry = new JLabel("Expiry Date (YYYY-MM-DD):");
     private JLabel labelMax = new JLabel("Max Allowance:");
     private JLabel labelCompany = new JLabel("Company:");
@@ -93,8 +93,8 @@ public class RecordAddition extends JPanel{
         constraints.gridy = 0;
         left.add(labelCustomer, constraints);
         constraints.gridy++;
-        left.add(labelID,constraints);
-        constraints.gridy++;
+        //left.add(labelID,constraints);
+        //constraints.gridy++;
         //left.add(textID,constraints);
         //constraints.gridy++;
         left.add(labelName,constraints);
@@ -196,7 +196,7 @@ public class RecordAddition extends JPanel{
 
     private class AddButton implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            String query = "SELECT customer_id FROM CUSTOMER";
+            String query = "SELECT customer_id FROM Customer;";
             String insertQuery;
             String valueQuery;
             ResultSet results = Pharmacy_DB.getResults(query);
@@ -208,13 +208,15 @@ public class RecordAddition extends JPanel{
                     if (curr != ID) {
                         break;
                     } else {
-                        ID++
+                        ID++;
                     }
                 }
+
+                String stringID = Integer.toString(ID);
                 String name = textName.getText();
                 String phone = textPhone.getText();
                 insertQuery = "INSERT INTO Customer (customer_id";
-                valueQuery = "VALUES (" + ID;
+                valueQuery = "VALUES (" + stringID;
                 if (!name.isEmpty()) {
                     insertQuery = insertQuery + ",name";
                     valueQuery = valueQuery + "," + name;
@@ -232,11 +234,13 @@ public class RecordAddition extends JPanel{
                     String company = textCompany.getText();
 
                     insertInsuranceQuery ="INSERT INTO Insurance_coverage (";
-                    valueInsuranceQuery = "VALUES (" + ID;
+                    valueInsuranceQuery = "VALUES (" + stringID;
 
                     if (!policy.isEmpty()) {
                         insertInsuranceQuery = insertInsuranceQuery + "policy_id";
                         valueInsuranceQuery = valueInsuranceQuery + policy;
+                        insertQuery += ",insurance_policy_id";
+                        valueQuery += ",'" + policy + "'";
                         if (!expDate.isEmpty()) {
                             insertInsuranceQuery += ",expDate";
                             valueInsuranceQuery += "," + "'" + expDate + "'";
@@ -250,7 +254,7 @@ public class RecordAddition extends JPanel{
                             valueInsuranceQuery += "," + "'" + company + "'";
                         }
                         insertInsuranceQuery += ")";
-                        valueInsuranceQuery += ")";
+                        valueInsuranceQuery += ");";
                         String insuranceQuery = insertInsuranceQuery + " " + valueInsuranceQuery;
                         Pharmacy_DB.executeUpdate(insuranceQuery);
                     }
@@ -262,7 +266,7 @@ public class RecordAddition extends JPanel{
                 }
 
                 insertQuery += ")";
-                valueQuery += ")";
+                valueQuery += ");";
                 query = insertQuery + " " + valueQuery;
                 Pharmacy_DB.executeUpdate(query);
 
@@ -275,7 +279,7 @@ public class RecordAddition extends JPanel{
                     String valuePatientQuery = "VALUES (";
                     if (!card.isEmpty()) {
                         insertPatientQuery = insertPatientQuery + "customer_id, care_card_number";
-                        valuePatientQuery = valuePatientQuery + ID +",'" + card + "'";
+                        valuePatientQuery = valuePatientQuery + stringID +",'" + card + "'";
                         if (!address.isEmpty()) {
                             insertPatientQuery += ",address";
                             valuePatientQuery += "," + "'" +address + "'";
@@ -285,7 +289,7 @@ public class RecordAddition extends JPanel{
                             valuePatientQuery += "," + "'" + DOB + "'";
                         }
                         insertPatientQuery += ")";
-                        valuePatientQuery += ")";
+                        valuePatientQuery += ");";
                         String patientQuery = insertPatientQuery + " " + valuePatientQuery;
                         Pharmacy_DB.executeUpdate(patientQuery);
                     }
@@ -295,7 +299,7 @@ public class RecordAddition extends JPanel{
                     }
                 }
             }
-            catch (SQLException e){
+            catch (SQLException ex){
                 additionMessage.setText("An error occurred!");
                 return;
             }
