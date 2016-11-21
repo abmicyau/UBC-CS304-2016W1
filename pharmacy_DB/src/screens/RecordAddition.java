@@ -115,7 +115,6 @@ public class RecordAddition extends JPanel{
         constraints.gridy++;
         left.add(buttonBack, constraints);
 
-<<<<<<< HEAD
         // Set visibilities
         center.setVisible(false);
         right.setVisible(false);
@@ -189,20 +188,13 @@ public class RecordAddition extends JPanel{
                 right.setVisible(false);
             }
         }
-=======
-
-        buttonBack.addActionListener(new BackButton());
-        buttonAdd.addActionListener(new AddButton());
->>>>>>> 5eb332eef1943f2904f7ddc17291b64899222235
     }
 
     private class AddButton implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-<<<<<<< HEAD
-            Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
-=======
 
->>>>>>> 5eb332eef1943f2904f7ddc17291b64899222235
+            Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
+
         }
     }
 
