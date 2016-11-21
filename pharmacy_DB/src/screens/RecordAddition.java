@@ -196,14 +196,14 @@ public class RecordAddition extends JPanel{
 
     private class AddButton implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            String query = "SELECT customer_id FROM Customer;";
+            try {
+            String query = "SELECT customer_id FROM Customer";
             String insertQuery;
             String valueQuery;
             ResultSet results = Pharmacy_DB.getResults(query);
-            try {
                 int ID = 0;
                 int curr;
-                while (results.next()) {
+                while (results != null && results.next()) {
                     curr = results.getInt("customer_id");
                     if (curr != ID) {
                         break;
@@ -219,7 +219,7 @@ public class RecordAddition extends JPanel{
                 valueQuery = "VALUES (" + stringID;
                 if (!name.isEmpty()) {
                     insertQuery = insertQuery + ",name";
-                    valueQuery = valueQuery + "," + name;
+                    valueQuery = valueQuery + "," + "'" + name +"'";
                 }
                 if (!phone.isEmpty()) {
                     insertQuery = insertQuery + ",phone_number";
@@ -234,13 +234,13 @@ public class RecordAddition extends JPanel{
                     String company = textCompany.getText();
 
                     insertInsuranceQuery ="INSERT INTO Insurance_coverage (";
-                    valueInsuranceQuery = "VALUES (" + stringID;
+                    valueInsuranceQuery = "VALUES (";
 
                     if (!policy.isEmpty()) {
-                        insertInsuranceQuery = insertInsuranceQuery + "policy_id";
-                        valueInsuranceQuery = valueInsuranceQuery + policy;
                         insertQuery += ",insurance_policy_id";
                         valueQuery += ",'" + policy + "'";
+                        insertInsuranceQuery += "policy_id";
+                        valueInsuranceQuery += "'" + policy + "'";
                         if (!expDate.isEmpty()) {
                             insertInsuranceQuery += ",expDate";
                             valueInsuranceQuery += "," + "'" + expDate + "'";
@@ -254,7 +254,7 @@ public class RecordAddition extends JPanel{
                             valueInsuranceQuery += "," + "'" + company + "'";
                         }
                         insertInsuranceQuery += ")";
-                        valueInsuranceQuery += ");";
+                        valueInsuranceQuery += ")";
                         String insuranceQuery = insertInsuranceQuery + " " + valueInsuranceQuery;
                         Pharmacy_DB.executeUpdate(insuranceQuery);
                     }
@@ -266,7 +266,7 @@ public class RecordAddition extends JPanel{
                 }
 
                 insertQuery += ")";
-                valueQuery += ");";
+                valueQuery += ")";
                 query = insertQuery + " " + valueQuery;
                 Pharmacy_DB.executeUpdate(query);
 
@@ -289,7 +289,7 @@ public class RecordAddition extends JPanel{
                             valuePatientQuery += "," + "'" + DOB + "'";
                         }
                         insertPatientQuery += ")";
-                        valuePatientQuery += ");";
+                        valuePatientQuery += ")";
                         String patientQuery = insertPatientQuery + " " + valuePatientQuery;
                         Pharmacy_DB.executeUpdate(patientQuery);
                     }
@@ -298,6 +298,7 @@ public class RecordAddition extends JPanel{
                         return;
                     }
                 }
+                additionMessage.setText("Add successful");
             }
             catch (SQLException ex){
                 additionMessage.setText("An error occurred!");
