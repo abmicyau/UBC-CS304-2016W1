@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Created by Victor on 2016-11-16.
@@ -33,7 +35,7 @@ public class RecordAddition extends JPanel{
     private JLabel labelName = new JLabel("Name:");
     private JLabel labelPhone = new JLabel("Phone Number:");
 
-    private JTextField textID = new JTextField(10);
+    //private JTextField textID = new JTextField(10);
     private JTextField textName = new JTextField(10);
     private JTextField textPhone = new JTextField(10);
 
@@ -93,8 +95,8 @@ public class RecordAddition extends JPanel{
         constraints.gridy++;
         left.add(labelID,constraints);
         constraints.gridy++;
-        left.add(textID,constraints);
-        constraints.gridy++;
+        //left.add(textID,constraints);
+        //constraints.gridy++;
         left.add(labelName,constraints);
         constraints.gridy++;
         left.add(textName,constraints);
@@ -106,6 +108,8 @@ public class RecordAddition extends JPanel{
         left.add(checkPatient,constraints);
         constraints.gridy++;
         left.add(checkInsurance,constraints);
+        constraints.gridy++;
+        left.add(additionMessage,constraints);
 
         // Sets up buttons
         constraints.gridy++;
@@ -192,9 +196,111 @@ public class RecordAddition extends JPanel{
 
     private class AddButton implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+            String query = "SELECT customer_id FROM CUSTOMER";
+            String insertQuery;
+            String valueQuery;
+            ResultSet results = Pharmacy_DB.getResults(query);
+            try {
+                int ID = 0;
+                int curr;
+                while (results.next()) {
+                    curr = results.getInt("customer_id");
+                    if (curr != ID) {
+                        break;
+                    } else {
+                        ID++
+                    }
+                }
+                String name = textName.getText();
+                String phone = textPhone.getText();
+                insertQuery = "INSERT INTO Customer (customer_id";
+                valueQuery = "VALUES (" + ID;
+                if (!name.isEmpty()) {
+                    insertQuery = insertQuery + ",name";
+                    valueQuery = valueQuery + "," + name;
+                }
+                if (!phone.isEmpty()) {
+                    insertQuery = insertQuery + ",phone_number";
+                    valueQuery = valueQuery + "," + phone;
+                }
+                if (checkInsurance.isSelected()) {
+                    String insertInsuranceQuery;
+                    String valueInsuranceQuery;
+                    String policy = textPolicy.getText();
+                    String expDate = textExpiry.getText();
+                    String max = textMax.getText();
+                    String company = textCompany.getText();
 
-            Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
+                    insertInsuranceQuery ="INSERT INTO Insurance_coverage (";
+                    valueInsuranceQuery = "VALUES (" + ID;
 
+                    if (!policy.isEmpty()) {
+                        insertInsuranceQuery = insertInsuranceQuery + "policy_id";
+                        valueInsuranceQuery = valueInsuranceQuery + policy;
+                        insertQuery += ",insurance_policy_id";
+                        valueQuery += ",'" + policy + "'";
+                        if (!expDate.isEmpty()) {
+                            insertInsuranceQuery += ",expDate";
+                            valueInsuranceQuery += "," + "'" + expDate + "'";
+                        }
+                        if (!max.isEmpty()) {
+                            insertInsuranceQuery += ",maxAllowance_cents";
+                            valueInsuranceQuery += "," + max;
+                        }
+                        if (!company.isEmpty()) {
+                            insertInsuranceQuery += ",company";
+                            valueInsuranceQuery += "," + "'" + company + "'";
+                        }
+                        insertInsuranceQuery += ")";
+                        valueInsuranceQuery += ")";
+                        String insuranceQuery = insertInsuranceQuery + " " + valueInsuranceQuery;
+                        Pharmacy_DB.executeUpdate(insuranceQuery);
+                    }
+                    else {
+                        additionMessage.setText("Please input a policy number!");
+                        return;
+                    }
+
+                }
+
+                insertQuery += ")";
+                valueQuery += ")";
+                query = insertQuery + " " + valueQuery;
+                Pharmacy_DB.executeUpdate(query);
+
+                if (checkPatient.isSelected()) {
+                    String card = textCard.getText();
+                    String address = textAddress.getText();
+                    String DOB = textDOB.getText();
+
+                    String insertPatientQuery = "INSERT INTO Patient (";
+                    String valuePatientQuery = "VALUES (";
+                    if (!card.isEmpty()) {
+                        insertPatientQuery = insertPatientQuery + "customer_id, care_card_number";
+                        valuePatientQuery = valuePatientQuery + ID +",'" + card + "'";
+                        if (!address.isEmpty()) {
+                            insertPatientQuery += ",address";
+                            valuePatientQuery += "," + "'" +address + "'";
+                        }
+                        if (!DOB.isEmpty()) {
+                            insertPatientQuery += ",birthdate";
+                            valuePatientQuery += "," + "'" + DOB + "'";
+                        }
+                        insertPatientQuery += ")";
+                        valuePatientQuery += ")";
+                        String patientQuery = insertPatientQuery + " " + valuePatientQuery;
+                        Pharmacy_DB.executeUpdate(patientQuery);
+                    }
+                    else {
+                        additionMessage.setText("Please input a care card number!");
+                        return;
+                    }
+                }
+            }
+            catch (SQLException e){
+                additionMessage.setText("An error occurred!");
+                return;
+            }
         }
     }
 
