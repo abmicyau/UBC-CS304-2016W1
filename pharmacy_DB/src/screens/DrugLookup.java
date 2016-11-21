@@ -496,8 +496,10 @@ public class DrugLookup extends JPanel {
                 restockDialog.setLocationRelativeTo(Pharmacy_DB.getDrugLookup());
                 restockDialog.setVisible(true);
             } catch (SQLException ex) {
-                // TODO: change this to a dialog
-                System.out.println("Unexpected error");
+                JOptionPane.showMessageDialog(Pharmacy_DB.getDrugLookup(),
+                        "Unexpected error.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
         }
     }

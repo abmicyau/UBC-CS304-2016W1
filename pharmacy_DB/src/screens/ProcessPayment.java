@@ -15,6 +15,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import static javax.swing.JOptionPane.YES_OPTION;
 
@@ -236,19 +238,35 @@ public class ProcessPayment extends JPanel implements ActionListener {
 
             try {
                 if (rs0.next()) {
-                    int numRows = model.getRowCount();
-                    int totalCost = 0;
+                    int itemOverStock = checkAndDepleteCartStocks();
+                    if (itemOverStock == -1) {
+                        int numRows = model.getRowCount();
+                        int totalCost = 0;
 
-                    // TODO: implement stock checking...
+                        for (int i = 0; i < numRows; i++) {
+                            totalCost += Pharmacy_DB.currencyToCents(model.getValueAt(i, 4).toString());
+                        }
 
-                    for (int i = 0; i < numRows; i++) {
-                        totalCost += Pharmacy_DB.currencyToCents(model.getValueAt(i, 4).toString());
+                        newPaymentDialog.process(Integer.parseInt(customer_id), totalCost);
+                        newPaymentDialog.pack();
+                        newPaymentDialog.setLocationRelativeTo(Pharmacy_DB.getProcessPayment());
+                        newPaymentDialog.setVisible(true);
+                    } else {
+                        ResultSet rs1 = Pharmacy_DB.getResults("SELECT drug_name_INN FROM Drug WHERE DIN = " + itemOverStock);
+
+                        if (rs1.next()) {
+                            String name = rs1.getString("drug_name_INN");
+                            if (name.indexOf(",") != -1) {
+                                name = name.substring(0, name.indexOf(","));
+                            }
+                            JOptionPane.showMessageDialog(Pharmacy_DB.getProcessPayment(),
+                                    "Your total cart quantity of " + name + " exceeds your available stock.",
+                                    "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            throw new SQLException();
+                        }
                     }
-
-                    newPaymentDialog.process(Integer.parseInt(customer_id), totalCost);
-                    newPaymentDialog.pack();
-                    newPaymentDialog.setLocationRelativeTo(Pharmacy_DB.getProcessPayment());
-                    newPaymentDialog.setVisible(true);
                 } else {
                     JOptionPane.showMessageDialog(Pharmacy_DB.getProcessPayment(),
                             "Customer not found.",
@@ -256,6 +274,7 @@ public class ProcessPayment extends JPanel implements ActionListener {
                             JOptionPane.ERROR_MESSAGE);
                 }
             } catch (SQLException e) {
+                e.printStackTrace();
                 JOptionPane.showMessageDialog(Pharmacy_DB.getProcessPayment(),
                         "Unexpected error.",
                         "Error",
@@ -266,6 +285,44 @@ public class ProcessPayment extends JPanel implements ActionListener {
 
     private void doClear() {
         model.setRowCount(0);
+    }
+
+    private int checkAndDepleteCartStocks() throws SQLException {
+        int numRows = model.getRowCount();
+        HashMap<Integer, Integer> totals = new HashMap<Integer, Integer>();
+
+        for (int i = 0; i < numRows; i++) {
+            Integer din = Integer.parseInt(model.getValueAt(i, 0).toString());
+            String quantityString = model.getValueAt(i, 2).toString();
+            Integer quantity = Integer.parseInt(quantityString.substring(0, quantityString.indexOf(" ")));
+            if (!totals.containsKey(din)) {
+                totals.put(din, quantity);
+            } else {
+                Integer oldQuantity = totals.get(din);
+                totals.put(din, oldQuantity + quantity);
+            }
+        }
+
+        for (Integer din: totals.keySet()) {
+            ResultSet rs1 = Pharmacy_DB.getResults("SELECT * FROM Over_the_counter_drug WHERE DIN = " + din);
+            ResultSet rs2 = Pharmacy_DB.getResults("SELECT * FROM Stock_drug WHERE DIN = " + din);
+
+            if (rs1.next()) {
+                int stock = rs1.getInt("quantity");
+                if (totals.get(din) > stock) {
+                    return din;
+                }
+            } else if (rs2.next()) {
+                int stock = rs2.getInt("amount_mg");
+                if (totals.get(din) > stock) {
+                    return din;
+                }
+            } else {
+                throw new SQLException();
+            }
+        }
+
+        return -1;
     }
 
     private class NewItemDialog extends JDialog implements ActionListener {
@@ -586,6 +643,7 @@ public class ProcessPayment extends JPanel implements ActionListener {
                             year.getSelectedItem() + "-" + month.getSelectedItem() + "-" + day.getSelectedItem() + "')");
 
                     createRecords();
+                    depleteStocks();
 
                     dispose();
                     model.setRowCount(0);
@@ -594,10 +652,34 @@ public class ProcessPayment extends JPanel implements ActionListener {
                             "Success",
                             JOptionPane.PLAIN_MESSAGE);
                 } catch (SQLException e) {
+                    e.printStackTrace();
                     JOptionPane.showMessageDialog(this,
                             "Unexpected error.",
                             "Error",
                             JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+
+        private void depleteStocks() throws SQLException {
+            int numRows = model.getRowCount();
+
+            for (int i = 0; i < numRows; i++) {
+                String din = model.getValueAt(i, 0).toString();
+                String amountString = model.getValueAt(i, 2).toString();
+                amountString = amountString.substring(0, amountString.indexOf(" "));
+
+                ResultSet rs1 = Pharmacy_DB.getResults("SELECT * FROM Over_the_counter_drug WHERE DIN = " + din);
+                ResultSet rs2 = Pharmacy_DB.getResults("SELECT * FROM Stock_drug WHERE DIN = " + din);
+
+                if (rs1.next()) {
+                    Pharmacy_DB.executeUpdate("UPDATE Over_the_counter_drug SET quantity = quantity - " +
+                            amountString + "WHERE DIN = " + din);
+                } else if (rs2.next()){
+                    Pharmacy_DB.executeUpdate("UPDATE Stock_drug SET amount_mg = amount_mg - " +
+                            amountString + "WHERE DIN = " + din);
+                } else {
+                    throw new SQLException();
                 }
             }
         }
