@@ -1,6 +1,7 @@
 package screens;
 
 import main.Pharmacy_DB;
+import models.DBScreen;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +10,7 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class DrugRestock extends JPanel {
+public class DrugRestock extends DBScreen {
     // todo : integrate this with druglookup
 
     private JLabel restockType = new JLabel("Product type:");

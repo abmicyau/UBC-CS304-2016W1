@@ -1,6 +1,7 @@
 package screens;
 
 import main.Pharmacy_DB;
+import models.DBScreen;
 import models.DBTableModel;
 
 import javax.swing.*;
@@ -15,7 +16,7 @@ import java.sql.SQLException;
 
 import static javax.swing.JOptionPane.YES_OPTION;
 
-public class DrugLookup extends JPanel {
+public class DrugLookup extends DBScreen {
 
     private JLabel labelID = new JLabel("DIN: ");
     private JTextField textID = new JTextField(10);

@@ -1,6 +1,7 @@
 package screens;
 
 import main.Pharmacy_DB;
+import models.DBScreen;
 import models.DBTableModel;
 
 import javax.swing.*;
@@ -20,7 +21,7 @@ import java.util.HashSet;
 
 import static javax.swing.JOptionPane.YES_OPTION;
 
-public class ProcessPayment extends JPanel implements ActionListener {
+public class ProcessPayment extends DBScreen implements ActionListener {
 
     // implementing ActionListener interface for improved button handling
 

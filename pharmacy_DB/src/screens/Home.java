@@ -1,13 +1,14 @@
 package screens;
 
 import main.Pharmacy_DB;
+import models.DBScreen;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Home extends JPanel {
+public class Home extends DBScreen {
 
     private JButton actionButton1 = new JButton("Process Payment");
     private JButton actionButton2 = new JButton("Add Record");
@@ -88,8 +89,6 @@ public class Home extends JPanel {
         middle.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Employees"));
         right.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Patients"));
 
-        setVisibility();
-
         revalidate();
         repaint();
     }
@@ -115,7 +114,7 @@ public class Home extends JPanel {
             // TODO: disable delete doctors
             actionButton2.setVisible(true);
             actionButton8.setVisible(true);
-
+            System.out.println("blah");
         }
         if (Pharmacy_DB.getUser() == Pharmacy_DB.User.PHARMACIST) {
 
@@ -180,7 +179,11 @@ public class Home extends JPanel {
         actionButton10.addActionListener((new ActionListener() {
             public void actionPerformed(ActionEvent e) { Pharmacy_DB.switchScreen(Pharmacy_DB.getCheckPrescriptionPanel()); }
         }));
+    }
 
-
+    @Override
+    public void refresh() {
+        super.refresh();
+        setVisibility();
     }
 }

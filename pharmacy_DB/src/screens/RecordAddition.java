@@ -1,6 +1,7 @@
 package screens;
 
 import main.Pharmacy_DB;
+import models.DBScreen;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,7 @@ import java.sql.SQLException;
 /**
  * Created by Victor on 2016-11-16.
  */
-public class RecordAddition extends JPanel{
+public class RecordAddition extends DBScreen {
 
     // Types of patients
     private JCheckBox checkPatient = new JCheckBox("On-going Patient");

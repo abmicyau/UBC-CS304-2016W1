@@ -1,6 +1,7 @@
 package screens;
 
 import main.Pharmacy_DB;
+import models.DBScreen;
 import models.DBTableModel;
 
 import javax.swing.*;
@@ -17,7 +18,7 @@ import java.text.SimpleDateFormat;
 
 import static javax.swing.JOptionPane.YES_OPTION;
 
-public class CustomerLookup extends JPanel {
+public class CustomerLookup extends DBScreen {
 
     private JLabel labelID = new JLabel("ID: ");
     private JTextField textID = new JTextField(10);

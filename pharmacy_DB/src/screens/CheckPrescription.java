@@ -1,6 +1,7 @@
 package screens;
 
 import main.Pharmacy_DB;
+import models.DBScreen;
 import models.DBTableModel;
 
 import javax.swing.*;
@@ -12,7 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
-public class CheckPrescription extends JPanel {
+public class CheckPrescription extends DBScreen {
 
     private JLabel labelDID = new JLabel("Doctor ID: ");
     private JTextField textDID = new JTextField(8);

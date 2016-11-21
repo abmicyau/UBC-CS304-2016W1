@@ -1,6 +1,7 @@
 package screens;
 
 import main.Pharmacy_DB;
+import models.DBScreen;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +10,7 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Login extends JPanel {
+public class Login extends DBScreen {
 
     private JLabel title = new JLabel("Employee Login");
     private JLabel labelUsername = new JLabel("Enter username: ");
@@ -97,34 +98,48 @@ public class Login extends JPanel {
         // login button action
         buttonLogin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String user = textUsername.getText();
-                String pass = new String(fieldPassword.getPassword());
-
-                // TODO: change error messages to popups
-
-                // disable login for convenience for now
-                if (pass.equals(fetchUserPass(user))) {
-                    loginMsg.setVisible(false);
-
-                    // TODO: create helper for the following block, integrate with fetchuserpass
-                    try {
-                        ResultSet rs = Pharmacy_DB.getResults("SELECT * FROM Employee WHERE username = '" + user + "'");
-                        if (rs.next()) {
-                            Pharmacy_DB.setUser(rs.getInt("emp_id"));
-                        } else {
-                            throw new SQLException();
-                        }
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    }
-
-                    Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
-                } else {
-                    loginMsg.setText("Login failed. Invalid username/password.");
-                    loginMsg.setVisible(true);
+                try {
+                    Pharmacy_DB.setUser(2);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
                 }
+                Pharmacy_DB.getHomePanel().revalidate();
+                Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
+
+                // disable login for now
+
+//                String user = textUsername.getText();
+//                String pass = new String(fieldPassword.getPassword());
+//
+//                // TODO: change error messages to popups
+//
+//                // disable login for convenience for now
+//                if (pass.equals(fetchUserPass(user))) {
+//                    loginMsg.setVisible(false);
+//
+//                    // TODO: create helper for the following block, integrate with fetchuserpass
+//                    try {
+//                        ResultSet rs = Pharmacy_DB.getResults("SELECT * FROM Employee WHERE username = '" + user + "'");
+//                        if (rs.next()) {
+//                            Pharmacy_DB.setUser(rs.getInt("emp_id"));
+//                        } else {
+//                            throw new SQLException();
+//                        }
+//                    } catch (SQLException ex) {
+//                        ex.printStackTrace();
+//                    }
+//
+//                    Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
+//                } else {
+//                    loginMsg.setText("Login failed. Invalid username/password.");
+//                    loginMsg.setVisible(true);
+//                }
             }
         });
+    }
+
+    public void refresh() {
+
     }
 
 }

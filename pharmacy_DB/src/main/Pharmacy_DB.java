@@ -1,5 +1,6 @@
 package main;
 
+import models.DBScreen;
 import screens.*;
 
 import javax.swing.*;
@@ -22,17 +23,17 @@ public class Pharmacy_DB {
     private static Connection connection;
 
     // Screens
-    private static JPanel login;
-    private static JPanel home;
-    private static JPanel employeeLookup;
-    private static JPanel customerLookup;
-    private static JPanel doctorLookup;
-    private static JPanel drugLookup;
-    private static JPanel drugRestock;
-    private static JPanel checkPrescription;
-    private static JPanel recordDeletion;
-    private static JPanel recordAddition;
-    private static JPanel processPayment;
+    private static DBScreen login;
+    private static DBScreen home;
+    private static DBScreen employeeLookup;
+    private static DBScreen customerLookup;
+    private static DBScreen doctorLookup;
+    private static DBScreen drugLookup;
+    private static DBScreen drugRestock;
+    private static DBScreen checkPrescription;
+    private static DBScreen recordDeletion;
+    private static DBScreen recordAddition;
+    private static DBScreen processPayment;
 
     public static enum User {
         PHARMACIST, PHARMACY_ASSISTANT, PHARMACY_TECHNICIAN, OTHER
@@ -78,7 +79,6 @@ public class Pharmacy_DB {
         drugLookup = new DrugLookup();
         drugRestock = new DrugRestock();
         checkPrescription = new CheckPrescription();
-        recordDeletion = new RecordDeletion();
         recordAddition = new RecordAddition();
         processPayment = new ProcessPayment();
     }
@@ -181,16 +181,14 @@ public class Pharmacy_DB {
 
     // SCREEN GETTERS
     //
-    public static JPanel getLoginPanel() { return login; }
-    public static JPanel getHomePanel() { return home; }
-    public static JPanel getEmployeeLookupPanel() { return employeeLookup; }
-    public static JPanel getCustomerLookup() { return customerLookup; }
-    public static JPanel getDoctorLookupPanel() { return doctorLookup; }
-    public static JPanel getDrugLookup() { return drugLookup; }
-    public static JPanel getDrugRestock() { return drugRestock; }
-    public static JPanel getCheckPrescriptionPanel() { return checkPrescription; }
-    public static JPanel getRecordDeletion() { return recordDeletion; }
-    public static JPanel getRecordAddition() { return recordAddition; }
-    public static JPanel getProcessPayment() { return processPayment; }
-
+    public static DBScreen getLoginPanel() { return login; }
+    public static DBScreen getHomePanel() { return home; }
+    public static DBScreen getEmployeeLookupPanel() { return employeeLookup; }
+    public static DBScreen getCustomerLookup() { return customerLookup; }
+    public static DBScreen getDoctorLookupPanel() { return doctorLookup; }
+    public static DBScreen getDrugLookup() { return drugLookup; }
+    public static DBScreen getDrugRestock() { return drugRestock; }
+    public static DBScreen getCheckPrescriptionPanel() { return checkPrescription; }
+    public static DBScreen getRecordAddition() { return recordAddition; }
+    public static DBScreen getProcessPayment() { return processPayment; }
 }
