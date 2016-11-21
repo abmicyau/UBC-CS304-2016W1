@@ -237,6 +237,8 @@ public class RecordAddition extends JPanel{
                     if (!policy.isEmpty()) {
                         insertInsuranceQuery = insertInsuranceQuery + "policy_id";
                         valueInsuranceQuery = valueInsuranceQuery + policy;
+                        insertQuery += ",insurance_policy_id";
+                        valueQuery += ",'" + policy + "'";
                         if (!expDate.isEmpty()) {
                             insertInsuranceQuery += ",expDate";
                             valueInsuranceQuery += "," + "'" + expDate + "'";
