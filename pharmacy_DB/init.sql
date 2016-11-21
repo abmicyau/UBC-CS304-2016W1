@@ -161,10 +161,9 @@ create table Payment_paid_by
  	(paymentId int not null, 
  	customer_id int not null,
  	transdate date not null,
- 	total char(10) not null,
- 	cardNumber char(12) not null,
+ 	total int not null,
+ 	cardNumber char(16) not null,
  	cardExpDate date not null,
- 	time char(5) not null,
  	primary key (paymentId), 
  	foreign key (customer_id) references Customer ON DELETE CASCADE 
  	); 
@@ -768,7 +767,7 @@ insert into Customer (customer_id, name, phone_number, insurance_policy_id) valu
 insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (7, 'Ruby Graham', '92-(753)152-1440', 1211);
 insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (8, 'Frank Coleman', '63-(811)375-9222', 1384);
 insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (9, 'Mark Edwards', '81-(252)238-1065', 1557);
-insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (10, 'Samuel Simmons', '62-(890)233-6027', 1730);
+insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (10, 'Samuel Simmons', '62-(890)233-6027', null);
 insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (11, 'Heather Mendoza', '63-(839)265-4837', 1903);
 insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (12, 'Wayne Vasquez', '355-(328)426-3523', 2076);
 insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (13, 'Christine Murphy', '257-(301)621-9617', 2249);
@@ -778,7 +777,7 @@ insert into Customer (customer_id, name, phone_number, insurance_policy_id) valu
 insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (17, 'Denise Schmidt', '46-(528)674-9262', 2941);
 insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (18, 'Michelle King', '86-(317)323-9888', 3114);
 insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (19, 'Roger Hayes', '33-(856)952-1061', 3287);
-insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (20, 'Craig Mason', '86-(541)883-3899', 3460);
+insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (20, 'Craig Mason', '86-(541)883-3899', null);
 insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (21, 'Ashley Kennedy', '62-(861)661-7876', 3633);
 insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (22, 'Craig Arnold', '1-(198)718-4631', 3806);
 insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (23, 'Sandra Wells', '86-(563)550-6131', 3979);
@@ -788,7 +787,7 @@ insert into Customer (customer_id, name, phone_number, insurance_policy_id) valu
 insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (27, 'Jeffrey Hamilton', '86-(610)191-9817', 4671);
 insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (28, 'Amy Riley', '420-(368)693-0283', 4844);
 insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (29, 'Robert Dean', '420-(827)344-0224', 5017);
-insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (30, 'Russell Stewart', '7-(571)426-4708', 5190);
+insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (30, 'Russell Stewart', '7-(571)426-4708', null);
 insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (31, 'Lawrence Porter', '7-(217)841-4446', 5363);
 insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (32, 'Russell Ross', '48-(931)204-9479', 5536);
 insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (33, 'Adam Cooper', '1-(630)722-6150', 5709);
@@ -798,7 +797,7 @@ insert into Customer (customer_id, name, phone_number, insurance_policy_id) valu
 insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (37, 'Barbara Schmidt', '86-(607)246-5608', 6401);
 insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (38, 'Katherine Edwards', '86-(921)983-7769', 6574);
 insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (39, 'Roy Howell', '62-(964)573-9190', 6747);
-insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (40, 'Ryan Simmons', '269-(916)485-6258', 6920);
+insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (40, 'Ryan Simmons', '269-(916)485-6258', null);
 insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (41, 'Nicole Chapman', '86-(441)627-7548', 7093);
 insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (42, 'Edward Martin', '86-(783)756-9263', 7266);
 insert into Customer (customer_id, name, phone_number, insurance_policy_id) values (43, 'Alice Alvarez', '351-(379)530-8664', 7439);
