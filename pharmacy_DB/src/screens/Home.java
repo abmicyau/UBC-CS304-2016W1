@@ -88,8 +88,43 @@ public class Home extends JPanel {
         middle.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Employees"));
         right.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Patients"));
 
+        setVisibility();
+
         revalidate();
         repaint();
+    }
+
+    private void setVisibility() {
+
+        // Process payment, lookup/restock drugs, lookup customers, logout
+        // TODO: disable delete customers
+        actionButton1.setVisible(true);
+        actionButton5.setVisible(true);
+        actionButton6.setVisible(true);
+        buttonLogout.setVisible(true);
+
+        actionButton2.setVisible(false);
+        actionButton7.setVisible(false);
+        actionButton8.setVisible(false);
+        actionButton10.setVisible(false);
+
+        if (Pharmacy_DB.getUser() == Pharmacy_DB.User.PHARMACIST ||
+                Pharmacy_DB.getUser() == Pharmacy_DB.User.PHARMACY_TECHNICIAN) {
+
+            // Add customer/patient records, lookup doctors
+            // TODO: disable delete doctors
+            actionButton2.setVisible(true);
+            actionButton8.setVisible(true);
+
+        }
+        if (Pharmacy_DB.getUser() == Pharmacy_DB.User.PHARMACIST) {
+
+            // Lookup employees, check prescriptions
+            // TODO: enable delete customers
+            // TODO: enable delete doctors
+            actionButton7.setVisible(true);
+            actionButton10.setVisible(true);
+        }
     }
 
     private void addActions() {

@@ -39,6 +39,8 @@ public class Login extends JPanel {
         return pw;
     }
 
+    // ???
+    //
     private void allowedAccess(){
         String unionAllowedEmps = "(SELECT emp_id FROM Pharmacy_Assistant) " +
                 "UNION (SELECT emp_id FROM Pharmacist) " +
@@ -95,23 +97,34 @@ public class Login extends JPanel {
         // login button action
         buttonLogin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
+                String user = textUsername.getText();
+                String pass = new String(fieldPassword.getPassword());
+
+                // TODO: change error messages to popups
 
                 // disable login for convenience for now
-//                if (fieldPassword.getText().equals(fetchUserPass(textUsername.getText()))) {
-//                    loginMsg.setVisible(false);
-//                    Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
-//                } else {
-//                    loginMsg.setText("Login failed. Invalid username/password.");
-//                    loginMsg.setVisible(true);
-//                }
+                if (pass.equals(fetchUserPass(user))) {
+                    loginMsg.setVisible(false);
 
+                    // TODO: create helper for the following block, integrate with fetchuserpass
+                    try {
+                        ResultSet rs = Pharmacy_DB.getResults("SELECT * FROM Employee WHERE username = '" + user + "'");
+                        if (rs.next()) {
+                            Pharmacy_DB.setUser(rs.getInt("emp_id"));
+                        } else {
+                            throw new SQLException();
+                        }
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+
+                    Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
+                } else {
+                    loginMsg.setText("Login failed. Invalid username/password.");
+                    loginMsg.setVisible(true);
+                }
             }
         });
-    }
-
-    private Pharmacy_DB.User getUser() {
-        return Pharmacy_DB.User.OTHER;
     }
 
 }

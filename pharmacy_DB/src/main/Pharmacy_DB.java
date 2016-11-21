@@ -118,7 +118,24 @@ public class Pharmacy_DB {
         mainFrame.repaint();
     }
 
+    public static void setUser(int id) throws SQLException {
+        ResultSet rs0 = getResults("SELECT * FROM Pharmacist WHERE emp_id = " + id);
+        ResultSet rs1 = getResults("SELECT * FROM Pharmacy_Assistant WHERE emp_id = " + id);
+        ResultSet rs2 = getResults("SELECT * FROM Pharmacy_Technician WHERE emp_id = " + id);
+
+        if (rs0.next()) {
+            user = User.PHARMACIST;
+        } else if (rs1.next()) {
+            user = User.PHARMACY_ASSISTANT;
+        } else if (rs2.next()) {
+            user = User.PHARMACY_TECHNICIAN;
+        } else {
+            user = User.OTHER;
+        }
+    }
+
     // Gets a result set given a query
+    // TODO: make this throw exception and fix all callers accordingly
     //
     public static ResultSet getResults(String query) {
         try {
@@ -159,6 +176,8 @@ public class Pharmacy_DB {
         s2 = s2.replace(".", "");
         return Integer.parseInt(s2);
     }
+
+    public static User getUser() { return user; }
 
     // SCREEN GETTERS
     //
