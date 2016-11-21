@@ -268,8 +268,10 @@ public class CustomerLookup extends JPanel {
                 detailsDialog.setLocationRelativeTo(Pharmacy_DB.getCustomerLookup());
                 detailsDialog.setVisible(true);
             } catch (SQLException ex) {
-                // TODO: change this to a dialog
-                System.out.println("Unexpected error");
+                JOptionPane.showMessageDialog(Pharmacy_DB.getCustomerLookup(),
+                        "Unexpected error.",
+                        "Delete Customer Record",
+                        JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -277,7 +279,7 @@ public class CustomerLookup extends JPanel {
     private class DeleteButton implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             int n = JOptionPane.showConfirmDialog(
-                    Pharmacy_DB.getEmployeeLookupPanel(),
+                    Pharmacy_DB.getCustomerLookup(),
                     "Are you sure you want to delete the following customer record?\n\n" +
                             "(" + table.getValueAt(table.getSelectedRow(), 0).toString() + ") " +
                             table.getValueAt(table.getSelectedRow(), 1).toString() + "\n\n",
@@ -287,13 +289,13 @@ public class CustomerLookup extends JPanel {
                 try {
                     // check for result > 0???
                     deleteCustomer(Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString()));
-                    JOptionPane.showMessageDialog(Pharmacy_DB.getEmployeeLookupPanel(),
+                    JOptionPane.showMessageDialog(Pharmacy_DB.getCustomerLookup(),
                             "Customer record successfully deleted.",
                             "Delete Customer Record",
                             JOptionPane.PLAIN_MESSAGE);
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(Pharmacy_DB.getEmployeeLookupPanel(),
-                            "Unexpected error. Could not delete employee.",
+                    JOptionPane.showMessageDialog(Pharmacy_DB.getCustomerLookup(),
+                            "Unexpected error. Could not delete customer.",
                             "Delete Customer Record",
                             JOptionPane.ERROR_MESSAGE);
                 }

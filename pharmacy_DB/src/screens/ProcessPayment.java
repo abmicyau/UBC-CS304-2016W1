@@ -588,6 +588,7 @@ public class ProcessPayment extends JPanel implements ActionListener {
                     createRecords();
 
                     dispose();
+                    model.setRowCount(0);
                     JOptionPane.showMessageDialog(Pharmacy_DB.getProcessPayment(),
                             "Transaction complete.",
                             "Success",

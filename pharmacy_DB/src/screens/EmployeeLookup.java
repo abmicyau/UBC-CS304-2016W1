@@ -249,8 +249,10 @@ public class EmployeeLookup extends JPanel {
                 detailsDialog.setLocationRelativeTo(Pharmacy_DB.getEmployeeLookupPanel());
                 detailsDialog.setVisible(true);
             } catch (SQLException ex) {
-                // TODO: change this to a dialog
-                System.out.println("Unexpected error");
+                JOptionPane.showMessageDialog(Pharmacy_DB.getEmployeeLookupPanel(),
+                        "Unexpected error.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
         }
     }
