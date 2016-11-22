@@ -9,8 +9,12 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import static javax.swing.JOptionPane.YES_OPTION;
 
 public class PaymentRecordLookup extends DBScreen {
 
@@ -29,8 +33,12 @@ public class PaymentRecordLookup extends DBScreen {
     DefaultTableModel model = new DBTableModel();
     JTable table = new JTable(model);
 
+    private JPopupMenu contextMenu = new JPopupMenu();
+
     private JPanel left = new JPanel(new GridBagLayout());
     private JPanel right = new JPanel(new BorderLayout());
+
+    private boolean clickable = false;
 
     public PaymentRecordLookup() {
 
@@ -107,10 +115,42 @@ public class PaymentRecordLookup extends DBScreen {
         right.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(), "Payment Records"));
 
+        JMenuItem menuDelete = new JMenuItem("Delete");
+        menuDelete.addActionListener(new DeleteButton());
+        contextMenu.add(menuDelete);
+
         buttonSearch.addActionListener(new SearchButton());
         buttonTotals.addActionListener(new TotalsButton());
         buttonSumTotals.addActionListener(new SumTotalsButton());
         buttonBack.addActionListener(new BackButton());
+
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (clickable) popup(e);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (clickable) popup(e);
+            }
+
+            private void popup(MouseEvent e) {
+                int r = table.rowAtPoint(e.getPoint());
+                if (r >= 0 && r < table.getRowCount()) {
+                    table.setRowSelectionInterval(r, r);
+                } else {
+                    table.clearSelection();
+                }
+
+                int rowindex = table.getSelectedRow();
+                if (rowindex < 0)
+                    return;
+                if (e.isPopupTrigger() && e.getComponent() instanceof JTable ) {
+                    contextMenu.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
 
         search();
     }
@@ -183,6 +223,8 @@ public class PaymentRecordLookup extends DBScreen {
         message.append(" results found.");
 
         searchMessage.setText(message.toString());
+        clickable = true;
+
         revalidate();
         repaint();
     }
@@ -209,11 +251,13 @@ public class PaymentRecordLookup extends DBScreen {
         message.append(" results found.");
 
         searchMessage.setText(message.toString());
+        clickable = false;
+
         revalidate();
         repaint();
     }
 
-    // nested aggregation
+    // aggregation
     private void searchSumTotals() {
         StringBuilder query = new StringBuilder();
         StringBuilder message = new StringBuilder();
@@ -226,6 +270,23 @@ public class PaymentRecordLookup extends DBScreen {
         message.append(" results found.");
 
         searchMessage.setText(message.toString());
+        clickable = false;
+
+        revalidate();
+        repaint();
+    }
+
+    private void deleteRecord(int id) throws SQLException {
+        StringBuilder query = new StringBuilder();
+        StringBuilder message = new StringBuilder();
+
+        query.append("DELETE FROM Payment_paid_by WHERE paymentId = ");
+        query.append(id);
+
+        Pharmacy_DB.executeUpdate(query.toString());
+
+        search();
+
         revalidate();
         repaint();
     }
@@ -275,6 +336,32 @@ public class PaymentRecordLookup extends DBScreen {
     private class BackButton implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
+        }
+    }
+
+    private class DeleteButton implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            int n = JOptionPane.showConfirmDialog(
+                    Pharmacy_DB.getEmployeeLookupPanel(),
+                    "Are you sure you want to delete the following record?\n\n" +
+                            "Record ID: " + table.getValueAt(table.getSelectedRow(), 0).toString() + "\n\n",
+                    "Delete Record",
+                    JOptionPane.YES_NO_OPTION);
+            if (n == YES_OPTION) {
+                try {
+                    // check for result > 0???
+                    deleteRecord(Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString()));
+                    JOptionPane.showMessageDialog(Pharmacy_DB.getEmployeeLookupPanel(),
+                            "Record successfully deleted.",
+                            "Delete Record",
+                            JOptionPane.PLAIN_MESSAGE);
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(Pharmacy_DB.getEmployeeLookupPanel(),
+                            "Unexpected error.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
         }
     }
 
