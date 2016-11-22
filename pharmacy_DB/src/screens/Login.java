@@ -4,6 +4,7 @@ import main.Pharmacy_DB;
 import models.DBScreen;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,6 +21,9 @@ public class Login extends DBScreen {
     private JButton buttonLogin = new JButton("Login");
 
     private JLabel loginMsg = new JLabel(" ");
+
+    // logo
+    private ImageIcon logoIcon = new ImageIcon(getClass().getClassLoader().getResource("teambb.png"));
 
     private String fetchUserPass(String uname) {
         StringBuilder query = new StringBuilder();
@@ -54,38 +58,56 @@ public class Login extends DBScreen {
         // important! call JPanel constructor and pass GridBagLayout
         super(new GridBagLayout());
 
+
+
+
         // set contraints and padding
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(10, 10, 10, 10);
+
+        // jpanels
+
+        JPanel top = new JPanel(new GridBagLayout());
+        JPanel mid = new JPanel(new GridBagLayout());
+        //logo
+        JLabel logoLabel = new JLabel(logoIcon);
+        constraints.weighty = 0;
+        constraints.gridy=0;
+        add(top, constraints);
+        top.add(logoLabel, constraints);
+
+        constraints.weighty = 0;
+        constraints.gridy=1;
+        add(mid, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.gridwidth = 2;
         constraints.anchor = GridBagConstraints.CENTER;
-        add(title, constraints);
+        mid.add(title, constraints);
 
         constraints.gridwidth = 1;
         constraints.anchor = GridBagConstraints.WEST;
 
         constraints.gridx = 0;
         constraints.gridy = 1;
-        add(labelUsername, constraints);
+        mid.add(labelUsername, constraints);
 
         constraints.gridx = 1;
-        add(textUsername, constraints);
+        mid.add(textUsername, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 2;
-        add(labelPassword, constraints);
+        mid.add(labelPassword, constraints);
 
         constraints.gridx = 1;
-        add(fieldPassword, constraints);
+        mid.add(fieldPassword, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 3;
         constraints.gridwidth = 2;
         constraints.anchor = GridBagConstraints.CENTER;
-        add(buttonLogin, constraints);
+        mid.add(buttonLogin, constraints);
 
         // set border for the panel
         setBorder(BorderFactory.createTitledBorder(
@@ -93,7 +115,7 @@ public class Login extends DBScreen {
 
         constraints.gridx = 0;
         constraints.gridy = 5;
-        add(loginMsg, constraints);
+        mid.add(loginMsg, constraints);
 
         // login button action
         buttonLogin.addActionListener(new ActionListener() {
