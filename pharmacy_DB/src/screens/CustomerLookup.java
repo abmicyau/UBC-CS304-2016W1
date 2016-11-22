@@ -308,6 +308,7 @@ public class CustomerLookup extends DBScreen {
     private class DetailsDialog extends JDialog implements ActionListener {
 
         private JPanel dialogPanel = new JPanel(new GridBagLayout());
+        private JButton addButton = new JButton("Add");
         private JButton closeButton = new JButton("Close");
 
         // labels
@@ -340,6 +341,8 @@ public class CustomerLookup extends DBScreen {
         private JLabel info3_4 = new JLabel("");
 
         private GridBagConstraints constraints = new GridBagConstraints();
+        private NewPatientDialog newPatientDialog = new NewPatientDialog();
+        private int cid = 0;
 
         public DetailsDialog() {
 
@@ -434,11 +437,17 @@ public class CustomerLookup extends DBScreen {
             constraints.gridx = 1;
             dialogPanel.add(info3_4, constraints);
 
+            constraints.gridy = 14;
+            constraints.gridx = 0;
+            dialogPanel.add(addButton, constraints);
+
             constraints.insets.set(15, 10, 10, 10);
             constraints.gridx = 0;
-            constraints.gridy = 14;
+            constraints.gridy = 15;
             dialogPanel.add(closeButton, constraints);
 
+            addButton.setVisible(false);
+            addButton.addActionListener(this);
             closeButton.addActionListener(this);
 
             setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -454,6 +463,7 @@ public class CustomerLookup extends DBScreen {
 
             if (rs.next()) {
                 String customer_id = rs.getString("customer_id");
+                cid = Integer.parseInt(customer_id);
                 String policy_id = rs.getString("insurance_policy_id");
 
                 info1_1.setText(customer_id);
@@ -481,15 +491,30 @@ public class CustomerLookup extends DBScreen {
                 ResultSet rs3 = Pharmacy_DB.getResults("SELECT * FROM Patient WHERE customer_id = " + customer_id);
 
                 if (rs3.next()) {
+                    addButton.setVisible(false);
+                    label3_1.setVisible(true);
+                    label3_2.setVisible(true);
+                    label3_3.setVisible(true);
+                    label3_4.setVisible(true);
+                    info3_1.setVisible(true);
+                    info3_2.setVisible(true);
+                    info3_3.setVisible(true);
+                    info3_4.setVisible(true);
+
                     info3_1.setText(rs3.getString("care_card_number"));
                     info3_2.setText(rs3.getString("address"));
                     info3_3.setText(rs3.getString("birthdate"));
                     info3_4.setText(rs3.getString("gender"));
                 } else {
-                    info3_1.setText("N/A");
-                    info3_2.setText("N/A");
-                    info3_3.setText("N/A");
-                    info3_4.setText("N/A");
+                    addButton.setVisible(true);
+                    label3_1.setVisible(false);
+                    label3_2.setVisible(false);
+                    label3_3.setVisible(false);
+                    label3_4.setVisible(false);
+                    info3_1.setVisible(false);
+                    info3_2.setVisible(false);
+                    info3_3.setVisible(false);
+                    info3_4.setVisible(false);
                 }
 
             } else {
@@ -498,7 +523,180 @@ public class CustomerLookup extends DBScreen {
         }
 
         public void actionPerformed(ActionEvent e) {
-            dispose();
+            if (e.getSource() == addButton) {
+                newPatientDialog.updateInfoPD(cid, this);
+                newPatientDialog.pack();
+                newPatientDialog.setLocationRelativeTo(this);
+                newPatientDialog.setVisible(true);
+            } else if (e.getSource() == closeButton) {
+                dispose();
+            }
+        }
+
+        private class NewPatientDialog extends JDialog implements ActionListener {
+
+            private JPanel dialogPanel = new JPanel(new GridBagLayout());
+            private JButton submitButton = new JButton("Submit");
+            private JButton closeButton = new JButton("Close");
+
+            // labels
+            private JLabel label0 = new JLabel("<html><b>Customer ID: </b></html>");
+            private JLabel label1 = new JLabel("<html><b>Care Card #: </b></html>");
+            private JLabel label2 = new JLabel("<html><b>Address: </b></html>");
+            private JLabel label3 = new JLabel("<html><b>Birthdate: </b></html>");
+            private JLabel label4 = new JLabel("<html><b>Gender: </b></html>");
+
+            // info
+            private JLabel info0 = new JLabel("");
+
+            // text fields
+            private JTextField cardNumber = new JTextField(8);
+            private JTextField address = new JTextField(8);
+            private JComboBox<Integer> year = new JComboBox<Integer>(new Integer[] {
+                            1910, 1911, 1912, 1913, 1914, 1915, 1916, 1917, 1918, 1919,
+                            1920, 1921, 1922, 1923, 1924, 1925, 1926, 1927, 1928, 1929,
+                            1930, 1931, 1932, 1933, 1934, 1935, 1936, 1937, 1938, 1939,
+                            1940, 1941, 1942, 1943, 1944, 1945, 1946, 1947, 1948, 1949,
+                            1950, 1951, 1952, 1953, 1954, 1955, 1956, 1957, 1958, 1959,
+                            1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969,
+                            1970, 1971, 1972, 1973, 1974, 1975, 1976, 1977, 1978, 1979,
+                            1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989,
+                            1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+                            2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,
+                            2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017});
+            private JComboBox<Integer> month = new JComboBox<Integer>(new Integer[]
+                    {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12});
+            private JComboBox<Integer> day = new JComboBox<Integer>(new Integer[]
+                    {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+                            16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31});
+            private JComboBox<String> gender = new JComboBox<String>(new String[] {"M", "F"});
+
+            private GridBagConstraints constraints = new GridBagConstraints();
+            private JDialog parent;
+
+            private int cid = 0;
+
+            public NewPatientDialog() {
+                setTitle("Add Patient Record");
+                constraints.anchor = GridBagConstraints.WEST;
+                // TOP, LEFT, BOTTOM, RIGHT
+                constraints.insets = new Insets(10, 10, 10, 10);
+                constraints.fill = GridBagConstraints.HORIZONTAL;
+                constraints.gridwidth = 1;
+
+                constraints.gridx = 0;
+                constraints.gridy = 0;
+                dialogPanel.add(label0, constraints);
+
+                constraints.gridwidth = 3;
+                constraints.gridx = 1;
+                dialogPanel.add(info0, constraints);
+
+                constraints.gridwidth = 1;
+                constraints.gridx = 0;
+                constraints.gridy = 1;
+                dialogPanel.add(label1, constraints);
+
+                constraints.gridwidth = 3;
+                constraints.gridx = 1;
+                dialogPanel.add(cardNumber, constraints);
+
+                constraints.gridwidth = 1;
+                constraints.gridx = 0;
+                constraints.gridy = 2;
+                dialogPanel.add(label2, constraints);
+
+                constraints.gridwidth = 3;
+                constraints.gridx = 1;
+                dialogPanel.add(address, constraints);
+
+                constraints.gridwidth = 1;
+                constraints.gridx = 0;
+                constraints.gridy = 3;
+                dialogPanel.add(label3, constraints);
+
+                constraints.gridx = 1;
+                dialogPanel.add(year, constraints);
+
+                constraints.gridx = 2;
+                dialogPanel.add(month, constraints);
+
+                constraints.gridx = 3;
+                dialogPanel.add(day, constraints);
+
+                constraints.gridx = 0;
+                constraints.gridy = 4;
+                dialogPanel.add(label4, constraints);
+
+                constraints.gridx = 1;
+                dialogPanel.add(gender, constraints);
+
+                constraints.gridwidth = 4;
+                constraints.gridx = 0;
+                constraints.gridy = 5;
+                dialogPanel.add(submitButton, constraints);
+
+                constraints.gridwidth = 1;
+                constraints.gridy = 6;
+                constraints.fill = GridBagConstraints.NONE;
+                dialogPanel.add(closeButton, constraints);
+
+                submitButton.addActionListener(this);
+                closeButton.addActionListener(this);
+
+                setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                setContentPane(dialogPanel);
+            }
+
+            public void updateInfoPD(int cid, JDialog parent) {
+                this.cid = cid;
+                this.parent = parent;
+                info0.setText(cid + "");
+            }
+
+            private void doSubmit() {
+                String card = cardNumber.getText();
+                if (card.length() != 16) {
+                    JOptionPane.showMessageDialog(this,
+                            "Please enter a 16-digit care card number.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                } else if (!Pharmacy_DB.isNumeric(card)) {
+                    JOptionPane.showMessageDialog(this,
+                            "Care card number must be numeric.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                } else {
+                    try {
+                        Pharmacy_DB.executeUpdate("INSERT INTO Patient VALUES " +
+                                "(" + cid + ", " + card + ", '" + address.getText() + "', '" +
+                                year.getSelectedItem() + "-" + month.getSelectedItem() + "-" + day.getSelectedItem() + "', '" +
+                                gender.getSelectedItem() + "')");
+
+                        dispose();
+                        updateInfo(cid);
+                        parent.pack();
+                        JOptionPane.showMessageDialog(parent,
+                                "Patient record added.",
+                                "Success",
+                                JOptionPane.PLAIN_MESSAGE);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(this,
+                                "Unexpected error.",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource() == submitButton) {
+                    doSubmit();
+                } else if (e.getSource() == closeButton) {
+                    dispose();
+                }
+            }
         }
     }
 

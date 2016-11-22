@@ -641,7 +641,7 @@ public class ProcessPayment extends DBScreen implements ActionListener {
                     String dateString = format.format(new Date());
 
                     Pharmacy_DB.executeUpdate("INSERT INTO Payment_paid_by VALUES " +
-                            "(" + getNextID("Payment_paid_by", "paymentId") + ", " + cid + ", '" + dateString + "', " +
+                            "(" + Pharmacy_DB.getNextID("Payment_paid_by", "paymentId") + ", " + cid + ", '" + dateString + "', " +
                             totalCost + ", '" + cardNumber.getText() + "', '" +
                             year.getSelectedItem() + "-" + month.getSelectedItem() + "-" + day.getSelectedItem() + "')");
 
@@ -691,23 +691,9 @@ public class ProcessPayment extends DBScreen implements ActionListener {
             for (int i = 0; i < model.getRowCount(); i++) {
                 String quantity = table.getValueAt(i, 2).toString();
                 Pharmacy_DB.executeUpdate("INSERT INTO Purchase_record VALUES " +
-                        "(" + getNextID("Purchase_record", "record_id") + ", " + cid + ", " +
+                        "(" + Pharmacy_DB.getNextID("Purchase_record", "record_id") + ", " + cid + ", " +
                         Integer.parseInt(table.getValueAt(i, 0).toString()) + ", " +
                         Integer.parseInt(quantity.substring(0, quantity.indexOf(" "))) + ")");
-            }
-        }
-
-        private int getNextID(String tableName, String identifier) throws SQLException {
-            ResultSet rs0 = Pharmacy_DB.getResults("SELECT MAX(" + identifier + ") id FROM " + tableName);
-
-            if (rs0.next()) {
-                if (rs0.getString("id") == null) {
-                    return 0;
-                } else {
-                    return rs0.getInt("id") + 1;
-                }
-            } else {
-                throw new SQLException();
             }
         }
 

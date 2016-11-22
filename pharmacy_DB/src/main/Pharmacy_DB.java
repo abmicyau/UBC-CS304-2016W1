@@ -177,6 +177,20 @@ public class Pharmacy_DB {
         return Integer.parseInt(s2);
     }
 
+    public static int getNextID(String tableName, String identifier) throws SQLException {
+        ResultSet rs0 = getResults("SELECT MAX(" + identifier + ") id FROM " + tableName);
+
+        if (rs0.next()) {
+            if (rs0.getString("id") == null) {
+                return 0;
+            } else {
+                return rs0.getInt("id") + 1;
+            }
+        } else {
+            throw new SQLException();
+        }
+    }
+
     public static User getUser() { return user; }
 
     // SCREEN GETTERS

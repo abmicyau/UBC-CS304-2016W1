@@ -61,9 +61,9 @@ create table Pharmacy_Technician
 
  create table Insurance_coverage
  	(policy_id int not null,
-	 expDate date null,
+	 expDate char(10) null,
  	 maxAllowance_cents int null,
-   	 company varchar (40) null,
+   company varchar (40) null,
  	 primary key (policy_id)
  	); 
 
@@ -80,7 +80,7 @@ create table Customer
  	(customer_id int not null,
  	 care_card_number int not null,
  	 address char(32) null,
- 	 birthdate date null,
+ 	 birthdate char(10) null,
  	 gender char(1) null,
  	 primary key (customer_id), 
  	 foreign key (customer_id) references Customer ON DELETE CASCADE
