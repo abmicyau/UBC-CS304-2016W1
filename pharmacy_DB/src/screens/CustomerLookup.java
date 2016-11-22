@@ -895,11 +895,13 @@ public class CustomerLookup extends DBScreen {
                                     "Please enter a 16-digit care card number.",
                                     "Error",
                                     JOptionPane.ERROR_MESSAGE);
+                            return;
                         } else if (!Pharmacy_DB.isNumeric(card)) {
                             JOptionPane.showMessageDialog(this,
                                     "Care card number must be numeric.",
                                     "Error",
                                     JOptionPane.ERROR_MESSAGE);
+                            return;
                         } else {
                                 Pharmacy_DB.executeUpdate("UPDATE Patient SET care_card_number = " + card +
                                         ", address = '" + address + "' WHERE customer_id = " + cid);
