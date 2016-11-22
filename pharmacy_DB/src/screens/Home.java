@@ -11,15 +11,14 @@ import java.awt.event.ActionListener;
 public class Home extends DBScreen {
 
     private JButton actionButton1 = new JButton("Process Payment");
-    private JButton actionButton2 = new JButton("Add Record");
-    private JButton actionButton4 = new JButton("Drug Restock");
-    private JButton actionButton5 = new JButton("Drug Lookup");
-    private JButton actionButton6 = new JButton("Customer Lookup");
-    private JButton actionButton7 = new JButton("Employee Lookup");
-    private JButton actionButton8 = new JButton("Doctor Lookup");
+    private JButton actionButton2 = new JButton("New Customer");
+    private JButton actionButton5 = new JButton("Drugs");
+    private JButton actionButton6 = new JButton("Customers");
+    private JButton actionButton7 = new JButton("Employees");
+    private JButton actionButton8 = new JButton("Doctors");
     private JButton actionButton10 = new JButton("Check Prescription");
+    private JButton actionButton11 = new JButton("Purchase Records");
     private JButton buttonLogout = new JButton("Logout");
-
 
     private JPanel left;
     private JPanel middle;
@@ -74,6 +73,10 @@ public class Home extends DBScreen {
 
         constraints.gridx = 0;
         constraints.gridy = 3;
+        middle.add(actionButton11, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 4;
         middle.add(buttonLogout, constraints);
 
         constraints.gridx = 0;
@@ -96,7 +99,6 @@ public class Home extends DBScreen {
     private void setVisibility() {
 
         // Process payment, lookup/restock drugs, lookup customers, logout
-        // TODO: disable delete customers
         actionButton1.setVisible(true);
         actionButton5.setVisible(true);
         actionButton6.setVisible(true);
@@ -111,7 +113,6 @@ public class Home extends DBScreen {
                 Pharmacy_DB.getUser() == Pharmacy_DB.User.PHARMACY_TECHNICIAN) {
 
             // Add customer/patient records, lookup doctors
-            // TODO: disable delete doctors
             actionButton2.setVisible(true);
             actionButton8.setVisible(true);
             System.out.println("blah");
@@ -119,8 +120,6 @@ public class Home extends DBScreen {
         if (Pharmacy_DB.getUser() == Pharmacy_DB.User.PHARMACIST) {
 
             // Lookup employees, check prescriptions
-            // TODO: enable delete customers
-            // TODO: enable delete doctors
             actionButton7.setVisible(true);
             actionButton10.setVisible(true);
         }
@@ -179,6 +178,11 @@ public class Home extends DBScreen {
 
         actionButton10.addActionListener((new ActionListener() {
             public void actionPerformed(ActionEvent e) { Pharmacy_DB.switchScreen(Pharmacy_DB.getCheckPrescriptionPanel()); }
+        }));
+
+        // purchase record lookup
+        actionButton11.addActionListener((new ActionListener() {
+            public void actionPerformed(ActionEvent e) { Pharmacy_DB.switchScreen(Pharmacy_DB.getPurchaseRecordLookup()); }
         }));
     }
 
