@@ -17,7 +17,7 @@ public class Home extends DBScreen {
     private JButton actionButton7 = new JButton("Employees");
     private JButton actionButton8 = new JButton("Doctors");
     private JButton actionButton10 = new JButton("Check Prescription");
-    private JButton actionButton11 = new JButton("Purchase Records");
+    private JButton actionButton11 = new JButton("Payment Records");
     private JButton buttonLogout = new JButton("Logout");
 
     private JPanel left;
@@ -182,7 +182,7 @@ public class Home extends DBScreen {
 
         // purchase record lookup
         actionButton11.addActionListener((new ActionListener() {
-            public void actionPerformed(ActionEvent e) { Pharmacy_DB.switchScreen(Pharmacy_DB.getPurchaseRecordLookup()); }
+            public void actionPerformed(ActionEvent e) { Pharmacy_DB.switchScreen(Pharmacy_DB.getPaymentRecordLookup()); }
         }));
     }
 

@@ -34,7 +34,7 @@ public class Pharmacy_DB {
     private static DBScreen recordDeletion;
     private static DBScreen recordAddition;
     private static DBScreen processPayment;
-    private static DBScreen purchaseRecordLookup;
+    private static DBScreen paymentRecordLookup;
 
     public static enum User {
         PHARMACIST, PHARMACY_ASSISTANT, PHARMACY_TECHNICIAN, OTHER
@@ -82,7 +82,7 @@ public class Pharmacy_DB {
         checkPrescription = new CheckPrescription();
         recordAddition = new RecordAddition();
         processPayment = new ProcessPayment();
-        purchaseRecordLookup = new PurchaseRecordLookup();
+        paymentRecordLookup = new PaymentRecordLookup();
     }
 
     private static void initializeWindow() {
@@ -207,5 +207,5 @@ public class Pharmacy_DB {
     public static DBScreen getCheckPrescriptionPanel() { return checkPrescription; }
     public static DBScreen getRecordAddition() { return recordAddition; }
     public static DBScreen getProcessPayment() { return processPayment; }
-    public static DBScreen getPurchaseRecordLookup() { return purchaseRecordLookup; }
+    public static DBScreen getPaymentRecordLookup() { return paymentRecordLookup; }
 }
