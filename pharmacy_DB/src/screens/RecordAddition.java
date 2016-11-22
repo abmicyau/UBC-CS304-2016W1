@@ -297,7 +297,7 @@ public class RecordAddition extends DBScreen {
                 }
                 if (!phone.isEmpty()) {
                     insertQuery = insertQuery + ",phone_number";
-                    valueQuery = valueQuery + "," + phone;
+                    valueQuery = valueQuery + "," + "'" + phone + "'";
                 }
                 if (checkInsurance.isSelected()) {
                     String insertInsuranceQuery;
