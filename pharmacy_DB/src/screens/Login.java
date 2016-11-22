@@ -13,7 +13,7 @@ import java.sql.SQLException;
 
 public class Login extends DBScreen {
 
-    private JLabel title = new JLabel("Employee Login");
+    private JLabel title = new JLabel("<html><b>Employee Login</b></html>");
     private JLabel labelUsername = new JLabel("Enter username: ");
     private JLabel labelPassword = new JLabel("Enter password: ");
     private JTextField textUsername = new JTextField(20);
@@ -125,7 +125,7 @@ public class Login extends DBScreen {
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
-                Pharmacy_DB.getHomePanel().revalidate();
+                Pharmacy_DB.getHomePanel().refresh();
                 Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
 
                 // disable login for now

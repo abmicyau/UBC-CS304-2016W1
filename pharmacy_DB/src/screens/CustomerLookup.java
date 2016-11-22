@@ -43,8 +43,13 @@ public class CustomerLookup extends DBScreen {
     private SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
 
     private JPopupMenu contextMenu = new JPopupMenu();
+    private JMenuItem menuDetails = new JMenuItem("Details");
+    private JMenuItem menuEdit = new JMenuItem("Edit");
+    private JMenuItem menuDelete = new JMenuItem("Delete");
+
 
     private DetailsDialog detailsDialog = new DetailsDialog();
+    private EditDialog editDialog = new EditDialog();
 
     public CustomerLookup() {
 
@@ -132,11 +137,12 @@ public class CustomerLookup extends DBScreen {
         buttonSearch.addActionListener(new SearchButton());
         buttonBack.addActionListener(new BackButton());
 
-        JMenuItem menuDetails = new JMenuItem("Details");
         menuDetails.addActionListener(new DetailsButton());
         contextMenu.add(menuDetails);
 
-        JMenuItem menuDelete = new JMenuItem("Delete");
+        menuEdit.addActionListener(new EditButton());
+        contextMenu.add(menuEdit);
+
         menuDelete.addActionListener(new DeleteButton());
         contextMenu.add(menuDelete);
 
@@ -239,6 +245,21 @@ public class CustomerLookup extends DBScreen {
         repaint();
     }
 
+    @Override
+    public void refresh() {
+        super.refresh();
+        update();
+        setVisibility();
+    }
+
+    private void setVisibility() {
+        if (Pharmacy_DB.getUser() == Pharmacy_DB.User.PHARMACIST) {
+            menuDelete.setVisible(true);
+        } else {
+            menuDelete.setVisible(false);
+        }
+    }
+
     private class SearchButton implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             searchMessage.setText("Searching...");
@@ -272,7 +293,26 @@ public class CustomerLookup extends DBScreen {
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(Pharmacy_DB.getCustomerLookup(),
                         "Unexpected error.",
-                        "Delete Customer Record",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private class EditButton implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            String idString = table.getValueAt(table.getSelectedRow(), 0).toString();
+            int id = Integer.parseInt(idString);
+
+            try {
+                editDialog.updateInfo(id);
+                editDialog.pack();
+                editDialog.setLocationRelativeTo(Pharmacy_DB.getCustomerLookup());
+                editDialog.setVisible(true);
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(Pharmacy_DB.getCustomerLookup(),
+                        "Unexpected error.",
+                        "Error",
                         JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -375,21 +415,21 @@ public class CustomerLookup extends DBScreen {
             constraints.gridx = 1;
             dialogPanel.add(info1_3, constraints);
 
-            constraints.gridwidth = 2;
-            constraints.insets.set(5, 10, 5, 10);
-            constraints.gridx = 0;
             constraints.gridy = 4;
-            dialogPanel.add(label2, constraints);
-
-            constraints.gridwidth = 1;
-            constraints.insets.set(5, 20, 5, 10);
-            constraints.gridy = 5;
+            constraints.gridx = 0;
             dialogPanel.add(label2_1, constraints);
             constraints.gridx = 1;
             dialogPanel.add(info2_1, constraints);
 
-            constraints.gridy = 6;
+            constraints.gridwidth = 2;
+            constraints.insets.set(5, 10, 5, 10);
             constraints.gridx = 0;
+            constraints.gridy = 5;
+            dialogPanel.add(label2, constraints);
+
+            constraints.gridwidth = 1;
+            constraints.insets.set(5, 20, 5, 10);
+            constraints.gridy = 6;
             dialogPanel.add(label2_2, constraints);
             constraints.gridx = 1;
             dialogPanel.add(info2_2, constraints);
@@ -466,7 +506,7 @@ public class CustomerLookup extends DBScreen {
                 cid = Integer.parseInt(customer_id);
                 String policy_id = rs.getString("insurance_policy_id");
 
-                info1_1.setText(customer_id);
+                info1_1.setText(String.format("%08d", cid));
                 info1_2.setText(rs.getString("name"));
                 info1_3.setText(rs.getString("phone_number"));
 
@@ -475,7 +515,7 @@ public class CustomerLookup extends DBScreen {
                     ResultSet rs2 = Pharmacy_DB.getResults("SELECT * FROM Insurance_coverage WHERE policy_id = " + policy_id);
                     if (rs2.next()) {
                         info2_2.setText(rs2.getString("expDate"));
-                        info2_3.setText(rs2.getString("maxAllowance_cents"));
+                        info2_3.setText(String.format("$%.2f", (float) Integer.parseInt(rs2.getString("maxAllowance_cents")) / 100));
                         info2_4.setText(rs2.getString("company"));
                     } else {
                         info2_2.setText("Missing from database");
@@ -483,6 +523,7 @@ public class CustomerLookup extends DBScreen {
                         info2_4.setText("Missing from database");
                     }
                 } else {
+                    info2_1.setText("N/A");
                     info2_2.setText("N/A");
                     info2_3.setText("N/A");
                     info2_4.setText("N/A");
@@ -700,4 +741,233 @@ public class CustomerLookup extends DBScreen {
         }
     }
 
+    private class EditDialog extends JDialog implements ActionListener {
+
+        private JPanel dialogPanel = new JPanel(new GridBagLayout());
+        private JButton submitButton = new JButton("Submit");
+        private JButton closeButton = new JButton("Close");
+
+        // labels
+        private JLabel label1 = new JLabel("<html><b>Basic Information</b></html>");
+        private JLabel label1_1 = new JLabel("Name: ");
+        private JLabel label1_2 = new JLabel("Phone #: ");
+        private JLabel label1_3 = new JLabel("Policy ID: ");
+        private JLabel label2 = new JLabel("<html><b>Patient Record</b></html>");
+        private JLabel label2_1 = new JLabel("Care Card #: ");
+        private JLabel label2_2 = new JLabel("Address: ");
+
+        // info
+        private JTextField text1_1 = new JTextField(12);
+        private JTextField text1_2 = new JTextField(12);
+        private JTextField text1_3 = new JTextField(12);
+        private JTextField text2_1 = new JTextField(12);
+        private JTextField text2_2 = new JTextField(12);
+
+        private GridBagConstraints constraints = new GridBagConstraints();
+        private int cid = 0;
+        private boolean patient = false;
+
+        public EditDialog() {
+
+            setTitle("Edit Customer");
+            constraints.anchor = GridBagConstraints.WEST;
+            // TOP, LEFT, BOTTOM, RIGHT
+            constraints.insets = new Insets(10, 10, 5, 10);
+            constraints.gridwidth = 2;
+
+            constraints.gridx = 0;
+            constraints.gridy = 0;
+            dialogPanel.add(label1, constraints);
+
+            constraints.gridwidth = 1;
+            constraints.insets.set(5, 20, 5, 10);
+            constraints.gridy = 1;
+            dialogPanel.add(label1_1, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(text1_1, constraints);
+
+            constraints.gridy = 2;
+            constraints.gridx = 0;
+            dialogPanel.add(label1_2, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(text1_2, constraints);
+
+            constraints.gridy = 3;
+            constraints.gridx = 0;
+            dialogPanel.add(label1_3, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(text1_3, constraints);
+
+            constraints.gridwidth = 2;
+            constraints.insets.set(5, 10, 5, 10);
+            constraints.gridx = 0;
+            constraints.gridy = 4;
+            dialogPanel.add(label2, constraints);
+
+            constraints.gridwidth = 1;
+            constraints.insets.set(5, 20, 5, 10);
+            constraints.gridy = 5;
+            dialogPanel.add(label2_1, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(text2_1, constraints);
+
+            constraints.gridy = 6;
+            constraints.gridx = 0;
+            dialogPanel.add(label2_2, constraints);
+            constraints.gridx = 1;
+            dialogPanel.add(text2_2, constraints);
+
+            constraints.insets.set(15, 10, 10, 10);
+            constraints.fill = GridBagConstraints.HORIZONTAL;
+            constraints.gridwidth = 2;
+            constraints.gridx = 0;
+            constraints.gridy = 7;
+            dialogPanel.add(submitButton, constraints);
+
+            constraints.insets.set(15, 10, 10, 10);
+            constraints.fill = GridBagConstraints.NONE;
+            constraints.gridwidth = 1;
+            constraints.gridx = 0;
+            constraints.gridy = 8;
+            dialogPanel.add(closeButton, constraints);
+
+            submitButton.addActionListener(this);
+            closeButton.addActionListener(this);
+
+            setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            setContentPane(dialogPanel);
+        }
+
+        public void updateInfo(int id) throws SQLException {
+            cid = id;
+            ResultSet rs0 = Pharmacy_DB.getResults("SELECT * FROM Customer WHERE customer_id = " + id);
+
+            if (rs0.next()) {
+                text1_1.setText(rs0.getString("name"));
+                text1_2.setText(rs0.getString("phone_number"));
+                text1_3.setText(rs0.getString("insurance_policy_id"));
+
+                ResultSet rs1 = Pharmacy_DB.getResults("SELECT * FROM Patient WHERE customer_id = " + id);
+
+                if (rs1.next()) {
+                    label2.setVisible(true);
+                    label2_1.setVisible(true);
+                    label2_2.setVisible(true);
+                    text2_1.setVisible(true);
+                    text2_2.setVisible(true);
+
+                    text2_1.setText(rs1.getString("care_card_number"));
+                    text2_2.setText(rs1.getString("address"));
+
+                    patient = true;
+                } else {
+                    label2.setVisible(false);
+                    label2_1.setVisible(false);
+                    label2_2.setVisible(false);
+                    text2_1.setVisible(false);
+                    text2_2.setVisible(false);
+
+                    patient = false;
+                }
+            } else {
+                throw new SQLException();
+            }
+        }
+
+        private void doSubmit() {
+
+            String name = text1_1.getText();
+            String phone_number = text1_2.getText();
+            String insurance_policy_id = text1_3.getText();
+
+            if (name.length() == 0) {
+                JOptionPane.showMessageDialog(this,
+                        "Name cannot be blank.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            } else if (!Pharmacy_DB.isNumeric(insurance_policy_id)) {
+                JOptionPane.showMessageDialog(this,
+                        "Insurance policy ID must be numeric.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            } else if (!isValidPolicyID(insurance_policy_id)) {
+                JOptionPane.showMessageDialog(this,
+                        "Insurance policy not found. Please enter a valid policy ID.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            } else {
+                try {
+                    if (patient) {
+                        String card = text2_1.getText();
+                        String address = text2_2.getText();
+                        if (card.length() != 16) {
+                            JOptionPane.showMessageDialog(this,
+                                    "Please enter a 16-digit care card number.",
+                                    "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                            return;
+                        } else if (!Pharmacy_DB.isNumeric(card)) {
+                            JOptionPane.showMessageDialog(this,
+                                    "Care card number must be numeric.",
+                                    "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                            return;
+                        } else {
+                                Pharmacy_DB.executeUpdate("UPDATE Patient SET care_card_number = " + card +
+                                        ", address = '" + address + "' WHERE customer_id = " + cid);
+                        }
+                    }
+
+                    if (insurance_policy_id.length() == 0) {
+                        insurance_policy_id = null;
+                    }
+                    Pharmacy_DB.executeUpdate("UPDATE Customer SET name = '" + name + "', " +
+                            "phone_number = '" + phone_number + "', insurance_policy_id = " + insurance_policy_id +
+                            " WHERE customer_id = " + cid);
+
+                    Pharmacy_DB.getCustomerLookup().refresh();
+                    dispose();
+
+                    JOptionPane.showMessageDialog(Pharmacy_DB.getCustomerLookup(),
+                            "Patient record edited.",
+                            "Success",
+                            JOptionPane.PLAIN_MESSAGE);
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(this,
+                            "Unexpected error.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+
+        private boolean isValidPolicyID(String id) {
+            if (id.length() > 0) {
+                ResultSet rs = Pharmacy_DB.getResults("SELECT * FROM Insurance_coverage WHERE policy_id = " + id);
+
+                try {
+                    if (rs.next()) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } catch (SQLException e) {
+                    return false;
+                }
+            } else {
+                return true;
+            }
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == submitButton) {
+                doSubmit();
+            } else if (e.getSource() == closeButton) {
+                dispose();
+            }
+        }
+
+    }
 }
