@@ -15,6 +15,9 @@ import java.sql.SQLException;
  */
 public class RecordAddition extends DBScreen {
 
+    // set up dates
+
+
     // Types of patients
     private JCheckBox checkPatient = new JCheckBox("On-going Patient");
     private JCheckBox checkInsurance = new JCheckBox("Register Insurance");
@@ -23,12 +26,13 @@ public class RecordAddition extends DBScreen {
     private JLabel labelCard = new JLabel("Service Card Number (16 Digits):");
     private JLabel labelAddress = new JLabel("Address:");
     private JLabel labelDOB = new JLabel("Date of birth (YYYY-MM-DD):");
-    private JLabel labelGender = new JLabel("Gender (M/F):");
+    private JLabel labelGender = new JLabel("Gender:");
 
     private JTextField textCard = new JTextField(10);
     private JTextField textAddress = new JTextField(10);
     private JTextField textDOB = new JTextField(10);
-    private JTextField textGender = new JTextField(10);
+    String[] genders = {"M","F"};
+    private JComboBox comboGender = new JComboBox(genders);
 
     // Customer info
     private JLabel labelCustomer = new JLabel("Customer Information");
@@ -121,8 +125,8 @@ public class RecordAddition extends DBScreen {
         left.add(buttonBack, constraints);
 
         // Set visibilities
-        center.setVisible(false);
-        right.setVisible(false);
+        center.setEnabled(false);
+        right.setEnabled(false);
 
         // Sets up center(Patient info)
         constraints.gridx = 0;
@@ -143,7 +147,7 @@ public class RecordAddition extends DBScreen {
         constraints.gridy++;
         center.add(labelGender,constraints);
         constraints.gridy++;
-        center.add(textGender,constraints);
+        center.add(comboGender,constraints);
 
         // Sets up right (insurance info) panel
         constraints.gridx = 0;
@@ -176,10 +180,18 @@ public class RecordAddition extends DBScreen {
     private class PatientCheck implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             if (checkPatient.isSelected()) {
-                center.setVisible(true);
+                center.setEnabled(true);
+                textCard.setEnabled(true);
+                textAddress.setEnabled(true);
+                textDOB.setEnabled(true);
+                comboGender.setEnabled(true);
             }
             else {
-                center.setVisible(false);
+                center.setEnabled(false);
+                textCard.setEnabled(false);
+                textAddress.setEnabled(false);
+                textDOB.setEnabled(false);
+                comboGender.setEnabled(false);
             }
         }
     }
@@ -187,10 +199,18 @@ public class RecordAddition extends DBScreen {
     private class InsuranceCheck implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             if (checkInsurance.isSelected()) {
-                right.setVisible(true);
+                right.setEnabled(true);
+                textPolicy.setEnabled(true);
+                textExpiry.setEnabled(true);
+                textMax.setEnabled(true);
+                textCompany.setEnabled(true);
             }
             else {
-                right.setVisible(false);
+                right.setEnabled(false);
+                textPolicy.setEnabled(false);
+                textExpiry.setEnabled(false);
+                textMax.setEnabled(false);
+                textCompany.setEnabled(false);
             }
         }
     }
@@ -275,6 +295,7 @@ public class RecordAddition extends DBScreen {
                     String card = textCard.getText();
                     String address = textAddress.getText();
                     String DOB = textDOB.getText();
+                    String gender = (String) comboGender.getSelectedItem();
 
                     String insertPatientQuery = "INSERT INTO Patient (";
                     String valuePatientQuery = "VALUES (";
@@ -288,6 +309,10 @@ public class RecordAddition extends DBScreen {
                         if (!DOB.isEmpty()) {
                             insertPatientQuery += ",birthdate";
                             valuePatientQuery += "," + "'" + DOB + "'";
+                        }
+                        if (!gender.isEmpty()) {
+                            insertPatientQuery += ",gender";
+                            valuePatientQuery += "," + "'" + gender + "'";
                         }
                         insertPatientQuery += ")";
                         valuePatientQuery += ")";
