@@ -99,11 +99,11 @@ public class Login extends DBScreen {
         buttonLogin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    Pharmacy_DB.setUser(2);
+                    Pharmacy_DB.setUser(1);
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
-                Pharmacy_DB.getHomePanel().revalidate();
+                Pharmacy_DB.getHomePanel().refresh();
                 Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
 
                 // disable login for now

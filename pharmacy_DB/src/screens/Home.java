@@ -158,6 +158,7 @@ public class Home extends DBScreen {
         // record lookup button action
         actionButton6.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                Pharmacy_DB.getCustomerLookup().refresh();
                 Pharmacy_DB.switchScreen(Pharmacy_DB.getCustomerLookup());
             }
         });

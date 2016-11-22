@@ -43,6 +43,10 @@ public class CustomerLookup extends DBScreen {
     private SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
 
     private JPopupMenu contextMenu = new JPopupMenu();
+    private JMenuItem menuDetails = new JMenuItem("Details");
+    private JMenuItem menuEdit = new JMenuItem("Edit");
+    private JMenuItem menuDelete = new JMenuItem("Delete");
+
 
     private DetailsDialog detailsDialog = new DetailsDialog();
     private EditDialog editDialog = new EditDialog();
@@ -133,15 +137,12 @@ public class CustomerLookup extends DBScreen {
         buttonSearch.addActionListener(new SearchButton());
         buttonBack.addActionListener(new BackButton());
 
-        JMenuItem menuDetails = new JMenuItem("Details");
         menuDetails.addActionListener(new DetailsButton());
         contextMenu.add(menuDetails);
 
-        JMenuItem menuEdit = new JMenuItem("Edit");
         menuEdit.addActionListener(new EditButton());
         contextMenu.add(menuEdit);
 
-        JMenuItem menuDelete = new JMenuItem("Delete");
         menuDelete.addActionListener(new DeleteButton());
         contextMenu.add(menuDelete);
 
@@ -248,6 +249,15 @@ public class CustomerLookup extends DBScreen {
     public void refresh() {
         super.refresh();
         update();
+        setVisibility();
+    }
+
+    private void setVisibility() {
+        if (Pharmacy_DB.getUser() == Pharmacy_DB.User.PHARMACIST) {
+            menuDelete.setVisible(true);
+        } else {
+            menuDelete.setVisible(false);
+        }
     }
 
     private class SearchButton implements ActionListener {
