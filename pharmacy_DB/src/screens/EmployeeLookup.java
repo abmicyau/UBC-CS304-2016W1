@@ -224,6 +224,10 @@ public class EmployeeLookup extends DBScreen {
             searchMessage.setText("Searching...");
             searchMessage.setVisible(true);
 
+            if ((textID.getText().length() != 0) && (textID.getText().matches("[0-9]+") == false)) {
+                JOptionPane.showMessageDialog(left, "Please enter a valid Employee ID", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
