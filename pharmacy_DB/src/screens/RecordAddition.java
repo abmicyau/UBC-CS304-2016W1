@@ -289,6 +289,9 @@ public class RecordAddition extends DBScreen {
                 String stringID = Integer.toString(ID);
                 String name = textName.getText();
                 String phone = textPhone.getText();
+                if (!phone.matches("[0-9]+" + "-" + ("[0-9]+") + "-" + ("[0-9]+")) && !phone.isEmpty()){
+                    throw new SQLException();
+                }
                 insertQuery = "INSERT INTO Customer (customer_id";
                 valueQuery = "VALUES (" + stringID;
                 if (!name.isEmpty()) {
@@ -307,6 +310,9 @@ public class RecordAddition extends DBScreen {
                     String max = textMax.getText();
                     String company = textCompany.getText();
 
+                    if (!policy.matches("[0-9]+")){
+                        throw new SQLException();
+                    }
                     insertInsuranceQuery ="INSERT INTO Insurance_coverage (";
                     valueInsuranceQuery = "VALUES (";
 
