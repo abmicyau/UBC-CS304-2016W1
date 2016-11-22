@@ -12,7 +12,7 @@ import java.sql.SQLException;
 
 public class Login extends DBScreen {
 
-    private JLabel title = new JLabel("Employee Login");
+    private JLabel title = new JLabel("<html><b>Employee Login</b></html>");
     private JLabel labelUsername = new JLabel("Enter username: ");
     private JLabel labelPassword = new JLabel("Enter password: ");
     private JTextField textUsername = new JTextField(20);
