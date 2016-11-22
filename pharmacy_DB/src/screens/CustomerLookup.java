@@ -496,7 +496,7 @@ public class CustomerLookup extends DBScreen {
                 cid = Integer.parseInt(customer_id);
                 String policy_id = rs.getString("insurance_policy_id");
 
-                info1_1.setText(customer_id);
+                info1_1.setText(String.format("%08d", cid));
                 info1_2.setText(rs.getString("name"));
                 info1_3.setText(rs.getString("phone_number"));
 
@@ -505,7 +505,7 @@ public class CustomerLookup extends DBScreen {
                     ResultSet rs2 = Pharmacy_DB.getResults("SELECT * FROM Insurance_coverage WHERE policy_id = " + policy_id);
                     if (rs2.next()) {
                         info2_2.setText(rs2.getString("expDate"));
-                        info2_3.setText(rs2.getString("maxAllowance_cents"));
+                        info2_3.setText(String.format("$%.2f", (float) Integer.parseInt(rs2.getString("maxAllowance_cents")) / 100));
                         info2_4.setText(rs2.getString("company"));
                     } else {
                         info2_2.setText("Missing from database");
