@@ -99,7 +99,7 @@ public class Login extends DBScreen {
         buttonLogin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    Pharmacy_DB.setUser(1);
+                    Pharmacy_DB.setUser(2);
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
