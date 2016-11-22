@@ -160,10 +160,10 @@ create table Item_consistof_drug
 create table Payment_paid_by
  	(paymentId int not null, 
  	customer_id int not null,
- 	transdate date not null,
+ 	transdate char(10) not null,
  	total int not null,
  	cardNumber char(16) not null,
- 	cardExpDate date not null,
+ 	cardExpDate char(10) not null,
  	primary key (paymentId), 
  	foreign key (customer_id) references Customer ON DELETE CASCADE 
  	); 

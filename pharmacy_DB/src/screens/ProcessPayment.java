@@ -14,6 +14,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -636,8 +637,9 @@ public class ProcessPayment extends DBScreen implements ActionListener {
                         JOptionPane.ERROR_MESSAGE);
             } else {
                 try {
-                    Date date = new Date();
-                    String dateString = new SimpleDateFormat("yyyy-MM-dd").format(date);
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                    String dateString = format.format(new Date());
+
                     Pharmacy_DB.executeUpdate("INSERT INTO Payment_paid_by VALUES " +
                             "(" + getNextID("Payment_paid_by", "paymentId") + ", " + cid + ", '" + dateString + "', " +
                             totalCost + ", '" + cardNumber.getText() + "', '" +
