@@ -1,5 +1,6 @@
 package screens;
 
+import javafx.beans.property.adapter.JavaBeanObjectProperty;
 import main.Pharmacy_DB;
 import models.DBScreen;
 import models.DBTableModel;
@@ -9,29 +10,42 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static javax.swing.JOptionPane.YES_OPTION;
 
 public class CheckPrescription extends DBScreen {
 
     private JLabel labelDID = new JLabel("Doctor ID: ");
-    private JTextField textDID = new JTextField(8);
-    private JLabel labelPID = new JLabel("Prescription ID: ");
-    private JTextField textPID = new JTextField(8);
-    private JButton searchButton = new JButton("Search");
+    private JTextField textDID = new JTextField(10);
+    private JLabel labelPID = new JLabel("Customer ID: ");
+    private JTextField textPID = new JTextField(10);
+    private JButton buttonSearch = new JButton("Search");
     private JButton buttonBack = new JButton("Back");
     private JFrame warningFrame = new JFrame("Warning");
+    private JPanel messageContainer = new JPanel(new GridLayout(1, 1));
+
+
     private GridBagConstraints constraints = new GridBagConstraints();
-    private DefaultTableModel model = new DBTableModel();
-    private JTable table = new JTable(model);
+
+    DefaultTableModel model = new DBTableModel();
+    JTable table = new JTable(model);
 
     private JPanel left = new JPanel(new GridBagLayout());
+    ;
     private JPanel right = new JPanel(new BorderLayout());
+    ;
+
+    private JPopupMenu contextMenu = new JPopupMenu();
+
 
     public CheckPrescription() {
-        super(new GridLayout());
 
+        // important! call JPanel constructor and pass GridBagLayout
+        super(new GridBagLayout());
 
         // set contraints and padding
         constraints.anchor = GridBagConstraints.WEST;
@@ -53,27 +67,26 @@ public class CheckPrescription extends DBScreen {
         // add components to the panel
         constraints.gridx = 0;
         constraints.gridy = 0;
-        left.add(labelPID, constraints);
-
-        constraints.gridx = 1;
-        left.add(textPID, constraints);
-
-        constraints.gridx = 0;
-        constraints.gridy = 1;
         left.add(labelDID, constraints);
 
         constraints.gridx = 1;
         left.add(textDID, constraints);
 
         constraints.gridx = 0;
+        constraints.gridy = 1;
+        left.add(labelPID, constraints);
+
+        constraints.gridx = 1;
+        left.add(textPID, constraints);
+
+        constraints.gridx = 0;
         constraints.gridy = 2;
         constraints.gridwidth = 2;
         constraints.anchor = GridBagConstraints.CENTER;
-        left.add(searchButton, constraints);
+        left.add(buttonSearch, constraints);
 
         constraints.gridy = 3;
         left.add(buttonBack, constraints);
-
 
         model.addColumn("Customer ID");
         model.addColumn("Doctor Name");
@@ -104,15 +117,15 @@ public class CheckPrescription extends DBScreen {
 
         // set border for the panel
         right.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createEtchedBorder(), "Prescriptions"));
+                BorderFactory.createEtchedBorder(), "Prescription"));
 
-        searchButton.addActionListener(new SearchButton());
+        buttonSearch.addActionListener(new SearchButton());
         buttonBack.addActionListener(new BackButton());
 
-    }
+        JMenuItem menuDelete = new JMenuItem("Delete");
+        menuDelete.addActionListener(new DeleteButton());
+        contextMenu.add(menuDelete);
 
-    private class BackButton implements ActionListener {
-        public void actionPerformed(ActionEvent e) { Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel()); }
     }
 
     private void fillTable(DefaultTableModel model, ResultSet rs) {
@@ -131,49 +144,63 @@ public class CheckPrescription extends DBScreen {
                     model.addRow(new Object[]{String.format("%08d", cid), dname, dphone, dateprescribed, String.format("%08d", din), dosage, duration, freq});
                 }
             } catch (SQLException e) {
-
+                // stop
             }
         }
     }
 
+    private void update() {
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT * FROM Prescription_item_has pi, Prescription_by_is_for pbf, Doctor do, " +
+                "Item_consistof_drug icd WHERE pi.prescription_id = pbf.prescription_id AND do.doctor_id=" +
+                "pbf.doctor_id AND pi.item_id = icd.item_id AND do.doctor_id=");
+        query.append(textDID.getText());
+        query.append(" AND pi.prescription_id=");
+        query.append(textPID.getText());
+
+        fillTable(model, Pharmacy_DB.getResults(query.toString()));
+
+        if (model.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(warningFrame, "No such prescription exists in the database", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+
+
+        revalidate();
+        repaint();
+    }
+
     private class SearchButton implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            searchButton.setText("Searching...");
 
             if ((textPID.getText().length() == 0 || textDID.getText().length() == 0) ||
                     (textPID.getText().matches("[0-9]+") == false) || (textDID.getText().matches("[0-9]+") == false)) {
-                JOptionPane.showMessageDialog(warningFrame, "Please enter a valid Doctor ID and/or Prescription ID.");
-                searchButton.setText("Search");
+                JOptionPane.showMessageDialog(warningFrame, "Please enter a valid Doctor ID and/or Prescription ID.", "Error", JOptionPane.ERROR_MESSAGE);
 
             } else {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        StringBuilder query = new StringBuilder();
-                        query.append("SELECT * FROM Prescription_item_has pi, Prescription_by_is_for pbf, Doctor do, " +
-                                "Item_consistof_drug icd WHERE pi.prescription_id = pbf.prescription_id AND do.doctor_id=" +
-                                "pbf.doctor_id AND pi.item_id = icd.item_id AND do.doctor_id=");
-                        query.append(textDID.getText());
-                        query.append(" AND pi.prescription_id=");
-                        query.append(textPID.getText());
-                        //print query to console
-                        System.out.println(query.toString());
-
-                        fillTable(model, Pharmacy_DB.getResults(query.toString()));
-
-                        if (model.getRowCount() == 0) {
-                            JOptionPane.showMessageDialog(warningFrame, "No such prescription exists in the database");
-                        }
-
-                        searchButton.setText("Search");
-
-                        revalidate();
-                        repaint();
+                        update();
                     }
                 });
             }
         }
-
     }
+
+    private class BackButton implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
+        }
+    }
+
+    private class DeleteButton implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+
+
+        }
+    }
+
+
 
 }
