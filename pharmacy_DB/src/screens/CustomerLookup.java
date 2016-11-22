@@ -495,10 +495,6 @@ public class CustomerLookup extends DBScreen {
         }
 
         public void updateInfo(int id) throws SQLException {
-
-            // TODO: fix string formatting
-            // TODO: bug: search message persists (should show # of search results)
-
             ResultSet rs = Pharmacy_DB.getResults("SELECT * FROM Customer WHERE customer_id = " + id);
 
             if (rs.next()) {

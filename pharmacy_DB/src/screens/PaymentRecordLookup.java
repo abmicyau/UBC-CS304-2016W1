@@ -101,7 +101,7 @@ public class PaymentRecordLookup extends DBScreen {
         left.add(buttonBack, constraints);
 
         constraints.gridx = 0;
-        constraints.gridy = 6;
+        constraints.gridy = 11;
         constraints.gridwidth = 2;
         messageContainer.add(searchMessage);
         left.add(messageContainer, constraints);
