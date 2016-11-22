@@ -20,9 +20,12 @@ public class PaymentRecordLookup extends DBScreen {
 
     private JLabel labelID = new JLabel("Customer ID: ");
     private JTextField textID = new JTextField(10);
+    private JLabel extra = new JLabel("Extra Functions");
     private JButton buttonSearch = new JButton("Search");
     private JButton buttonTotals = new JButton("Total Per Customer");
     private JButton buttonSumTotals = new JButton("Total Overall");
+    private JButton buttonAverageTotals = new JButton("Average Total Per Customer");
+    private JButton buttonMaxTotals = new JButton("Highest Total");
     private JButton buttonBack = new JButton("Back");
 
     private JPanel messageContainer = new JPanel(new GridLayout(1, 1));
@@ -73,20 +76,32 @@ public class PaymentRecordLookup extends DBScreen {
         constraints.gridx = 0;
         constraints.gridy = 1;
         constraints.gridwidth = 2;
-        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
         left.add(buttonSearch, constraints);
 
         constraints.gridy = 2;
-        left.add(buttonTotals, constraints);
+        left.add(extra, constraints);
 
         constraints.gridy = 3;
-        left.add(buttonSumTotals, constraints);
+        constraints.insets.set(5, 10, 5, 10);
+        left.add(buttonTotals, constraints);
 
         constraints.gridy = 4;
+        left.add(buttonSumTotals, constraints);
+
+        constraints.gridy = 5;
+        left.add(buttonAverageTotals, constraints);
+
+        constraints.gridy = 6;
+        left.add(buttonMaxTotals, constraints);
+
+        constraints.gridy = 10;
+        constraints.gridwidth = 1;
+        constraints.insets.set(10, 10, 10, 10);
         left.add(buttonBack, constraints);
 
         constraints.gridx = 0;
-        constraints.gridy = 5;
+        constraints.gridy = 6;
         constraints.gridwidth = 2;
         messageContainer.add(searchMessage);
         left.add(messageContainer, constraints);
@@ -122,6 +137,8 @@ public class PaymentRecordLookup extends DBScreen {
         buttonSearch.addActionListener(new SearchButton());
         buttonTotals.addActionListener(new TotalsButton());
         buttonSumTotals.addActionListener(new SumTotalsButton());
+        buttonAverageTotals.addActionListener(new AverageTotalsButton());
+        buttonMaxTotals.addActionListener(new MaxTotalsButton());
         buttonBack.addActionListener(new BackButton());
 
         table.addMouseListener(new MouseAdapter() {
@@ -276,6 +293,46 @@ public class PaymentRecordLookup extends DBScreen {
         repaint();
     }
 
+    // nexted aggregation with group-by
+    private void searchAverageTotals() {
+        StringBuilder query = new StringBuilder();
+        StringBuilder message = new StringBuilder();
+
+        query.append("SELECT AVG(total) total FROM (SELECT customer_id, SUM(total) total " +
+                "FROM Payment_paid_by GROUP BY customer_id)");
+
+        fillTableSumTotals(model, Pharmacy_DB.getResults(query.toString()));
+
+        message.append(model.getRowCount());
+        message.append(" results found.");
+
+        searchMessage.setText(message.toString());
+        clickable = false;
+
+        revalidate();
+        repaint();
+    }
+
+    // nexted aggregation with group-by
+    private void searchMaxTotals() {
+        StringBuilder query = new StringBuilder();
+        StringBuilder message = new StringBuilder();
+
+        query.append("SELECT MAX(total) total FROM (SELECT customer_id, SUM(total) total " +
+                "FROM Payment_paid_by GROUP BY customer_id)");
+
+        fillTableSumTotals(model, Pharmacy_DB.getResults(query.toString()));
+
+        message.append(model.getRowCount());
+        message.append(" results found.");
+
+        searchMessage.setText(message.toString());
+        clickable = false;
+
+        revalidate();
+        repaint();
+    }
+
     private void deleteRecord(int id) throws SQLException {
         StringBuilder query = new StringBuilder();
         StringBuilder message = new StringBuilder();
@@ -328,6 +385,34 @@ public class PaymentRecordLookup extends DBScreen {
                 @Override
                 public void run() {
                     searchSumTotals();
+                }
+            });
+        }
+    }
+
+    private class AverageTotalsButton implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            searchMessage.setText("Searching...");
+            searchMessage.setVisible(true);
+
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    searchAverageTotals();
+                }
+            });
+        }
+    }
+
+    private class MaxTotalsButton implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            searchMessage.setText("Searching...");
+            searchMessage.setVisible(true);
+
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    searchMaxTotals();
                 }
             });
         }

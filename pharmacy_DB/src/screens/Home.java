@@ -90,7 +90,7 @@ public class Home extends DBScreen {
         // set border for the panels
         left.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Drugs"));
         middle.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Employees"));
-        right.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Patients"));
+        right.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Customers"));
 
         revalidate();
         repaint();
