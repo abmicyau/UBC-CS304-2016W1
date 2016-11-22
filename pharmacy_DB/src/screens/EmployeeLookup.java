@@ -390,7 +390,7 @@ public class EmployeeLookup extends DBScreen {
             if (rs.next()) {
                 String emp_id = rs.getString("emp_id");
 
-                info1_1.setText(rs.getString("emp_id"));
+                info1_1.setText(String.format("%08d", Integer.parseInt(emp_id)));
                 info1_2.setText(rs.getString("name"));
                 info1_3.setText(rs.getString("email"));
                 info1_4.setText(rs.getString("phone_number"));
