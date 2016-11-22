@@ -160,6 +160,10 @@ public class DoctorLookup extends DBScreen {
             searchMessage.setText("Searching...");
             searchMessage.setVisible(true);
 
+            if ((textID.getText().length() != 0) && (textID.getText().matches("[0-9]+") == false)) {
+                JOptionPane.showMessageDialog(left, "Please enter a valid Doctor ID", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
