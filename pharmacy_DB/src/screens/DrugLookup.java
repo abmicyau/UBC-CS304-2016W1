@@ -277,7 +277,7 @@ public class DrugLookup extends DBScreen {
             searchMessage.setText("Searching...");
             searchMessage.setVisible(true);
             // warning if DIN =/= integer
-            if (textID.getText().matches("[0-9]+") == false) {
+            if ((textID.getText().length() != 0) && (textID.getText().matches("[0-9]+") == false)) {
                 JOptionPane.showMessageDialog(left, "Please enter a valid DIN", "Error", JOptionPane.ERROR_MESSAGE);
             }
 
