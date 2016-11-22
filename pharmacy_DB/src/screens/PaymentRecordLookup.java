@@ -24,7 +24,7 @@ public class PaymentRecordLookup extends DBScreen {
     private JButton buttonSearch = new JButton("Search");
     private JButton buttonTotals = new JButton("Total Per Customer");
     private JButton buttonSumTotals = new JButton("Total Overall");
-    private JButton buttonAverageTotals = new JButton("Average Total Per Customer");
+    private JButton buttonAverageTotals = new JButton("Average Total Overall");
     private JButton buttonMaxTotals = new JButton("Highest Total");
     private JButton buttonBack = new JButton("Back");
 
