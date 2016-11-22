@@ -120,42 +120,28 @@ public class Login extends DBScreen {
         // login button action
         buttonLogin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                try {
-                    Pharmacy_DB.setUser(2);
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
+                String user = textUsername.getText();
+                String pass = new String(fieldPassword.getPassword());
+
+                if (pass.equals(fetchUserPass(user))) {
+                    loginMsg.setVisible(false);
+
+                    try {
+                        ResultSet rs = Pharmacy_DB.getResults("SELECT * FROM Employee WHERE username = '" + user + "'");
+                        if (rs.next()) {
+                            Pharmacy_DB.setUser(rs.getInt("emp_id"));
+                        } else {
+                            throw new SQLException();
+                        }
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    Pharmacy_DB.getHomePanel().refresh();
+                    Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
+                } else {
+                    loginMsg.setText("Login failed. Invalid username/password.");
+                    loginMsg.setVisible(true);
                 }
-                Pharmacy_DB.getHomePanel().refresh();
-                Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
-
-                // disable login for now
-
-//                String user = textUsername.getText();
-//                String pass = new String(fieldPassword.getPassword());
-//
-//                // TODO: change error messages to popups
-//
-//                // disable login for convenience for now
-//                if (pass.equals(fetchUserPass(user))) {
-//                    loginMsg.setVisible(false);
-//
-//                    // TODO: create helper for the following block, integrate with fetchuserpass
-//                    try {
-//                        ResultSet rs = Pharmacy_DB.getResults("SELECT * FROM Employee WHERE username = '" + user + "'");
-//                        if (rs.next()) {
-//                            Pharmacy_DB.setUser(rs.getInt("emp_id"));
-//                        } else {
-//                            throw new SQLException();
-//                        }
-//                    } catch (SQLException ex) {
-//                        ex.printStackTrace();
-//                    }
-//
-//                    Pharmacy_DB.switchScreen(Pharmacy_DB.getHomePanel());
-//                } else {
-//                    loginMsg.setText("Login failed. Invalid username/password.");
-//                    loginMsg.setVisible(true);
-//                }
             }
         });
     }

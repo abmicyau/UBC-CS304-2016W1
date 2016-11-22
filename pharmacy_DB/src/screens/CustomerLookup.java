@@ -27,6 +27,7 @@ public class CustomerLookup extends DBScreen {
     private JLabel labelPolicyID = new JLabel("Policy ID: ");
     private JTextField textPolicyID = new JTextField(10);
     private JButton buttonSearch = new JButton("Search");
+    private JButton buttonAllergies = new JButton("Allergies");
     private JButton buttonBack = new JButton("Back");
 
     private JPanel messageContainer = new JPanel(new GridLayout(1, 1));
@@ -102,10 +103,13 @@ public class CustomerLookup extends DBScreen {
         left.add(buttonSearch, constraints);
 
         constraints.gridy = 4;
+        left.add(buttonAllergies, constraints);
+
+        constraints.gridy = 5;
         left.add(buttonBack, constraints);
 
         constraints.gridx = 0;
-        constraints.gridy = 5;
+        constraints.gridy = 6;
         constraints.gridwidth = 2;
         messageContainer.add(searchMessage);
         left.add(messageContainer, constraints);
@@ -136,6 +140,7 @@ public class CustomerLookup extends DBScreen {
 
         buttonSearch.addActionListener(new SearchButton());
         buttonBack.addActionListener(new BackButton());
+        buttonAllergies.addActionListener(new AllergiesButton());
 
         menuDetails.addActionListener(new DetailsButton());
         contextMenu.add(menuDetails);
@@ -197,6 +202,20 @@ public class CustomerLookup extends DBScreen {
         }
     }
 
+    private void fillTableExtra(DefaultTableModel model, ResultSet rs) {
+        model.setRowCount(0);
+        if (rs != null) {
+            try {
+                while (rs.next()) {
+                    String name = rs.getString("name");
+                    model.addRow(new Object[]{"-", name, "-", "-"});
+                }
+            } catch (SQLException e) {
+                // stop
+            }
+        }
+    }
+
     private void update() {
         StringBuilder query = new StringBuilder();
         StringBuilder message = new StringBuilder();
@@ -221,6 +240,24 @@ public class CustomerLookup extends DBScreen {
         query.append(" ORDER BY customer_id");
 
         fillTable(model, Pharmacy_DB.getResults(query.toString()));
+
+        message.append(model.getRowCount());
+        message.append(" results found.");
+        searchMessage.setText(message.toString());
+
+        revalidate();
+        repaint();
+    }
+
+    private void updateExtra() {
+        StringBuilder query = new StringBuilder();
+        StringBuilder message = new StringBuilder();
+
+        fillTableExtra(model, Pharmacy_DB.getResults("SELECT a.name name FROM Customer a " +
+                "WHERE a.customer_id NOT IN " +
+                "(SELECT b.customer_id FROM Customer b, Purchase_record c " +
+                "WHERE b.customer_id = c.customer_id AND c.din NOT IN " +
+                "(SELECT d.din FROM Drug d WHERE d.drug_name_INN = 'loratidine'))"));
 
         message.append(model.getRowCount());
         message.append(" results found.");
@@ -269,6 +306,20 @@ public class CustomerLookup extends DBScreen {
                 @Override
                 public void run() {
                     update();
+                }
+            });
+        }
+    }
+
+    private class AllergiesButton implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            searchMessage.setText("Searching...");
+            searchMessage.setVisible(true);
+
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    updateExtra();
                 }
             });
         }
